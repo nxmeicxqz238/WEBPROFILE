@@ -49,7 +49,6 @@
             --sub-text: #94a3b8;
         }
 
-        /* Light Mode Custom CSS Variables */
         html:not(.dark) {
             --cyber-theme-color: #00a859;
             --cyber-glow-color: rgba(0, 168, 89, 0.3);
@@ -65,7 +64,7 @@
         ::-webkit-scrollbar-track { background: var(--bg-base); }
         ::-webkit-scrollbar-thumb { background: var(--cyber-theme-color); border-radius: 2px; }
 
-        /* Custom Cyber Cursor (Desktop Only) */
+        /* Custom Cyber Cursor (Desktop Only) with GPU Acceleration */
         @media (min-width: 768px) {
             body { cursor: none; }
             a, button, input { cursor: none !important; }
@@ -79,8 +78,9 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.15s, height 0.15s, background-color 0.15s;
+            will-change: transform;
+            transform: translate3d(-50%, -50%, 0);
+            transition: width 0.1s, height 0.1s, background-color 0.1s;
             box-shadow: 0 0 10px var(--cyber-theme-color);
         }
 
@@ -92,7 +92,8 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 10000;
-            transform: translate(-50%, -50%);
+            will-change: transform;
+            transform: translate3d(-50%, -50%, 0);
             box-shadow: 0 0 8px var(--cyber-theme-color);
         }
 
@@ -102,16 +103,11 @@
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 40;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
-            );
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 4px;
             opacity: 0.6;
         }
-        html:not(.dark) .scanlines {
-            opacity: 0.15;
-        }
+        html:not(.dark) .scanlines { opacity: 0.15; }
 
         /* Glassmorphic Sci-Fi Card Container */
         .cyber-card {
@@ -119,17 +115,11 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--cyber-glow-color);
-            clip-path: polygon(
-                0 0, 
-                calc(100% - 14px) 0, 
-                100% 14px, 
-                100% 100%, 
-                14px 100%, 
-                0 calc(100% - 14px)
-            );
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
+            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.3s ease;
             position: relative;
             overflow: hidden;
+            will-change: transform;
         }
 
         .cyber-card:hover {
@@ -141,33 +131,21 @@
         .cyber-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -150%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                var(--cyber-glow-color),
-                transparent
-            );
-            transition: 0.6s ease;
+            top: 0; left: -150%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), var(--cyber-glow-color), transparent);
+            transition: 0.5s ease;
             pointer-events: none;
         }
-
-        .cyber-card:hover::before {
-            left: 150%;
-        }
+        .cyber-card:hover::before { left: 150%; }
 
         /* HUD Corner Brackets for Links */
         .hud-bracket {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 8px; height: 8px;
             border-color: var(--cyber-theme-color);
             opacity: 0.4;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             pointer-events: none;
         }
         .hud-tl { top: 3px; left: 3px; border-top: 2px solid; border-left: 2px solid; }
@@ -177,8 +155,7 @@
 
         .cyber-card:hover .hud-bracket {
             opacity: 1;
-            width: 14px;
-            height: 14px;
+            width: 14px; height: 14px;
             border-color: #00e5ff;
         }
 
@@ -200,12 +177,12 @@
         .glitch-text:hover::before {
             left: -2px; text-shadow: 2px 0 #ff0055;
             clip: rect(10px, 9999px, 50px, 0);
-            animation: glitch-1 0.25s infinite linear alternate-reverse;
+            animation: glitch-1 0.2s infinite linear alternate-reverse;
         }
         .glitch-text:hover::after {
             left: 2px; text-shadow: -2px 0 #00e5ff;
             clip: rect(40px, 9999px, 80px, 0);
-            animation: glitch-2 0.25s infinite linear alternate-reverse;
+            animation: glitch-2 0.2s infinite linear alternate-reverse;
         }
 
         @keyframes glitch-1 { 0% { clip: rect(15px, 9999px, 35px, 0); } 100% { clip: rect(45px, 9999px, 75px, 0); } }
@@ -220,13 +197,11 @@
         .glow-steam:hover { box-shadow: 0 0 18px rgba(102, 192, 244, 0.4), inset 0 0 10px rgba(102, 192, 244, 0.2); border-color: #66c0f4; }
         .glow-ngl:hover { box-shadow: 0 0 18px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2); border-color: #ff6b00; }
 
-        /* Page Stagger Entrance */
         .cyber-stagger {
             opacity: 0;
             transform: translateY(20px);
-            animation: cyberIn 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            animation: cyberIn 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
-
         @keyframes cyberIn {
             to { opacity: 1; transform: translateY(0); }
         }
@@ -234,35 +209,25 @@
 </head>
 <body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
 
-    <!-- Custom Sci-Fi Cursor Ring & Dot -->
     <div id="cyber-cursor" class="hidden md:block"></div>
     <div id="cyber-cursor-dot" class="hidden md:block"></div>
 
-    <!-- Canvas 1: Matrix Digital Rain -->
     <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-40 transition-opacity"></canvas>
-
-    <!-- Canvas 2: Cursor Sparks & Particle Burst Layer -->
     <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-30"></canvas>
-
-    <!-- CRT Overlay Scanlines -->
     <div class="scanlines"></div>
 
-    <!-- Holographic Ambient Radial Glow -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full blur-[150px] opacity-20" style="background: var(--cyber-theme-color);"></div>
         <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-cyber-cyan/20 rounded-full blur-[150px]"></div>
     </div>
 
-    <!-- Main Mobile Container -->
     <div class="relative z-10 max-w-md mx-auto px-4 py-6 flex flex-col items-center min-h-screen justify-between">
         
-        <!-- Header / Sci-Fi HUD Control Widget -->
         <header class="w-full flex justify-between items-center mb-6 font-mono text-xs cyber-stagger" style="animation-delay: 0.05s;">
-            <!-- Left: Realtime System Status Display -->
             <div class="flex flex-col text-cyber-green">
                 <div class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full animate-ping" style="background: var(--cyber-theme-color);"></span>
-                    <span class="font-bold tracking-wider"> ONLINE</span>
+                    <span class="font-bold tracking-wider"> ONLINE (120FPS OPTIMIZED)</span>
                 </div>
                 <div class="text-[10px] text-[var(--sub-text)] mt-0.5 flex items-center gap-2">
                     <span id="cyber-clock">00:00:00 LOCAL</span>
@@ -271,19 +236,13 @@
                 </div>
             </div>
             
-            <!-- Right: Interactive Controls (Theme Toggle, Sound Toggle & Share Button) -->
             <div class="flex items-center gap-2">
-                <!-- Dark / Light Theme Toggle Button -->
                 <button id="theme-btn" title="Toggle Dark/Light Mode" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
                     <i id="theme-icon" class="fa-solid fa-moon text-xs"></i>
                 </button>
-
-                <!-- Sound Audio Effects Toggle -->
                 <button id="sound-btn" title="Toggle UI Sound FX" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
                     <i id="sound-icon" class="fa-solid fa-volume-high text-xs"></i>
                 </button>
-
-                <!-- Share Link Button -->
                 <button id="share-btn" class="cyber-card px-3 py-2 text-xs font-mono text-cyber-green hover:text-cyber-cyan flex items-center gap-1.5 active:scale-95 transition-all">
                     <i class="fa-solid fa-share-nodes text-xs"></i>
                     <span>[SHARE]</span>
@@ -291,18 +250,12 @@
             </div>
         </header>
 
-        <!-- Ambient Synth BGM Player Floating Widget -->
         <div class="w-full mb-5 cyber-card p-2.5 flex items-center justify-between font-mono text-xs cyber-stagger" style="animation-delay: 0.08s;">
-            <!-- แท็กเล่นเพลง MP3 (สำหรับปุ่ม Play) -->
             <audio id="bgm-audio" src="http://youtube.com/watch?v=NaE40w3riSQ" loop preload="auto"></audio>
-
             <div class="flex items-center gap-2.5">
-                <!-- ปุ่ม Play / Pause สำหรับเปิดเพลงในเว็บ -->
                 <button id="bgm-play-btn" class="w-8 h-8 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/50 text-cyber-green flex items-center justify-center hover:bg-cyber-green hover:text-black transition-colors cursor-pointer shrink-0">
                     <i id="bgm-icon" class="fa-solid fa-play text-xs"></i>
                 </button>
-
-                <!-- คลิกส่วนนี้แล้วจะเด้งเปิดลิงก์เว็บที่แปะไว้ -->
                 <a href="https://open.spotify.com/intl-th/track/1sczjXEYHpbpCsaA25ZzPv?si=5d717f4187f94899" target="_blank" rel="noopener noreferrer" class="text-left group cursor-pointer block">
                     <div class="text-[11px] font-bold text-[var(--card-text)] group-hover:text-cyber-green transition-colors flex items-center gap-1">
                         <span id="bgm-title">starfall - intentions</span>
@@ -311,8 +264,6 @@
                     <div class="text-[9px] text-[var(--sub-text)] group-hover:text-cyber-green transition-colors">CLICK TO OPEN SONG LINK</div>
                 </a>
             </div>
-
-            <!-- Dynamic Equalizer Bars -->
             <div id="eq-bars" class="flex items-end gap-1 h-5 px-2">
                 <div class="eq-bar w-1 bg-cyber-green h-2 transition-all duration-100"></div>
                 <div class="eq-bar w-1 bg-cyber-green h-4 transition-all duration-100"></div>
@@ -321,47 +272,34 @@
             </div>
         </div>
 
-        <!-- Profile Section -->
         <section class="w-full flex flex-col items-center text-center mb-6 cyber-stagger" style="animation-delay: 0.1s;">
-            <!-- Advanced Target Reticle & Audio-Reactive Avatar Container -->
             <div class="relative mb-5 group cursor-pointer" id="avatar-container">
-                <!-- Audio Equalizer Canvas Ring around Avatar -->
                 <canvas id="avatar-eq-canvas" class="absolute -inset-6 w-[160px] h-[160px] pointer-events-none z-0"></canvas>
-
-                <!-- Outer Tech Reticle 1 (Clockwise) -->
                 <div class="absolute -inset-3 rounded-full border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
-                <!-- Outer Tech Reticle 2 (Counter-Clockwise) -->
                 <div class="absolute -inset-1.5 rounded-full border border-cyber-cyan/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 
-                <!-- Main Avatar Image Frame -->
                 <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark dark:bg-cyber-dark bg-slate-100 border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
                     <img id="profile-img" src="https://i.pinimg.com/736x/45/3b/76/453b7642db0165a58c85240dc1cfc3a7.jpg" alt="Cyberpunk Avatar" class="w-full h-full object-cover rounded-full filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
                 </div>
 
-                <!-- Live Status Badge -->
                 <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
                     <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--cyber-theme-color);"></span>
                     <span>Nxmeicxqz: LVL_9</span>
                 </div>
             </div>
 
-            <!-- Profile Name with Glitch Effect -->
             <h1 class="font-mono text-2xl sm:text-3xl font-bold tracking-wider text-[var(--text-base)] mb-1">
                 <span id="profile-name" class="glitch-text text-cyber-green" data-text="NXMEICXQZ">NXMEICXQZ</span>
             </h1>
             <p class="font-mono text-xs text-cyber-cyan tracking-widest uppercase mb-3">&lt; ALL LINK SOCIAL MEDIA &gt;</p>
             
-            <!-- Terminal Typing Bio Box -->
             <div class="cyber-card p-3 w-full text-xs font-mono text-[var(--card-text)] leading-relaxed text-left border-l-2 border-l-cyber-green relative">
                 <span class="text-cyber-green font-bold">&gt; TERMINAL:</span> 
                 <span id="typing-text"></span><span class="animate-pulse text-cyber-green">_</span>
             </div>
         </section>
 
-        <!-- Social Links Stack -->
         <main class="w-full space-y-3 mb-6 flex-1" id="links-container">
-
-            <!-- Link: Instagram -->
             <a href="https://www.instagram.com/nxmeicxqz_/" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.15s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -379,7 +317,6 @@
                 </div>
             </a>
 
-            <!-- Link: Instagram Private -->
             <a href="https://www.instagram.com/frosttft_/" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.18s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -397,7 +334,6 @@
                 </div>
             </a>
 
-            <!-- Link: TikTok -->
             <a href="https://www.tiktok.com/@_iice0011?_r=1&_t=ZS-9AuQWFiu2nE" target="_blank" class="social-link cyber-card glow-tiktok block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.2s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -415,8 +351,7 @@
                 </div>
             </a>
 
-            <!-- Link: Facebook -->
-            <a href="https://i.pinimg.com/736x/95/c3/38/95c33803fef67db14705c6f4495a063d.jpg" target="_blank" class="social-link cyber-card glow-fb block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.25s;">
+            <a href="https://facebook.com" target="_blank" class="social-link cyber-card glow-fb block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.25s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
@@ -433,8 +368,7 @@
                 </div>
             </a>
 
-            <!-- Link: Discord -->
-            <a href="https://i.pinimg.com/736x/23/80/ff/2380ffb4293ae16f29eac233a63a044f.jpg" target="_blank" class="social-link cyber-card glow-dc block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.3s;">
+            <a href="https://ptb.discord.com/users/599163177845915699" target="_blank" class="social-link cyber-card glow-dc block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.3s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
@@ -451,7 +385,6 @@
                 </div>
             </a>
 
-            <!-- Link: Spotify -->
             <a href="https://open.spotify.com/user/31egvhfxsidtdg7t6vvphrarknjy?si=7abab4564e20406e" target="_blank" class="social-link cyber-card glow-spotify block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.35s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -469,7 +402,6 @@
                 </div>
             </a>
 
-            <!-- Link: Steam -->
             <a href="https://steamcommunity.com/profiles/76561198989348642/" target="_blank" class="social-link cyber-card glow-steam block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.4s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -487,8 +419,7 @@
                 </div>
             </a>
 
-            <!-- Link: NGL (Anonymous Q&A) -->
-            <a href="https://ngl.link/nxmeicxqz_1" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
+            <a href="https://ngl.link" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
@@ -498,32 +429,28 @@
                         </div>
                         <div class="text-left">
                             <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#ff6b00] transition-colors">NGL </h2>
-                            <p class="text-[11px] text-[var(--sub-text)] font-mono">NGL Q&A</p>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Anonymous Q&A</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#ff6b00] group-hover:translate-x-1 transition-all"></i>
                 </div>
             </a>
-
         </main>
 
-        <!-- Footer -->
         <footer class="w-full text-center font-mono text-[10px] text-[var(--sub-text)] py-3 cyber-stagger" style="animation-delay: 0.5s;">
             <p class="text-cyber-green/70 tracking-widest">[ Nxmeicxqz ]</p>
-            <p class="mt-1">ENCRYPTED CONNECTION // ALL SYSTEMS NOMINAL</p>
+            <p class="mt-1">ENCRYPTED CONNECTION // HIGH REFRESH RATE OPTIMIZED</p>
         </footer>
 
     </div>
 
-    <!-- HUD Notification Toast -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-4 py-2.5 text-xs font-mono text-cyber-green shadow-[0_0_20px_var(--cyber-glow-color)] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 rounded">
         <i class="fa-solid fa-terminal text-cyber-cyan animate-pulse"></i>
         <span id="toast-text">[SYS_LOG]: COPIED_TO_CLIPBOARD</span>
     </div>
 
-    <!-- JavaScript Logic & Animations -->
+    <!-- JavaScript Optimized for 120 FPS Rendering -->
     <script>
-        // --- 0. Theme Toggle Logic (Dark / Light Mode) ---
         const themeBtn = document.getElementById('theme-btn');
         const themeIcon = document.getElementById('theme-icon');
         const html = document.documentElement;
@@ -551,8 +478,7 @@
             if (typeof playChime === 'function') playChime();
         });
 
-
-        // --- 1. Custom Cyberpunk Cursor (Desktop) ---
+        // --- Optimized Cursor Engine (120 FPS Target via translate3d) ---
         const cursorRing = document.getElementById('cyber-cursor');
         const cursorDot = document.getElementById('cyber-cursor-dot');
         let mouseX = 0, mouseY = 0;
@@ -561,22 +487,20 @@
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            cursorDot.style.left = `${mouseX}px`;
-            cursorDot.style.top = `${mouseY}px`;
+            cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
             
-            if (Math.random() > 0.4) {
+            if (Math.random() > 0.6) {
                 createSparks(mouseX, mouseY, 1);
             }
-        });
+        }, { passive: true });
 
         function animateCursor() {
-            ringX += (mouseX - ringX) * 0.2;
-            ringY += (mouseY - ringY) * 0.2;
-            cursorRing.style.left = `${ringX}px`;
-            cursorRing.style.top = `${ringY}px`;
+            ringX += (mouseX - ringX) * 0.35;
+            ringY += (mouseY - ringY) * 0.35;
+            cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
             requestAnimationFrame(animateCursor);
         }
-        animateCursor();
+        requestAnimationFrame(animateCursor);
 
         document.querySelectorAll('a, button, input').forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -591,10 +515,9 @@
             });
         });
 
-
-        // --- 2. Particle Sparks & Click Energy Burst Canvas ---
+        // --- Optimized Particle System ---
         const particleCanvas = document.getElementById('particle-canvas');
-        const pCtx = particleCanvas.getContext('2d');
+        const pCtx = particleCanvas.getContext('2d', { alpha: true });
         let particles = [];
 
         function resizeParticleCanvas() {
@@ -604,15 +527,14 @@
         resizeParticleCanvas();
         window.addEventListener('resize', resizeParticleCanvas);
 
-        function createSparks(x, y, count = 12) {
+        function createSparks(x, y, count = 8) {
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
             for (let i = 0; i < count; i++) {
                 particles.push({
-                    x: x,
-                    y: y,
-                    vx: (Math.random() - 0.5) * (count > 5 ? 6 : 2),
-                    vy: (Math.random() - 0.5) * (count > 5 ? 6 : 2),
-                    size: Math.random() * 2.5 + 1,
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    size: Math.random() * 2 + 1,
                     alpha: 1,
                     color: themeColor
                 });
@@ -625,7 +547,7 @@
                 const p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.alpha -= 0.025;
+                p.alpha -= 0.04;
 
                 if (p.alpha <= 0) {
                     particles.splice(i, 1);
@@ -635,21 +557,18 @@
                 pCtx.save();
                 pCtx.globalAlpha = p.alpha;
                 pCtx.fillStyle = p.color;
-                pCtx.shadowBlur = 8;
-                pCtx.shadowColor = p.color;
                 pCtx.fillRect(p.x, p.y, p.size, p.size);
                 pCtx.restore();
             }
             requestAnimationFrame(drawParticles);
         }
-        drawParticles();
+        requestAnimationFrame(drawParticles);
 
         window.addEventListener('click', (e) => {
-            createSparks(e.clientX, e.clientY, 16);
+            createSparks(e.clientX, e.clientY, 12);
         });
 
-
-        // --- 3. Web Audio API (Sound FX & Synth Ambient BGM) ---
+        // --- Web Audio API ---
         let soundEnabled = true;
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
@@ -708,7 +627,7 @@
                 osc.stop(audioCtx.currentTime + 0.35);
 
                 document.querySelectorAll('.eq-bar').forEach(bar => {
-                    bar.style.height = `${Math.floor(Math.random() * 16) + 4}px`;
+                    bar.style.height = `${Math.floor(Math.random() * 14) + 4}px`;
                 });
             } catch(e) {}
         }
@@ -721,7 +640,7 @@
             bgmPlaying = !bgmPlaying;
             if (bgmPlaying) {
                 bgmIcon.className = 'fa-solid fa-pause text-xs';
-                bgmInterval = setInterval(playSynthStep, 220);
+                bgmInterval = setInterval(playSynthStep, 200);
                 showToast('[SYS_LOG]: AMBIENT_SYNTH_STARTED');
             } else {
                 bgmIcon.className = 'fa-solid fa-play text-xs';
@@ -739,10 +658,9 @@
             if (soundEnabled) playChime();
         });
 
-
-        // --- 4. Audio-Reactive Visualizer Canvas around Avatar ---
+        // --- Avatar Visualizer ---
         const avCanvas = document.getElementById('avatar-eq-canvas');
-        const avCtx = avCanvas.getContext('2d');
+        const avCtx = avCanvas.getContext('2d', { alpha: true });
         avCanvas.width = 160; avCanvas.height = 160;
 
         function drawAvatarEq() {
@@ -769,10 +687,9 @@
             }
             requestAnimationFrame(drawAvatarEq);
         }
-        drawAvatarEq();
+        requestAnimationFrame(drawAvatarEq);
 
-
-        // --- 5. Real-time Clock & System Ping ---
+        // --- Clock & Ping ---
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -783,15 +700,9 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        setInterval(() => {
-            const ping = Math.floor(Math.random() * 8) + 10;
-            document.getElementById('ping-counter').textContent = `PING: ${ping}ms`;
-        }, 3000);
-
-
-        // --- 6. Matrix Digital Rain Canvas ---
+        // --- Matrix Digital Rain (Optimized for High Refresh Rate) ---
         const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false });
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -806,7 +717,7 @@
 
         function drawMatrix() {
             const isDark = html.classList.contains('dark');
-            ctx.fillStyle = isDark ? 'rgba(3, 7, 12, 0.08)' : 'rgba(238, 242, 246, 0.12)';
+            ctx.fillStyle = isDark ? 'rgba(3, 7, 12, 0.12)' : 'rgba(238, 242, 246, 0.18)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
@@ -822,11 +733,11 @@
                 }
                 drops[i]++;
             }
+            requestAnimationFrame(drawMatrix);
         }
-        setInterval(drawMatrix, 33);
+        requestAnimationFrame(drawMatrix);
 
-
-        // --- 7. Terminal Bio Typing Animation ---
+        // --- Typing Bio Animation ---
         const bioText = " ยินดีต้อนรับสู่ศูนย์รวมช่องทางโซเชียลมีเดีย";
         const typingContainer = document.getElementById('typing-text');
         let charIndex = 0;
@@ -836,38 +747,32 @@
                 typingContainer.textContent += bioText.charAt(charIndex);
                 charIndex++;
                 if (charIndex % 3 === 0) playBeep(400 + Math.random() * 200, 0.02, 'sawtooth');
-                setTimeout(typeBio, 35);
+                setTimeout(typeBio, 30);
             }
         }
-        setTimeout(typeBio, 600);
+        setTimeout(typeBio, 500);
 
-
-        // --- 8. 3D Tilt Effect on Link Hover ---
+        // --- 3D Tilt Effect ---
         const cards = document.querySelectorAll('.social-link');
         cards.forEach(card => {
-            card.addEventListener('mouseenter', () => playBeep(900, 0.04, 'sine'));
-            card.addEventListener('click', () => playBeep(1400, 0.08, 'triangle'));
+            card.addEventListener('mouseenter', () => playBeep(900, 0.03, 'sine'));
+            card.addEventListener('click', () => playBeep(1400, 0.06, 'triangle'));
 
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -6;
-                const rotateY = ((x - centerX) / centerX) * 6;
-
+                const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -4;
+                const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 4;
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
-            });
+            }, { passive: true });
 
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
             });
         });
 
-
-        // --- 9. Share Button & Toast System ---
+        // --- Share System ---
         const shareBtn = document.getElementById('share-btn');
         const toast = document.getElementById('toast');
         const toastText = document.getElementById('toast-text');
@@ -876,23 +781,19 @@
             toastText.textContent = message;
             toast.classList.remove('opacity-0', 'pointer-events-none');
             toast.classList.add('opacity-100', '-translate-y-2');
-
             setTimeout(() => {
                 toast.classList.remove('opacity-100', '-translate-y-2');
                 toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2500);
+            }, 2200);
         }
 
         shareBtn.addEventListener('click', () => {
             playChime();
             const shareUrl = "https://nxmeicxqz238.github.io/WEBPROFILE/";
-            
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
-                }).catch(() => {
-                    fallbackCopyText(shareUrl);
-                });
+                }).catch(() => fallbackCopyText(shareUrl));
             } else {
                 fallbackCopyText(shareUrl);
             }
@@ -908,10 +809,9 @@
             showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
         }
 
-        // Avatar Interactive Click FX
         document.getElementById('avatar-container').addEventListener('click', () => {
-            playBeep(300, 0.1, 'sawtooth');
-            setTimeout(() => playBeep(600, 0.1, 'square'), 50);
+            playBeep(300, 0.08, 'sawtooth');
+            setTimeout(() => playBeep(600, 0.08, 'square'), 40);
             showToast('[SYS_LOG]: BIOMETRIC_SCAN_COMPLETE');
         });
     </script>
