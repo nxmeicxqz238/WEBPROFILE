@@ -26,6 +26,7 @@
                         cyber: {
                             black: '#03070c',
                             dark: '#081018',
+                            light: '#f0f4f8',
                             green: 'var(--cyber-theme-color, #00ff88)',
                             cyan: '#00e5ff',
                             magenta: '#ff0055',
@@ -41,11 +42,27 @@
         :root {
             --cyber-theme-color: #00ff88;
             --cyber-glow-color: rgba(0, 255, 136, 0.4);
+            --bg-base: #03070c;
+            --text-base: #f1f5f9;
+            --card-bg: rgba(8, 16, 24, 0.8);
+            --card-text: #f1f5f9;
+            --sub-text: #94a3b8;
+        }
+
+        /* Light Mode Custom CSS Variables */
+        html:not(.dark) {
+            --cyber-theme-color: #00a859;
+            --cyber-glow-color: rgba(0, 168, 89, 0.3);
+            --bg-base: #eef2f6;
+            --text-base: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-text: #0f172a;
+            --sub-text: #475569;
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #03070c; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
         ::-webkit-scrollbar-thumb { background: var(--cyber-theme-color); border-radius: 2px; }
 
         /* Custom Cyber Cursor (Desktop Only) */
@@ -87,15 +104,18 @@
             z-index: 40;
             background: linear-gradient(
                 rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.35) 50%
+                rgba(0, 0, 0, 0.25) 50%
             );
             background-size: 100% 4px;
-            opacity: 0.7;
+            opacity: 0.6;
+        }
+        html:not(.dark) .scanlines {
+            opacity: 0.15;
         }
 
         /* Glassmorphic Sci-Fi Card Container */
         .cyber-card {
-            background: rgba(8, 16, 24, 0.8);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--cyber-glow-color);
@@ -107,7 +127,7 @@
                 14px 100%, 
                 0 calc(100% - 14px)
             );
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -128,7 +148,7 @@
             background: linear-gradient(
                 90deg,
                 transparent,
-                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.2),
                 var(--cyber-glow-color),
                 transparent
             );
@@ -196,9 +216,9 @@
         .glow-tiktok:hover { box-shadow: 0 0 18px rgba(0, 242, 234, 0.4), inset 0 0 10px rgba(255, 0, 80, 0.2); border-color: #00f2ea; }
         .glow-fb:hover { box-shadow: 0 0 18px rgba(24, 119, 242, 0.4), inset 0 0 10px rgba(24, 119, 242, 0.2); border-color: #1877f2; }
         .glow-dc:hover { box-shadow: 0 0 18px rgba(88, 101, 242, 0.4), inset 0 0 10px rgba(88, 101, 242, 0.2); border-color: #5865f2; }
-        .glow-yt:hover { box-shadow: 0 0 18px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2); border-color: #ff0000; }
         .glow-spotify:hover { box-shadow: 0 0 18px rgba(30, 215, 96, 0.4), inset 0 0 10px rgba(30, 215, 96, 0.2); border-color: #1ed760; }
-        .glow-gh:hover { box-shadow: 0 0 18px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.1); border-color: #ffffff; }
+        .glow-steam:hover { box-shadow: 0 0 18px rgba(102, 192, 244, 0.4), inset 0 0 10px rgba(102, 192, 244, 0.2); border-color: #66c0f4; }
+        .glow-ngl:hover { box-shadow: 0 0 18px rgba(255, 107, 0, 0.4), inset 0 0 10px rgba(255, 107, 0, 0.2); border-color: #ff6b00; }
 
         /* Page Stagger Entrance */
         .cyber-stagger {
@@ -212,14 +232,14 @@
         }
     </style>
 </head>
-<body class="bg-cyber-black text-slate-100 font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden">
+<body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
 
     <!-- Custom Sci-Fi Cursor Ring & Dot -->
     <div id="cyber-cursor" class="hidden md:block"></div>
     <div id="cyber-cursor-dot" class="hidden md:block"></div>
 
     <!-- Canvas 1: Matrix Digital Rain -->
-    <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+    <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-40 transition-opacity"></canvas>
 
     <!-- Canvas 2: Cursor Sparks & Particle Burst Layer -->
     <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-30"></canvas>
@@ -244,57 +264,62 @@
                     <span class="w-2 h-2 rounded-full animate-ping" style="background: var(--cyber-theme-color);"></span>
                     <span class="font-bold tracking-wider"> ONLINE</span>
                 </div>
-                <div class="text-[10px] text-slate-400 mt-0.5 flex items-center gap-2">
+                <div class="text-[10px] text-[var(--sub-text)] mt-0.5 flex items-center gap-2">
                     <span id="cyber-clock">00:00:00 LOCAL</span>
                     <span>|</span>
                     <span id="ping-counter" class="text-cyber-cyan">PING: 12ms</span>
                 </div>
             </div>
             
-            <!-- Right: Interactive Controls (Sound Toggle & Share Button) -->
+            <!-- Right: Interactive Controls (Theme Toggle, Sound Toggle & Share Button) -->
             <div class="flex items-center gap-2">
+                <!-- Dark / Light Theme Toggle Button -->
+                <button id="theme-btn" title="Toggle Dark/Light Mode" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
+                    <i id="theme-icon" class="fa-solid fa-moon text-xs"></i>
+                </button>
+
                 <!-- Sound Audio Effects Toggle -->
-                <button id="sound-btn" title="Toggle UI Sound FX" class="cyber-card p-2 text-cyber-green hover:text-white active:scale-95 transition-all">
+                <button id="sound-btn" title="Toggle UI Sound FX" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
                     <i id="sound-icon" class="fa-solid fa-volume-high text-xs"></i>
                 </button>
 
                 <!-- Share Link Button -->
-                <button id="share-btn" class="cyber-card px-3 py-2 text-xs font-mono text-cyber-green hover:text-white flex items-center gap-1.5 active:scale-95 transition-all">
+                <button id="share-btn" class="cyber-card px-3 py-2 text-xs font-mono text-cyber-green hover:text-cyber-cyan flex items-center gap-1.5 active:scale-95 transition-all">
                     <i class="fa-solid fa-share-nodes text-xs"></i>
                     <span>[SHARE]</span>
                 </button>
             </div>
         </header>
 
-      <!-- Ambient Synth BGM Player Floating Widget -->
-<div class="w-full mb-5 cyber-card p-2.5 flex items-center justify-between font-mono text-xs cyber-stagger" style="animation-delay: 0.08s;">
-    <!-- แท็กเล่นเพลง MP3 (สำหรับปุ่ม Play) -->
-    <audio id="bgm-audio" src="http://youtube.com/watch?v=NaE40w3riSQ" loop preload="auto"></audio>
+        <!-- Ambient Synth BGM Player Floating Widget -->
+        <div class="w-full mb-5 cyber-card p-2.5 flex items-center justify-between font-mono text-xs cyber-stagger" style="animation-delay: 0.08s;">
+            <!-- แท็กเล่นเพลง MP3 (สำหรับปุ่ม Play) -->
+            <audio id="bgm-audio" src="http://youtube.com/watch?v=NaE40w3riSQ" loop preload="auto"></audio>
 
-    <div class="flex items-center gap-2.5">
-        <!-- ปุ่ม Play / Pause สำหรับเปิดเพลงในเว็บ -->
-        <button id="bgm-play-btn" class="w-8 h-8 rounded bg-cyber-black border border-cyber-green/50 text-cyber-green flex items-center justify-center hover:bg-cyber-green hover:text-black transition-colors cursor-pointer shrink-0">
-            <i id="bgm-icon" class="fa-solid fa-play text-xs"></i>
-        </button>
+            <div class="flex items-center gap-2.5">
+                <!-- ปุ่ม Play / Pause สำหรับเปิดเพลงในเว็บ -->
+                <button id="bgm-play-btn" class="w-8 h-8 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/50 text-cyber-green flex items-center justify-center hover:bg-cyber-green hover:text-black transition-colors cursor-pointer shrink-0">
+                    <i id="bgm-icon" class="fa-solid fa-play text-xs"></i>
+                </button>
 
-        <!-- คลิกส่วนนี้แล้วจะเด้งเปิดลิงก์เว็บที่แปะไว้ -->
-        <a href="https://open.spotify.com/intl-th/track/1sczjXEYHpbpCsaA25ZzPv?si=5d717f4187f94899" target="_blank" rel="noopener noreferrer" class="text-left group cursor-pointer block">
-            <div class="text-[11px] font-bold text-slate-200 group-hover:text-cyber-green transition-colors flex items-center gap-1">
-                <span id="bgm-title">starfall - intentions</span>
-                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60 group-hover:opacity-100 transition-opacity"></i>
+                <!-- คลิกส่วนนี้แล้วจะเด้งเปิดลิงก์เว็บที่แปะไว้ -->
+                <a href="https://open.spotify.com/intl-th/track/1sczjXEYHpbpCsaA25ZzPv?si=5d717f4187f94899" target="_blank" rel="noopener noreferrer" class="text-left group cursor-pointer block">
+                    <div class="text-[11px] font-bold text-[var(--card-text)] group-hover:text-cyber-green transition-colors flex items-center gap-1">
+                        <span id="bgm-title">starfall - intentions</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                    <div class="text-[9px] text-[var(--sub-text)] group-hover:text-cyber-green transition-colors">CLICK TO OPEN SONG LINK</div>
+                </a>
             </div>
-            <div class="text-[9px] text-slate-400 group-hover:text-slate-300 transition-colors">CLICK TO OPEN SONG LINK</div>
-        </a>
-    </div>
 
-    <!-- Dynamic Equalizer Bars -->
-    <div id="eq-bars" class="flex items-end gap-1 h-5 px-2">
-        <div class="eq-bar w-1 bg-cyber-green h-2 transition-all duration-100"></div>
-        <div class="eq-bar w-1 bg-cyber-green h-4 transition-all duration-100"></div>
-        <div class="eq-bar w-1 bg-cyber-green h-1 transition-all duration-100"></div>
-        <div class="eq-bar w-1 bg-cyber-green h-3 transition-all duration-100"></div>
-    </div>
-</div>
+            <!-- Dynamic Equalizer Bars -->
+            <div id="eq-bars" class="flex items-end gap-1 h-5 px-2">
+                <div class="eq-bar w-1 bg-cyber-green h-2 transition-all duration-100"></div>
+                <div class="eq-bar w-1 bg-cyber-green h-4 transition-all duration-100"></div>
+                <div class="eq-bar w-1 bg-cyber-green h-1 transition-all duration-100"></div>
+                <div class="eq-bar w-1 bg-cyber-green h-3 transition-all duration-100"></div>
+            </div>
+        </div>
 
         <!-- Profile Section -->
         <section class="w-full flex flex-col items-center text-center mb-6 cyber-stagger" style="animation-delay: 0.1s;">
@@ -309,25 +334,25 @@
                 <div class="absolute -inset-1.5 rounded-full border border-cyber-cyan/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 
                 <!-- Main Avatar Image Frame -->
-                <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
+                <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark dark:bg-cyber-dark bg-slate-100 border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
                     <img id="profile-img" src="https://i.pinimg.com/736x/45/3b/76/453b7642db0165a58c85240dc1cfc3a7.jpg" alt="Cyberpunk Avatar" class="w-full h-full object-cover rounded-full filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
                 </div>
 
                 <!-- Live Status Badge -->
-                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
+                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
                     <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--cyber-theme-color);"></span>
                     <span>Nxmeicxqz: LVL_9</span>
                 </div>
             </div>
 
             <!-- Profile Name with Glitch Effect -->
-            <h1 class="font-mono text-2xl sm:text-3xl font-bold tracking-wider text-white mb-1">
-                <span id="profile-name" class="glitch-text text-cyber-green" data-text="NEO_CYBER">NXMEICXQZ</span>
+            <h1 class="font-mono text-2xl sm:text-3xl font-bold tracking-wider text-[var(--text-base)] mb-1">
+                <span id="profile-name" class="glitch-text text-cyber-green" data-text="NXMEICXQZ">NXMEICXQZ</span>
             </h1>
             <p class="font-mono text-xs text-cyber-cyan tracking-widest uppercase mb-3">&lt; ALL LINK SOCIAL MEDIA &gt;</p>
             
             <!-- Terminal Typing Bio Box -->
-            <div class="cyber-card p-3 w-full text-xs font-mono text-slate-300 leading-relaxed text-left border-l-2 border-l-cyber-green relative">
+            <div class="cyber-card p-3 w-full text-xs font-mono text-[var(--card-text)] leading-relaxed text-left border-l-2 border-l-cyber-green relative">
                 <span class="text-cyber-green font-bold">&gt; TERMINAL:</span> 
                 <span id="typing-text"></span><span class="animate-pulse text-cyber-green">_</span>
             </div>
@@ -342,46 +367,48 @@
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#e1306c] group-hover:text-white transition-colors duration-300">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#e1306c] group-hover:text-white transition-colors duration-300">
                             <i class="fa-brands fa-instagram text-xl"></i>
                         </div>
                         <div class="text-left">
-                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#e1306c] transition-colors">INSTAGRAM</h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Instagram official</p>
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#e1306c] transition-colors">INSTAGRAM</h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Instagram official</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#e1306c] group-hover:translate-x-1 transition-all"></i>
                 </div>
             </a>
- <!-- Link: Instagram -->
-            <a href="https://www.instagram.com/frosttft_?vrfl=MTlxb2FzbWE4eDF3dw%3D%3D&utm_source=qr" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.15s;">
+
+            <!-- Link: Instagram Private -->
+            <a href="https://www.instagram.com/frosttft_/" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.18s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#e1306c] group-hover:text-white transition-colors duration-300">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#e1306c] group-hover:text-white transition-colors duration-300">
                             <i class="fa-brands fa-instagram text-xl"></i>
                         </div>
                         <div class="text-left">
-                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#e1306c] transition-colors">INSTAGRAM</h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Private Instagram</p>
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#e1306c] transition-colors">INSTAGRAM</h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Private Instagram</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#e1306c] group-hover:translate-x-1 transition-all"></i>
                 </div>
             </a>
+
             <!-- Link: TikTok -->
             <a href="https://www.tiktok.com/@_iice0011?_r=1&_t=ZS-9AuQWFiu2nE" target="_blank" class="social-link cyber-card glow-tiktok block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.2s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#00f2ea] group-hover:text-black transition-colors duration-300">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#00f2ea] group-hover:text-black transition-colors duration-300">
                             <i class="fa-brands fa-tiktok text-xl"></i>
                         </div>
                         <div class="text-left">
-                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#00f2ea] transition-colors">TIKTOK</h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Tiktok official</p>
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#00f2ea] transition-colors">TIKTOK</h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Tiktok official</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#00f2ea] group-hover:translate-x-1 transition-all"></i>
@@ -394,12 +421,12 @@
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1877f2] group-hover:text-white transition-colors duration-300">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1877f2] group-hover:text-white transition-colors duration-300">
                             <i class="fa-brands fa-facebook-f text-lg"></i>
                         </div>
                         <div class="text-left">
-                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#1877f2] transition-colors">FACEBOOK</h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Facebook Official</p>
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#1877f2] transition-colors">FACEBOOK</h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Facebook Official</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#1877f2] group-hover:translate-x-1 transition-all"></i>
@@ -412,57 +439,76 @@
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#5865f2] group-hover:text-white transition-colors duration-300">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#5865f2] group-hover:text-white transition-colors duration-300">
                             <i class="fa-brands fa-discord text-lg"></i>
                         </div>
                         <div class="text-left">
-                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#5865f2] transition-colors">DISCORD </h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Discord Official</p>
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#5865f2] transition-colors">DISCORD </h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Discord Official</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#5865f2] group-hover:translate-x-1 transition-all"></i>
                 </div>
             </a>
 
-
             <!-- Link: Spotify -->
-            <a href="https://open.spotify.com/user/31egvhfxsidtdg7t6vvphrarknjy?si=7abab4564e20406e" target="_blank" class="social-link cyber-card glow-spotify block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.4s;">
+            <a href="https://open.spotify.com/user/31egvhfxsidtdg7t6vvphrarknjy?si=7abab4564e20406e" target="_blank" class="social-link cyber-card glow-spotify block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.35s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1ed760] group-hover:text-black transition-colors duration-300">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1ed760] group-hover:text-black transition-colors duration-300">
                             <i class="fa-brands fa-spotify text-xl"></i>
                         </div>
                         <div class="text-left">
-                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#1ed760] transition-colors">SPOTIFY </h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Spotify Official</p>
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#1ed760] transition-colors">SPOTIFY </h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Spotify Official</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#1ed760] group-hover:translate-x-1 transition-all"></i>
                 </div>
             </a>
 
-           <a href="https://steamcommunity.com/profiles/76561198989348642/" target="_blank" class="social-link cyber-card glow-steam block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.4s;">
-    <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
-    <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
-    <div class="flex items-center justify-between pointer-events-none">
-        <div class="flex items-center space-x-3.5">
-            <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1b2838] group-hover:text-[#66c0f4] group-hover:border-[#66c0f4] transition-colors duration-300">
-                <i class="fa-brands fa-steam text-xl"></i>
-            </div>
-            <div class="text-left">
-                <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#66c0f4] transition-colors">STEAM </h2>
-                <p class="text-[11px] text-slate-400 font-mono">Steam Profile</p>
-            </div>
-        </div>
-        <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#66c0f4] group-hover:translate-x-1 transition-all"></i>
-    </div>
-</a>
+            <!-- Link: Steam -->
+            <a href="https://steamcommunity.com/profiles/76561198989348642/" target="_blank" class="social-link cyber-card glow-steam block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.4s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1b2838] group-hover:text-[#66c0f4] group-hover:border-[#66c0f4] transition-colors duration-300">
+                            <i class="fa-brands fa-steam text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#66c0f4] transition-colors">STEAM </h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Steam Profile</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#66c0f4] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+            <!-- Link: NGL (Anonymous Q&A) -->
+            <a href="https://ngl.link/nxmeicxqz_1" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black dark:bg-cyber-black bg-slate-200 border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#ff6b00] group-hover:text-white transition-colors duration-300">
+                            <i class="fa-solid fa-envelope-open-text text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-[var(--card-text)] group-hover:text-[#ff6b00] transition-colors">NGL </h2>
+                            <p class="text-[11px] text-[var(--sub-text)] font-mono">Anonymous Q&A</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#ff6b00] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
         </main>
 
         <!-- Footer -->
-        <footer class="w-full text-center font-mono text-[10px] text-slate-500 py-3 cyber-stagger" style="animation-delay: 0.5s;">
+        <footer class="w-full text-center font-mono text-[10px] text-[var(--sub-text)] py-3 cyber-stagger" style="animation-delay: 0.5s;">
             <p class="text-cyber-green/70 tracking-widest">[ Nxmeicxqz ]</p>
             <p class="mt-1">ENCRYPTED CONNECTION // ALL SYSTEMS NOMINAL</p>
         </footer>
@@ -470,13 +516,42 @@
     </div>
 
     <!-- HUD Notification Toast -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-cyber-dark border border-cyber-green px-4 py-2.5 text-xs font-mono text-cyber-green shadow-[0_0_20px_var(--cyber-glow-color)] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 rounded">
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-4 py-2.5 text-xs font-mono text-cyber-green shadow-[0_0_20px_var(--cyber-glow-color)] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 rounded">
         <i class="fa-solid fa-terminal text-cyber-cyan animate-pulse"></i>
         <span id="toast-text">[SYS_LOG]: COPIED_TO_CLIPBOARD</span>
     </div>
 
     <!-- JavaScript Logic & Animations -->
     <script>
+        // --- 0. Theme Toggle Logic (Dark / Light Mode) ---
+        const themeBtn = document.getElementById('theme-btn');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        const savedTheme = localStorage.getItem('cyber_theme') || 'dark';
+        if (savedTheme === 'light') {
+            html.classList.remove('dark');
+            themeIcon.className = 'fa-solid fa-sun text-xs text-amber-500';
+        } else {
+            html.classList.add('dark');
+            themeIcon.className = 'fa-solid fa-moon text-xs';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const isDark = html.classList.toggle('dark');
+            if (isDark) {
+                themeIcon.className = 'fa-solid fa-moon text-xs';
+                localStorage.setItem('cyber_theme', 'dark');
+                showToast('[SYS_LOG]: THEME_SWITCHED_TO_DARK');
+            } else {
+                themeIcon.className = 'fa-solid fa-sun text-xs text-amber-500';
+                localStorage.setItem('cyber_theme', 'light');
+                showToast('[SYS_LOG]: THEME_SWITCHED_TO_LIGHT');
+            }
+            if (typeof playChime === 'function') playChime();
+        });
+
+
         // --- 1. Custom Cyberpunk Cursor (Desktop) ---
         const cursorRing = document.getElementById('cyber-cursor');
         const cursorDot = document.getElementById('cyber-cursor-dot');
@@ -489,7 +564,6 @@
             cursorDot.style.left = `${mouseX}px`;
             cursorDot.style.top = `${mouseY}px`;
             
-            // Add particle spark on cursor move
             if (Math.random() > 0.4) {
                 createSparks(mouseX, mouseY, 1);
             }
@@ -504,7 +578,6 @@
         }
         animateCursor();
 
-        // Cursor Enlarge on Hover Interactive Elements
         document.querySelectorAll('a, button, input').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 cursorRing.style.width = '35px';
@@ -609,10 +682,9 @@
             setTimeout(() => playBeep(783.99, 0.12, 'triangle'), 120);
         }
 
-        // Procedural Synthwave BGM Generator
         let bgmPlaying = false;
         let bgmInterval;
-        const notes = [110, 130.81, 146.83, 164.81, 196.00, 220.00]; // Cyber minor scale
+        const notes = [110, 130.81, 146.83, 164.81, 196.00, 220.00];
         let noteIdx = 0;
 
         function playSynthStep() {
@@ -635,7 +707,6 @@
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.35);
 
-                // Animate Equalizer Bars
                 document.querySelectorAll('.eq-bar').forEach(bar => {
                     bar.style.height = `${Math.floor(Math.random() * 16) + 4}px`;
                 });
@@ -660,7 +731,6 @@
             }
         });
 
-        // Audio Toggle Switch
         const soundBtn = document.getElementById('sound-btn');
         const soundIcon = document.getElementById('sound-icon');
         soundBtn.addEventListener('click', () => {
@@ -735,7 +805,8 @@
         let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(3, 7, 12, 0.08)';
+            const isDark = html.classList.contains('dark');
+            ctx.fillStyle = isDark ? 'rgba(3, 7, 12, 0.08)' : 'rgba(238, 242, 246, 0.12)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
@@ -814,15 +885,28 @@
 
         shareBtn.addEventListener('click', () => {
             playChime();
+            const shareUrl = "https://nxmeicxqz238.github.io/WEBPROFILE/";
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
+                }).catch(() => {
+                    fallbackCopyText(shareUrl);
+                });
+            } else {
+                fallbackCopyText(shareUrl);
+            }
+        });
+
+        function fallbackCopyText(text) {
             const input = document.createElement('input');
-            input.value = window.location.href;
+            input.value = text;
             document.body.appendChild(input);
             input.select();
             document.execCommand('copy');
             document.body.removeChild(input);
-
             showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
-        });
+        }
 
         // Avatar Interactive Click FX
         document.getElementById('avatar-container').addEventListener('click', () => {
