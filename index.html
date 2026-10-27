@@ -1,1811 +1,835 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="app_title">ระบบแจ้งเรื่องร้องเรียนระดับองค์กร | LOEI UNIVERSITY</title>
-    <!-- Google Fonts: Prompt -->
+    <title>CYBER_MATRIX // LINK_HUB</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDK (Modular หรือ App / Database ตามโครงสร้างที่ใช้งาน) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script>
-        // ตั้งค่า Firebase Config ที่คุณต้องการรวมไว้
-        const firebaseConfig = {
-            apiKey: "AIzaSyANW80fkZjaaQmCqjiPCAfsECfXdHfbEPA",
-            authDomain: "final-b282d.firebaseapp.com",
-            databaseURL: "https://final-b282d-default-rtdb.firebaseio.com",
-            projectId: "final-b282d",
-            storageBucket: "final-b282d.firebasestorage.app",
-            messagingSenderId: "1032442271501",
-            appId: "1:1032442271501:web:094ac7162bc01fd72d8244",
-            measurementId: "G-SPNGXZ9EJ2"
-        };
-
-        // เริ่มต้นใช้งาน Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
+                        mono: ['Share Tech Mono', 'Space Mono', 'monospace'],
                         sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            black: '#03070c',
+                            dark: '#081018',
+                            green: 'var(--cyber-theme-color, #00ff88)',
+                            cyan: '#00e5ff',
+                            magenta: '#ff0055',
+                            dim: '#00aa55',
+                        }
                     }
                 }
             }
         }
     </script>
+
     <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 182, 193, 0.4);
-            box-shadow: 0 20px 50px -15px rgba(236, 72, 153, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .dark .glass-card {
-            background: rgba(30, 41, 59, 0.85);
-            border: 1px solid rgba(236, 72, 153, 0.2);
-            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        :root {
+            --cyber-theme-color: #00ff88;
+            --cyber-glow-color: rgba(0, 255, 136, 0.4);
         }
 
-        .gradient-bg {
-            background: linear-gradient(135deg, #fdf2f8 0%, #f0fdf4 50%, #f0f9ff 100%);
-            position: relative;
-            overflow-x: hidden;
-            transition: background 0.3s ease;
-        }
-        .dark .gradient-bg {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #090d16 100%);
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #03070c; }
+        ::-webkit-scrollbar-thumb { background: var(--cyber-theme-color); border-radius: 2px; }
+
+        /* Custom Cyber Cursor (Desktop Only) */
+        @media (min-width: 768px) {
+            body { cursor: none; }
+            a, button, input { cursor: none !important; }
         }
 
-        body.sepia-mode {
-            filter: sepia(0.3) hue-rotate(-10deg);
-        }
-
-        .blob-1, .blob-2, .blob-3 {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(95px);
-            z-index: -3;
-            opacity: 0.6;
-            animation: moveBlob 14s infinite alternate ease-in-out;
-        }
-        .blob-1 { width: 450px; height: 450px; background: rgba(244, 114, 182, 0.3); top: -120px; left: -100px; }
-        .blob-2 { width: 520px; height: 520px; background: rgba(56, 189, 248, 0.28); top: 25%; right: -150px; animation-delay: -4s; }
-        .blob-3 { width: 400px; height: 400px; background: rgba(168, 85, 247, 0.2); bottom: -80px; left: 25%; animation-delay: -8s; }
-
-        .bg-watermark {
+        #cyber-cursor {
             position: fixed;
-            z-index: -2;
-            opacity: 0.035;
+            top: 0; left: 0;
+            width: 20px; height: 20px;
+            border: 1px solid var(--cyber-theme-color);
+            border-radius: 50%;
             pointer-events: none;
-            user-select: none;
-            filter: grayscale(15%);
-        }
-        .dark .bg-watermark { opacity: 0.07; filter: invert(1) grayscale(15%); }
-
-        @keyframes moveBlob {
-            0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
-            50% { transform: translate(60px, 50px) scale(1.15) rotate(10deg); }
-            100% { transform: translate(-50px, 40px) scale(0.9) rotate(-10deg); }
-        }
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(1.5deg); }
-        }
-        @keyframes floatWatermark {
-            0%, 100% { transform: translateY(0px) scale(1) rotate(-12deg); }
-            50% { transform: translateY(-20px) scale(1.04) rotate(-8deg); }
-        }
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.96) translateY(12px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(40px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes pulseNeon {
-            0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.4), 0 0 40px rgba(56, 189, 248, 0.2); }
-            50% { box-shadow: 0 0 35px rgba(236, 72, 153, 0.7), 0 0 60px rgba(56, 189, 248, 0.5); }
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.15s, height 0.15s, background-color 0.15s;
+            box-shadow: 0 0 10px var(--cyber-theme-color);
         }
 
-        .animate-float { animation: floatSlow 4s ease-in-out infinite; }
-        .animate-watermark { animation: floatWatermark 9s ease-in-out infinite; }
-        .animate-fade-in { animation: fadeInScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-toast { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .neon-btn { animation: pulseNeon 3.5s infinite; }
+        #cyber-cursor-dot {
+            position: fixed;
+            top: 0; left: 0;
+            width: 4px; height: 4px;
+            background: var(--cyber-theme-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px var(--cyber-theme-color);
+        }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #fdf2f8; }
-        .dark ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #db2777; }
+        /* CRT Overlay Lines */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 40;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.35) 50%
+            );
+            background-size: 100% 4px;
+            opacity: 0.7;
+        }
 
-        button, input, select, textarea { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* Glassmorphic Sci-Fi Card Container */
+        .cyber-card {
+            background: rgba(8, 16, 24, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--cyber-glow-color);
+            clip-path: polygon(
+                0 0, 
+                calc(100% - 14px) 0, 
+                100% 14px, 
+                100% 100%, 
+                14px 100%, 
+                0 calc(100% - 14px)
+            );
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--cyber-theme-color);
+            box-shadow: 0 0 22px var(--cyber-glow-color), inset 0 0 12px var(--cyber-glow-color);
+        }
+
+        /* Laser Sweep Shimmer Effect */
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                var(--cyber-glow-color),
+                transparent
+            );
+            transition: 0.6s ease;
+            pointer-events: none;
+        }
+
+        .cyber-card:hover::before {
+            left: 150%;
+        }
+
+        /* HUD Corner Brackets for Links */
+        .hud-bracket {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-color: var(--cyber-theme-color);
+            opacity: 0.4;
+            transition: all 0.25s ease;
+            pointer-events: none;
+        }
+        .hud-tl { top: 3px; left: 3px; border-top: 2px solid; border-left: 2px solid; }
+        .hud-tr { top: 3px; right: 3px; border-top: 2px solid; border-right: 2px solid; }
+        .hud-bl { bottom: 3px; left: 3px; border-bottom: 2px solid; border-left: 2px solid; }
+        .hud-br { bottom: 3px; right: 3px; border-bottom: 2px solid; border-right: 2px solid; }
+
+        .cyber-card:hover .hud-bracket {
+            opacity: 1;
+            width: 14px;
+            height: 14px;
+            border-color: #00e5ff;
+        }
+
+        /* Target Reticle Outer Ring Spin */
+        .spin-clockwise { animation: spinCW 12s linear infinite; }
+        .spin-counter { animation: spinCCW 8s linear infinite; }
+
+        @keyframes spinCW { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spinCCW { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+
+        /* Glitch Text Animation */
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            clip: rect(0, 0, 0, 0);
+        }
+        .glitch-text:hover::before {
+            left: -2px; text-shadow: 2px 0 #ff0055;
+            clip: rect(10px, 9999px, 50px, 0);
+            animation: glitch-1 0.25s infinite linear alternate-reverse;
+        }
+        .glitch-text:hover::after {
+            left: 2px; text-shadow: -2px 0 #00e5ff;
+            clip: rect(40px, 9999px, 80px, 0);
+            animation: glitch-2 0.25s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-1 { 0% { clip: rect(15px, 9999px, 35px, 0); } 100% { clip: rect(45px, 9999px, 75px, 0); } }
+        @keyframes glitch-2 { 0% { clip: rect(65px, 9999px, 20px, 0); } 100% { clip: rect(10px, 9999px, 85px, 0); } }
+
+        /* Custom Social Glow Colors */
+        .glow-ig:hover { box-shadow: 0 0 18px rgba(225, 48, 108, 0.4), inset 0 0 10px rgba(225, 48, 108, 0.2); border-color: #e1306c; }
+        .glow-tiktok:hover { box-shadow: 0 0 18px rgba(0, 242, 234, 0.4), inset 0 0 10px rgba(255, 0, 80, 0.2); border-color: #00f2ea; }
+        .glow-fb:hover { box-shadow: 0 0 18px rgba(24, 119, 242, 0.4), inset 0 0 10px rgba(24, 119, 242, 0.2); border-color: #1877f2; }
+        .glow-dc:hover { box-shadow: 0 0 18px rgba(88, 101, 242, 0.4), inset 0 0 10px rgba(88, 101, 242, 0.2); border-color: #5865f2; }
+        .glow-yt:hover { box-shadow: 0 0 18px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2); border-color: #ff0000; }
+        .glow-spotify:hover { box-shadow: 0 0 18px rgba(30, 215, 96, 0.4), inset 0 0 10px rgba(30, 215, 96, 0.2); border-color: #1ed760; }
+        .glow-gh:hover { box-shadow: 0 0 18px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.1); border-color: #ffffff; }
+
+        /* Page Stagger Entrance */
+        .cyber-stagger {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cyberIn 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes cyberIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-slate-800 dark:text-slate-100 antialiased pb-24 selection:bg-pink-500 selection:text-white">
+<body class="bg-cyber-black text-slate-100 font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden">
 
-    <div class="blob-1"></div>
-    <div class="blob-2"></div>
-    <div class="blob-3"></div>
+    <!-- Custom Sci-Fi Cursor Ring & Dot -->
+    <div id="cyber-cursor" class="hidden md:block"></div>
+    <div id="cyber-cursor-dot" class="hidden md:block"></div>
 
-    <img src="D:\Html\page\ChatGPT Image 23 ก.ย. 2569 09_20_53.png" alt="Watermark" class="bg-watermark animate-watermark w-[320px] sm:w-[420px] h-[320px] sm:h-[420px] top-12 left-[-90px]" onerror="this.src='https://placehold.co/420x420/f472b6/ffffff?text=LRU';">
-    <img src="D:\Html\page\ChatGPT Image 23 ก.ย. 2569 09_20_53.png" alt="Watermark" class="bg-watermark animate-watermark w-[380px] sm:w-[480px] h-[380px] sm:h-[480px] bottom-10 right-[-110px]" style="animation-delay: -4.5s;" onerror="this.src='https://placehold.co/480x480/38bdf8/ffffff?text=LRU';">
+    <!-- Canvas 1: Matrix Digital Rain -->
+    <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none max-w-[calc(100vw-3rem)]"></div>
+    <!-- Canvas 2: Cursor Sparks & Particle Burst Layer -->
+    <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-30"></canvas>
 
-    <!-- Responsive Header / Navigation Bar -->
-    <header class="sticky top-0 z-40 glass-card border-b border-pink-100/80 dark:border-slate-800 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-2">
-            <!-- Logo & Title -->
-            <div class="flex items-center gap-2.5 sm:gap-3.5 group cursor-pointer min-w-0" onclick="switchTab('submit')">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white dark:bg-slate-800 p-2 flex items-center justify-center shadow-lg shadow-pink-500/15 border border-pink-200 dark:border-slate-700 transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-300 overflow-hidden shrink-0">
-                    <img src="D:\Html\page\ChatGPT Image 23 ก.ย. 2569 09_20_53.png" alt="โลโก้มหาวิทยาลัยเลย" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/150/f472b6/ffffff?text=LRU';">
-                </div>
-                <div class="min-w-0">
-                    <h1 class="font-extrabold text-xs sm:text-base leading-tight bg-gradient-to-r from-pink-600 via-purple-600 to-sky-500 bg-clip-text text-transparent truncate">LOEI HELP CENTER</h1>
-                    <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1.5 truncate">
-                        <span class="w-2 h-2 rounded-full bg-pink-500 animate-ping shrink-0"></span> <span data-i18n="university_name">LOEI UNIVERSITY</span>
-                    </p>
-                </div>
-            </div>
+    <!-- CRT Overlay Scanlines -->
+    <div class="scanlines"></div>
 
-            <!-- Navigation Menu -->
-            <div class="flex items-center gap-1">
-                <nav id="mainNav" class="flex bg-pink-100/60 dark:bg-slate-800/80 p-1 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-semibold backdrop-blur-md shadow-inner border border-white/80 dark:border-slate-700 overflow-x-auto max-w-[55vw] sm:max-w-none scrollbar-none">
-                    <!-- Nav items dynamically rendered -->
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-4xl mx-auto px-4 pt-6 sm:pt-10">
-
-        <!-- TAB 1: FORM -->
-        <section id="sec-submit" class="space-y-6 animate-fade-in max-w-2xl mx-auto">
-            <div class="text-center max-w-lg mx-auto mb-6 sm:mb-8 space-y-2">
-                <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 bg-pink-50/90 dark:bg-slate-800 px-3.5 py-1.5 rounded-full border border-pink-200/80 dark:border-slate-700 shadow-sm animate-float">
-                    <i class="fa-solid fa-bolt text-pink-500 animate-pulse"></i>Loei University Support
-                </span>
-                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="form_heading">ส่งเรื่องร้องเรียน / ข้อเสนอแนะ</h2>
-                <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm" data-i18n="form_subheading">ระบบกลางรับเรื่องร้องเรียนภายในมหาวิทยาลัย รวดเร็ว ปลอดภัย ตรวจสอบสถานะในประวัติของฉันได้ทันที</p>
-            </div>
-
-            <form id="complaintForm" onsubmit="handleFormSubmit(event)" class="glass-card rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-10 space-y-5 sm:space-y-6">
-                
-                <!-- สถานะของผู้แจ้งปัญหา -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"><span data-i18n="label_reporter_status">สถานะผู้แจ้งปัญหา</span> <span class="text-rose-500">*</span></label>
-                    <div class="relative">
-                        <select id="userStatus" class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200/90 dark:border-slate-700 bg-white/95 dark:bg-slate-800 dark:text-white focus:bg-white focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 focus:outline-none text-xs sm:text-sm appearance-none cursor-pointer shadow-sm">
-                            <option value="" data-i18n="opt_select_reporter_status">-- เลือกสถานะผู้แจ้งปัญหา --</option>
-                            <option value="นักศึกษา" data-i18n="opt_student">👨‍🎓 นักศึกษา</option>
-                            <option value="อาจารย์ / บุคลากร" data-i18n="opt_staff">👩‍🏫 อาจารย์ / บุคลากร</option>
-                            <option value="บุคคลภายนอก" data-i18n="opt_external">🌐 บุคคลภายนอก / ผู้มาติดต่อ</option>
-                        </select>
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-pink-400 text-xs">
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"><span data-i18n="label_category">หน่วยงาน / คณะที่เกี่ยวข้อง</span> <span class="text-rose-500">*</span></label>
-                        <div class="relative">
-                            <select id="department" class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200/90 dark:border-slate-700 bg-white/95 dark:bg-slate-800 dark:text-white focus:bg-white focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 focus:outline-none text-xs sm:text-sm appearance-none cursor-pointer shadow-sm">
-                                <option value="" data-i18n="opt_select_cat">-- เลือกหน่วยงาน / คณะ --</option>
-                                <optgroup label="คณะวิชา" data-i18n-label="group_faculties">
-                                    <option value="คณะครุศาสตร์">🎓 คณะครุศาสตร์</option>
-                                    <option value="คณะมนุษยศาสตร์และสังคมศาสตร์">📚 คณะมนุษยศาสตร์และสังคมศาสตร์</option>
-                                    <option value="คณะวิทยาการจัดการ">💼 คณะวิทยาการจัดการ</option>
-                                    <option value="คณะวิทยาศาสตร์และเทคโนโลยี">🔬 คณะวิทยาศาสตร์และเทคโนโลยี</option>
-                                    <option value="คณะเทคโนโลยี">⚙️ คณะเทคโนโลยี</option>
-                                </optgroup>
-                                <optgroup label="สำนัก / กอง / หน่วยงานสนับสนุน" data-i18n-label="group_offices">
-                                    <option value="สำนักงานอธิการบดี">🏛️ สำนักงานอธิการบดี</option>
-                                    <option value="กองพัฒนานักศึกษา">🏃‍♂️ กองพัฒนานักศึกษา</option>
-                                    <option value="สำนักส่งเสริมวิชาการและงานทะเบียน">📝 สำนักส่งเสริมวิชาการและงานทะเบียน</option>
-                                    <option value="สำนักวิทยบริการและเทคโนโลยีสารสนเทศ">💻 สำนักวิทยบริการและเทคโนโลยีสารสนเทศ</option>
-                                    <option value="สำนักศิลปะและวัฒนธรรม">🏮 สำนักศิลปะและวัฒนธรรม</option>
-                                    <option value="อาคารสถานที่และสิ่งแวดล้อม">🏢 อาคารสถานที่ / สิ่งอำนวยความสะดวก</option>
-                                </optgroup>
-                                <option value="อื่นๆ" data-i18n="opt_other">❓ หน่วยงานอื่นๆ</option>
-                            </select>
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-pink-400 text-xs">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"><span data-i18n="label_priority">ระดับความเร่งด่วน</span> <span class="text-rose-500">*</span></label>
-                        <div class="relative">
-                            <select id="complaintUrgency" class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200/90 dark:border-slate-700 bg-white/95 dark:bg-slate-800 dark:text-white focus:bg-white focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 focus:outline-none text-xs sm:text-sm appearance-none cursor-pointer shadow-sm">
-                                <option value="ปกติ" data-i18n="opt_normal">🟢 ปกติ (1-3 วันทำการ)</option>
-                                <option value="ด่วน" data-i18n="opt_urgent">🟡 ด่วน (ภายใน 24 ชม.)</option>
-                                <option value="ด่วนที่สุด" data-i18n="opt_very_urgent">🔴 ด่วนที่สุด (แก้ไขทันที)</option>
-                            </select>
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-pink-400 text-xs">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2"><span data-i18n="label_subject">หัวข้อเรื่อง</span> <span class="text-rose-500">*</span></label>
-                    <input type="text" id="complaintTitle" data-i18n-placeholder="placeholder_subject" placeholder="ระบุหัวข้อเรื่องสั้นๆ ให้ชัดเจน เช่น ปลั๊กไฟในห้องเรียนเสีย" class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200/90 dark:border-slate-700 bg-white/95 dark:bg-slate-800 dark:text-white focus:bg-white focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 focus:outline-none text-xs sm:text-sm shadow-sm">
-                </div>
-
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"><span data-i18n="label_description">รายละเอียดเรื่องร้องเรียน</span> <span class="text-rose-500">*</span></label>
-                        <span id="charCount" class="text-[11px] text-slate-400 font-medium">0 / 500 ตัวอักษร</span>
-                    </div>
-                    <textarea id="complaintDetail" rows="4" maxlength="500" oninput="updateCharCount(this)" data-i18n-placeholder="placeholder_description" placeholder="อธิบายรายละเอียด เหตุการณ์ หรือปัญหาที่พบเจอให้ครบถ้วน..." class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200/90 dark:border-slate-700 bg-white/95 dark:bg-slate-800 dark:text-white focus:bg-white focus:ring-4 focus:ring-pink-500/20 focus:border-pink-500 focus:outline-none text-xs sm:text-sm resize-none shadow-sm"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2" data-i18n="label_attachment">แนบรูปภาพประกอบหลักฐาน (ถ้ามี)</label>
-                    <div class="relative flex items-center justify-between px-4 sm:px-5 py-4 rounded-2xl border-2 border-dashed border-pink-300 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 hover:bg-white hover:border-pink-500 transition-all cursor-pointer group shadow-sm gap-3">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-pink-50 dark:bg-slate-700 text-pink-500 flex items-center justify-center text-base font-semibold group-hover:scale-110 transition-transform shadow-sm shrink-0">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p id="fileNameDisplay" class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-pink-600 transition-colors truncate" data-i18n="text_file_upload">คลิกเพื่อเลือกไฟล์รูปภาพหลักฐาน</p>
-                                <p class="text-[10px] sm:text-[11px] text-slate-400" data-i18n="text_file_hint">รองรับ JPG, PNG ขนาดไม่เกิน 5MB</p>
-                            </div>
-                        </div>
-                        <input type="file" id="attachment" accept="image/*" onchange="handleFileSelect(this)" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                    </div>
-                </div>
-
-                <div class="p-4 sm:p-5 rounded-2xl bg-pink-50/50 dark:bg-slate-800/60 border border-pink-200/80 dark:border-slate-700 space-y-3.5 shadow-inner">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200" data-i18n="label_anonymous">ส่งแบบไม่ระบุตัวตน (Anonymous)</span>
-                            <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400" data-i18n="sub_anonymous">ข้อมูลส่วนตัวของคุณจะถูกปิดเป็นความลับสูงสุด</p>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                            <input type="checkbox" id="isAnonymous" onchange="toggleAnonymous(this.checked)" class="sr-only peer">
-                            <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-pink-500 peer-checked:to-sky-500 shadow-sm"></div>
-                        </label>
-                    </div>
-
-                    <div id="contactFields" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 transition-all duration-300">
-                        <div>
-                            <input type="text" id="userName" data-i18n-placeholder="placeholder_fullname" placeholder="ชื่อ-นามสกุล / รหัสนักศึกษา" class="w-full px-4.5 py-3 rounded-xl border border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                        </div>
-                        <div>
-                            <input type="text" id="contact" data-i18n-placeholder="placeholder_contact" placeholder="เบอร์โทรศัพท์ หรือ อีเมลติดต่อ" class="w-full px-4.5 py-3 rounded-xl border border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full py-4 bg-gradient-to-r from-pink-500 via-purple-600 to-sky-500 hover:from-pink-600 hover:to-sky-600 text-white font-bold rounded-2xl shadow-xl shadow-pink-500/25 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 text-xs sm:text-base neon-btn">
-                    <i class="fa-solid fa-paper-plane animate-bounce"></i>
-                    <span data-i18n="btn_submit">ส่งเรื่องร้องเรียนไปยังมหาวิทยาลัย</span>
-                </button>
-            </form>
-        </section>
-
-        <!-- TAB 2: MY HISTORY -->
-        <section id="sec-my-history" class="hidden space-y-6 animate-fade-in max-w-2xl mx-auto">
-            <div class="text-center max-w-lg mx-auto mb-6 space-y-2">
-                <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 bg-pink-50/90 dark:bg-slate-800 px-3.5 py-1.5 rounded-full border border-pink-200/80 dark:border-slate-700 shadow-sm">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Device Local Storage History
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="history_heading">ประวัติเรื่องร้องเรียนของฉัน</h2>
-                <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm" data-i18n="history_subheading">คลิกที่การ์ดเพื่อดูรายละเอียดและรูปภาพหลักฐานเฉพาะของแต่ละรายการ</p>
-            </div>
-
-            <div id="myHistoryContainer" class="space-y-4 max-w-xl mx-auto">
-                <!-- Dynamically populated -->
-            </div>
-        </section>
-
-        <!-- TAB 3: ADMIN LOGIN -->
-        <section id="sec-admin-login" class="hidden space-y-6 animate-fade-in max-w-md mx-auto pt-4">
-            <div class="text-center space-y-2 mb-6">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-pink-50 dark:bg-slate-800 text-pink-600 dark:text-pink-400 flex items-center justify-center text-xl sm:text-2xl mx-auto shadow-md border border-pink-200 dark:border-slate-700">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="admin_login_heading">เข้าสู่ระบบผู้ดูแลระบบ</h2>
-                <p class="text-slate-500 dark:text-slate-400 text-xs" data-i18n="admin_login_sub">กรอกชื่อผู้ใช้และรหัสผ่านเพื่อเข้าจัดการแดชบอร์ดแอดมิน</p>
-            </div>
-
-            <div class="glass-card rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 space-y-5 shadow-xl">
-                <div id="loginFormContainer">
-                    <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5" data-i18n="label_username">ชื่อผู้ใช้ (Username)</label>
-                            <input type="text" id="adminUser" required data-i18n-placeholder="placeholder_username" placeholder="ระบุชื่อผู้ใช้" class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5" data-i18n="label_password">รหัสผ่าน (Password)</label>
-                            <input type="password" id="adminPass" required data-i18n-placeholder="placeholder_password" placeholder="ระบุรหัสผ่าน" class="w-full px-4.5 py-3.5 rounded-2xl border border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm" autocomplete="off">
-                        </div>
-                        
-                        <p id="adminAuthError" class="text-xs text-rose-500 hidden font-medium text-center bg-rose-50 dark:bg-slate-800 py-2.5 rounded-xl border border-rose-200 leading-relaxed"></p>
-                        
-                        <button type="submit" class="w-full py-3.5 sm:py-4 bg-gradient-to-r from-pink-500 to-sky-500 hover:opacity-95 text-white font-bold rounded-2xl text-xs sm:text-sm transition-all shadow-lg shadow-pink-500/25 transform active:scale-95" data-i18n="btn_login">
-                            <i class="fa-solid fa-right-to-bracket mr-2"></i> เข้าสู่ระบบแอดมิน
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 4: ADMIN DASHBOARD -->
-        <section id="sec-admin" class="hidden space-y-6 animate-fade-in">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i class="fa-solid fa-gauge-high text-pink-500"></i> <span data-i18n="dash_heading">แดชบอร์ดและกราฟภาพรวม (แอดมิน)</span>
-                    </h2>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs" data-i18n="dash_sub">สรุปสถิติมุมมองภาพรวม และจัดการรายการเรื่องร้องเรียนของระบบ</p>
-                </div>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="generateMockData()" class="px-3 py-2 bg-pink-50 dark:bg-slate-800 text-pink-600 dark:text-pink-400 hover:bg-pink-100 rounded-xl text-xs font-semibold transition-all border border-pink-200 dark:border-slate-700 flex items-center gap-1.5 shadow-sm transform active:scale-95">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="btn_mock">สร้างข้อมูลตัวอย่าง</span>
-                    </button>
-                    <button onclick="clearAllData()" class="px-3 py-2 bg-rose-50 dark:bg-slate-800 text-rose-600 dark:text-rose-400 hover:bg-rose-100 rounded-xl text-xs font-semibold transition-all border border-rose-200 dark:border-slate-700 flex items-center gap-1.5 shadow-sm transform active:scale-95">
-                        <i class="fa-solid fa-trash-can"></i> <span data-i18n="btn_clear">ล้างข้อมูล</span>
-                    </button>
-                    <button onclick="adminLogout()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-rose-50 hover:text-rose-600 rounded-xl text-xs font-semibold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-sm transform active:scale-95">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-i18n="btn_logout">ออกจากระบบ</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Stats Widgets -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="glass-card p-4 sm:p-5 rounded-2xl flex items-center gap-4 shadow-sm">
-                    <div class="w-12 h-12 rounded-xl bg-pink-50 dark:bg-slate-800 text-pink-600 dark:text-pink-400 flex items-center justify-center text-xl font-bold shadow-sm shrink-0">
-                        <i class="fa-solid fa-inbox"></i>
-                    </div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="stat_total">เรื่องทั้งหมด</p>
-                        <p id="stat-total" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">0</p>
-                    </div>
-                </div>
-                <div class="glass-card p-4 sm:p-5 rounded-2xl flex items-center gap-4 shadow-sm">
-                    <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold shadow-sm shrink-0">
-                        <i class="fa-solid fa-spinner animate-spin"></i>
-                    </div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="stat_pending">กำลังดำเนินการ</p>
-                        <p id="stat-pending" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">0</p>
-                    </div>
-                </div>
-                <div class="glass-card p-4 sm:p-5 rounded-2xl flex items-center gap-4 shadow-sm">
-                    <div class="w-12 h-12 rounded-xl bg-sky-50 dark:bg-slate-800 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl font-bold shadow-sm shrink-0">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="stat_resolved">แก้ไขเสร็จสิ้น</p>
-                        <p id="stat-resolved" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">0</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Graph Section -->
-            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4 shadow-lg">
-                <h3 class="font-extrabold text-slate-900 dark:text-white text-xs sm:text-base flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie text-pink-500"></i> <span data-i18n="graph_heading">กราฟภาพรวมสัดส่วนสถานะเรื่องร้องเรียน</span>
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-1" id="overviewGraphsContainer">
-                    <div class="p-3.5 bg-pink-50/50 dark:bg-slate-800/60 rounded-2xl border border-pink-100 dark:border-slate-700 space-y-2">
-                        <div class="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
-                            <span data-i18n="status_received">รับเรื่องแล้ว</span>
-                            <span id="graph-percent-received">0%</span>
-                        </div>
-                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                            <div id="graph-bar-received" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="p-3.5 bg-sky-50/50 dark:bg-slate-800/60 rounded-2xl border border-sky-100 dark:border-slate-700 space-y-2">
-                        <div class="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
-                            <span data-i18n="status_in_progress">กำลังดำเนินการ</span>
-                            <span id="graph-percent-pending">0%</span>
-                        </div>
-                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                            <div id="graph-bar-pending" class="bg-sky-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="p-3.5 bg-emerald-50/50 dark:bg-slate-800/60 rounded-2xl border border-emerald-100 dark:border-slate-700 space-y-2">
-                        <div class="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
-                            <span data-i18n="status_completed">แก้ไขเรียบร้อย</span>
-                            <span id="graph-percent-resolved">0%</span>
-                        </div>
-                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                            <div id="graph-bar-resolved" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Search and Filter Bar -->
-            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row gap-3 items-center justify-between shadow-sm">
-                <div class="relative w-full sm:w-80">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-pink-400 text-xs">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <input type="text" id="adminSearchInput" oninput="renderAdminDashboard()" data-i18n-placeholder="placeholder_search" placeholder="ค้นหารหัส, หัวข้อ หรือผู้แจ้ง..." class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 dark:text-white rounded-xl border border-pink-200 dark:border-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                </div>
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap" data-i18n="filter_status">กรองสถานะ:</span>
-                    <select id="adminStatusFilter" onchange="renderAdminDashboard()" class="w-full sm:w-auto px-3.5 py-2.5 bg-white dark:bg-slate-800 dark:text-white rounded-xl border border-pink-200 dark:border-slate-700 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm cursor-pointer">
-                        <option value="ALL" data-i18n="opt_all">ทั้งหมด</option>
-                        <option value="รับเรื่องแล้ว" data-i18n="status_received">🟠 รับเรื่องแล้ว</option>
-                        <option value="กำลังดำเนินการ" data-i18n="status_in_progress">🔵 กำลังดำเนินการ</option>
-                        <option value="แก้ไขเรียบร้อย" data-i18n="status_completed">🟢 แก้ไขเรียบร้อย</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Table -->
-            <div class="glass-card rounded-2xl overflow-hidden shadow-xl">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-pink-50/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 uppercase font-extrabold border-b border-pink-100 dark:border-slate-700 text-[11px]">
-                            <tr>
-                                <th class="p-3.5 sm:p-4" data-i18n="th_ticket">รหัส Ticket</th>
-                                <th class="p-3.5 sm:p-4" data-i18n="th_subject_dept">หัวข้อเรื่อง / หน่วยงาน</th>
-                                <th class="p-3.5 sm:p-4" data-i18n="th_evidence">หลักฐาน</th>
-                                <th class="p-3.5 sm:p-4" data-i18n="th_sender">ผู้แจ้ง & ติดต่อ</th>
-                                <th class="p-3.5 sm:p-4" data-i18n="th_priority">ความเร่งด่วน</th>
-                                <th class="p-3.5 sm:p-4" data-i18n="th_status">สถานะ</th>
-                                <th class="p-3.5 sm:p-4 text-center" data-i18n="th_reply">ตอบกลับ</th>
-                                <th class="p-3.5 sm:p-4 text-center" data-i18n="th_manage">จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminTableBody" class="divide-y divide-pink-50 dark:divide-slate-800 bg-white/40 dark:bg-slate-900/40">
-                            <!-- Dynamic Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 5: SETTING -->
-        <section id="sec-setting" class="hidden space-y-6 animate-fade-in max-w-2xl mx-auto">
-            <div class="text-center max-w-lg mx-auto mb-8 space-y-2">
-                <span class="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 bg-pink-50/90 dark:bg-slate-800 px-3.5 py-1.5 rounded-full border border-pink-200/80 dark:border-slate-700 shadow-sm">
-                    <i class="fa-solid fa-sliders text-pink-500"></i> Preference & Configuration
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="setting_heading">การตั้งค่าระบบ</h2>
-                <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm" data-i18n="setting_sub">ปรับแต่งโหมดการแสดงผล เสียงเอฟเฟกต์ ภาษา และจัดการข้อมูลส่วนตัวในเบราว์เซอร์ของคุณ</p>
-            </div>
-
-            <div class="grid grid-cols-1 gap-5">
-                <!-- ภาษาของระบบ -->
-                <div class="glass-card rounded-3xl p-5 sm:p-6 space-y-4 shadow-lg relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl group-hover:bg-purple-500/10 transition-all pointer-events-none"></div>
-                    <div class="flex items-center justify-between border-b border-pink-100/80 dark:border-slate-800 pb-3.5">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-slate-800 text-purple-600 dark:text-purple-400 flex items-center justify-center text-base font-bold shadow-sm">
-                                <i class="fa-solid fa-language"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base" data-i18n="lang_settings_title">ภาษาของระบบ (Language)</h3>
-                                <p class="text-[11px] text-slate-400" data-i18n="lang_select_sub">สลับระหว่างภาษาไทยและภาษาอังกฤษทันที</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] bg-purple-100/80 dark:bg-slate-700 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Language</span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300" data-i18n="lang_select_label">เลือกภาษาที่ต้องการใช้งาน</span>
-                        <div class="grid grid-cols-2 sm:flex bg-pink-100/60 dark:bg-slate-800 p-1.5 rounded-2xl text-xs gap-1 border border-pink-200/60 dark:border-slate-700 shadow-inner">
-                            <button onclick="switchLanguage('th')" id="langBtnTh" class="px-4 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-sm bg-white text-pink-600">🇹🇭 ภาษาไทย</button>
-                            <button onclick="switchLanguage('en')" id="langBtnEn" class="px-4 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 dark:hover:text-white">🇬🇧 English</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- การแสดงผลและธีม -->
-                <div class="glass-card rounded-3xl p-5 sm:p-6 space-y-5 shadow-lg relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/5 rounded-full blur-2xl group-hover:bg-pink-500/10 transition-all pointer-events-none"></div>
-                    <div class="flex items-center justify-between border-b border-pink-100/80 dark:border-slate-800 pb-3.5">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-pink-100 dark:bg-slate-800 text-pink-600 dark:text-pink-400 flex items-center justify-center text-base font-bold shadow-sm">
-                                <i class="fa-solid fa-palette"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base" data-i18n="appearance_title">การแสดงผลและธีม</h3>
-                                <p class="text-[11px] text-slate-400">ปรับเปลี่ยนหน้าตา โหมดมืดสว่าง และการถนอมสายตา</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] bg-pink-100/80 dark:bg-slate-700 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider">UI Theme</span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-1">
-                        <div>
-                            <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 block" data-i18n="theme_mode_label">โหมดหน้าจอ (Theme)</span>
-                            <span class="text-[11px] text-slate-400" data-i18n="theme_mode_sub">สลับระหว่างโหมดสว่างและโหมดมืด</span>
-                        </div>
-                        <div class="grid grid-cols-2 sm:flex bg-pink-100/60 dark:bg-slate-800 p-1.5 rounded-2xl text-xs gap-1 border border-pink-200/60 dark:border-slate-700 shadow-inner">
-                            <button onclick="setThemeMode('light')" id="themeBtnLight" class="px-3.5 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-sun text-amber-500"></i> <span data-i18n="theme_light">สว่าง</span>
-                            </button>
-                            <button onclick="setThemeMode('dark')" id="themeBtnDark" class="px-3.5 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-moon text-indigo-400"></i> <span data-i18n="theme_dark">มืด</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between py-3 border-t border-pink-100/60 dark:border-slate-800/60">
-                        <div>
-                            <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 block" data-i18n="sepia_label">โหมดถนอมสายตา (Sepia Tone)</span>
-                            <span class="text-[11px] text-slate-400" data-i18n="sepia_sub">ปรับโทนสีหน้าให้อุ่นขึ้น ลดอาการล้าทางสายตา</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                            <input type="checkbox" id="sepiaToggle" onchange="toggleSepiaMode(this.checked)" class="sr-only peer">
-                            <div class="w-12 h-7 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-amber-500 shadow-sm"></div>
-                        </label>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-2 border-t border-pink-100/60 dark:border-slate-800/60">
-                        <div>
-                            <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 block" data-i18n="fontsize_label">ขนาดตัวอักษรเว็บไซต์</span>
-                            <span class="text-[11px] text-slate-400" data-i18n="fontsize_sub">ปรับขนาดฟอนต์ให้เหมาะสมกับการอ่านของคุณ</span>
-                        </div>
-                        <select id="fontSizeSelect" onchange="setFontSize(this.value)" class="px-4 py-2.5 bg-white dark:bg-slate-800 dark:text-white rounded-xl border border-pink-200 dark:border-slate-700 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm cursor-pointer">
-                            <option value="normal" data-i18n="font_normal">ปกติ (Default)</option>
-                            <option value="large" data-i18n="font_large">ใหญ่ (Large)</option>
-                            <option value="xlarge" data-i18n="font_xlarge">ใหญ่มาก (Extra Large)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- เสียงและเอฟเฟกต์ -->
-                <div class="glass-card rounded-3xl p-5 sm:p-6 space-y-4 shadow-lg relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-2xl group-hover:bg-sky-500/10 transition-all pointer-events-none"></div>
-                    <div class="flex items-center justify-between border-b border-pink-100/80 dark:border-slate-800 pb-3.5">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-sky-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 flex items-center justify-center text-base font-bold shadow-sm">
-                                <i class="fa-solid fa-volume-high"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base" data-i18n="audio_title">เสียงและเอฟเฟกต์</h3>
-                                <p class="text-[11px] text-slate-400" data-i18n="sound_sub">เล่นเสียงเมื่อคลิกปุ่มหรือส่งข้อมูลสำเร็จ</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] bg-sky-100/80 dark:bg-slate-700 text-sky-700 dark:text-sky-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Sound FX</span>
-                    </div>
-
-                    <div class="flex items-center justify-between py-1">
-                        <div>
-                            <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 block" data-i18n="sound_label">เสียงกดปุ่มและแจ้งเตือน (Sound FX)</span>
-                            <span class="text-[11px] text-slate-400">เปิด/ปิดเสียงตอบสนองเวลากดปุ่มในระบบ</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                            <input type="checkbox" id="soundFxToggle" checked onchange="toggleSoundFx(this.checked)" class="sr-only peer">
-                            <div class="w-12 h-7 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-sky-500 shadow-sm"></div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- ข้อมูลและแคชในเครื่อง -->
-                <div class="glass-card rounded-3xl p-5 sm:p-6 space-y-4 shadow-lg relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-all pointer-events-none"></div>
-                    <div class="flex items-center justify-between border-b border-pink-100/80 dark:border-slate-800 pb-3.5">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-slate-800 text-rose-600 dark:text-rose-400 flex items-center justify-center text-base font-bold shadow-sm">
-                                <i class="fa-solid fa-database"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base" data-i18n="storage_title">ข้อมูลและแคชในเครื่อง</h3>
-                                <p class="text-[11px] text-slate-400" data-i18n="clear_history_sub">ล้างรหัสติดตามเรื่องร้องเรียนที่บันทึกไว้ในเบราว์เซอร์</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] bg-rose-100/80 dark:bg-slate-700 text-rose-700 dark:text-rose-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Storage</span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
-                        <div>
-                            <span class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 block" data-i18n="clear_history_label">ล้างประวัติการแจ้งเรื่องในเครื่องนี้</span>
-                            <span class="text-[11px] text-slate-400">ข้อมูล Ticket IDs ที่จัดเก็บอยู่ใน LocalStorage จะถูกเคลียร์</span>
-                        </div>
-                        <button onclick="clearMyLocalTickets()" class="w-full sm:w-auto px-5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-slate-800 dark:text-rose-400 rounded-2xl text-xs font-bold transition-all border border-rose-200 dark:border-slate-700 shadow-sm flex items-center justify-center gap-2 transform active:scale-95">
-                            <i class="fa-solid fa-trash-can"></i> <span data-i18n="btn_clear_history">ล้างประวัติของฉัน</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal Success -->
-    <div id="successModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden items-center justify-center z-50 p-4 animate-fade-in">
-        <div class="bg-white dark:bg-slate-800 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] max-w-sm w-full p-6 sm:p-7 text-center space-y-4 shadow-2xl border border-pink-100 dark:border-slate-700">
-            <div class="w-14 h-14 sm:w-16 sm:h-16 bg-pink-50 dark:bg-slate-700 text-pink-600 dark:text-pink-400 rounded-full flex items-center justify-center text-xl sm:text-2xl mx-auto shadow-sm animate-bounce">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white" data-i18n="modal_success_title">ส่งเรื่องร้องเรียนสำเร็จ!</h3>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400" data-i18n="modal_success_sub">บันทึกรหัสติดตามลงประวัติของคุณเรียบร้อยแล้ว</p>
-            <div class="p-3.5 bg-pink-50/50 dark:bg-slate-900 rounded-2xl font-mono text-sm sm:text-base font-extrabold text-pink-600 dark:text-pink-400 tracking-wider border border-pink-200 dark:border-slate-700 shadow-inner" id="modalTicketId">
-                #LRU-XXXX
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="closeModalToHistory()" class="py-3 bg-pink-500 text-white rounded-xl font-semibold text-xs hover:bg-pink-600 transition-all shadow-md transform active:scale-95" data-i18n="btn_view_history">
-                    ดูประวัติของฉัน
-                </button>
-                <button onclick="closeModal()" class="py-3 bg-slate-900 dark:bg-slate-700 text-white rounded-xl font-semibold text-xs hover:bg-slate-800 transition-all shadow-md transform active:scale-95" data-i18n="btn_ok">
-                    ตกลง
-                </button>
-            </div>
-        </div>
+    <!-- Holographic Ambient Radial Glow -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full blur-[150px] opacity-20" style="background: var(--cyber-theme-color);"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-cyber-cyan/20 rounded-full blur-[150px]"></div>
     </div>
 
-    <!-- Modal View Image -->
-    <div id="imageModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center z-50 p-4 animate-fade-in" onclick="closeImageModal()">
-        <div class="bg-white dark:bg-slate-800 rounded-[2rem] sm:rounded-[2.5rem] max-w-xl w-full p-4 sm:p-5 relative overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
-            <button onclick="closeImageModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 bg-pink-50 dark:bg-slate-700 w-8 h-8 rounded-full text-pink-600 dark:text-pink-400 hover:bg-pink-100 flex items-center justify-center transition-all z-10 text-xs">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="font-bold text-slate-800 dark:text-white mb-3 px-1 text-xs sm:text-sm flex items-center gap-2"><i class="fa-solid fa-image text-pink-500"></i> <span data-i18n="modal_img_title">รูปภาพหลักฐานประกอบ</span></h3>
-            <div class="max-h-[75vh] overflow-auto flex items-center justify-center bg-slate-50 dark:bg-slate-900 rounded-2xl p-2">
-                <img id="modalImagePreview" src="" class="max-w-full rounded-xl object-contain shadow-sm">
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Admin Reply -->
-    <div id="replyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden items-center justify-center z-50 p-4 animate-fade-in">
-        <div class="bg-white dark:bg-slate-800 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl relative border border-pink-100 dark:border-slate-700">
-            <button onclick="closeReplyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-all w-8 h-8 rounded-full bg-pink-50 dark:bg-slate-700 flex items-center justify-center text-xs">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="flex items-center gap-3 border-b border-pink-100 dark:border-slate-700 pb-3.5">
-                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-pink-50 dark:bg-slate-700 text-pink-600 dark:text-pink-400 flex items-center justify-center text-base sm:text-lg font-bold shadow-sm shrink-0">
-                    <i class="fa-solid fa-comments"></i>
-                </div>
-                <div class="min-w-0">
-                    <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate" id="replyTicketTitle" data-i18n="modal_reply_title">ตอบกลับเรื่องร้องเรียน</h3>
-                    <p class="text-[10px] sm:text-[11px] text-slate-400 truncate" id="replyTicketSub">รหัส: #LRU-XXXX</p>
-                </div>
-            </div>
-
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1" data-i18n="modal_user_issue">รายละเอียดปัญหาของผู้แจ้ง</label>
-                    <div id="replyTicketDesc" class="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl text-xs text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700 max-h-28 overflow-y-auto leading-relaxed">
-                        -
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase mb-1" data-i18n="modal_type_reply">พิมพ์ข้อความตอบกลับถึงผู้ใช้</label>
-                    <textarea id="adminReplyText" rows="3" data-i18n-placeholder="placeholder_reply" placeholder="พิมพ์ข้อความชี้แจงความคืบหน้า หรือวิธีแก้ไขปัญหา..." class="w-full p-3 rounded-xl border border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-pink-500 resize-none shadow-sm"></textarea>
-                </div>
-            </div>
-
-            <input type="hidden" id="currentReplyId">
-
-            <div class="flex justify-end gap-2 pt-1">
-                <button onclick="closeReplyModal()" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 text-xs font-semibold transition-all" data-i18n="btn_cancel">
-                    ยกเลิก
-                </button>
-                <button onclick="submitAdminReply()" class="px-4.5 py-2 bg-gradient-to-r from-pink-500 to-sky-500 hover:opacity-95 text-white rounded-xl text-xs font-semibold transition-all shadow-md shadow-pink-500/20 transform active:scale-95" data-i18n="btn_send_reply">
-                    <i class="fa-solid fa-paper-plane mr-1"></i> ส่งข้อความตอบกลับ
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript Application Logic -->
-    <script>
-        const translations = {
-            th: {
-                app_title: "ระบบแจ้งเรื่องร้องเรียนระดับองค์กร | LOEI UNIVERSITY",
-                university_name: "LOEI UNIVERSITY",
-                nav_submit: "แจ้งเรื่อง",
-                nav_history: "ประวัติ",
-                nav_admin: "แอดมิน",
-                nav_dashboard: "แดชบอร์ด",
-                nav_setting: "ตั้งค่า",
-                form_heading: "ส่งเรื่องร้องเรียน / ข้อเสนอแนะ",
-                form_subheading: "ระบบกลางรับเรื่องร้องเรียนภายในมหาวิทยาลัย รวดเร็ว ปลอดภัย ตรวจสอบสถานะในประวัติของฉันได้ทันที",
-                label_reporter_status: "สถานะผู้แจ้งปัญหา",
-                opt_select_reporter_status: "-- เลือกสถานะผู้แจ้งปัญหา --",
-                opt_student: "👨‍🎓 นักศึกษา",
-                opt_staff: "👩‍🏫 อาจารย์ / บุคลากร",
-                opt_external: "🌐 บุคคลภายนอก / ผู้มาติดต่อ",
-                label_category: "หน่วยงาน / คณะที่เกี่ยวข้อง",
-                opt_select_cat: "-- เลือกหน่วยงาน / คณะ --",
-                group_faculties: "คณะวิชา",
-                group_offices: "สำนัก / กอง / หน่วยงานสนับสนุน",
-                opt_other: "❓ หน่วยงานอื่นๆ",
-                label_priority: "ระดับความเร่งด่วน",
-                opt_normal: "🟢 ปกติ (1-3 วันทำการ)",
-                opt_urgent: "🟡 ด่วน (ภายใน 24 ชม.)",
-                opt_very_urgent: "🔴 ด่วนที่สุด (แก้ไขทันที)",
-                label_subject: "หัวข้อเรื่อง",
-                placeholder_subject: "ระบุหัวข้อเรื่องสั้นๆ ให้ชัดเจน เช่น ปลั๊กไฟในห้องเรียนเสีย",
-                label_description: "รายละเอียดเรื่องร้องเรียน",
-                placeholder_description: "อธิบายรายละเอียด เหตุการณ์ หรือปัญหาที่พบเจอให้ครบถ้วน...",
-                label_attachment: "แนบรูปภาพประกอบหลักฐาน (ถ้ามี)",
-                text_file_upload: "คลิกเพื่อเลือกไฟล์รูปภาพหลักฐาน",
-                text_file_hint: "รองรับ JPG, PNG ขนาดไม่เกิน 5MB",
-                label_anonymous: "ส่งแบบไม่ระบุตัวตน (Anonymous)",
-                sub_anonymous: "ข้อมูลส่วนตัวของคุณจะถูกปิดเป็นความลับสูงสุด",
-                placeholder_fullname: "ชื่อ-นามสกุล / รหัสนักศึกษา",
-                placeholder_contact: "เบอร์โทรศัพท์ หรือ อีเมลติดต่อ",
-                btn_submit: "ส่งเรื่องร้องเรียนไปยังมหาวิทยาลัย",
-                history_heading: "ประวัติเรื่องร้องเรียนของฉัน",
-                history_subheading: "คลิกที่การ์ดเพื่อดูรายละเอียดและรูปภาพหลักฐานเฉพาะของแต่ละรายการ",
-                admin_login_heading: "เข้าสู่ระบบผู้ดูแลระบบ",
-                admin_login_sub: "กรอกชื่อผู้ใช้และรหัสผ่านเพื่อเข้าจัดการแดชบอร์ดแอดมิน",
-                label_username: "ชื่อผู้ใช้ (Username)",
-                placeholder_username: "ระบุชื่อผู้ใช้",
-                label_password: "รหัสผ่าน (Password)",
-                placeholder_password: "ระบุรหัสผ่าน",
-                btn_login: "เข้าสู่ระบบแอดมิน",
-                dash_heading: "แดชบอร์ดและกราฟภาพรวม (แอดมิน)",
-                dash_sub: "สรุปสถิติมุมมองภาพรวม และจัดการรายการเรื่องร้องเรียนของระบบ",
-                btn_mock: "สร้างข้อมูลตัวอย่าง",
-                btn_clear: "ล้างข้อมูล",
-                btn_logout: "ออกจากระบบ",
-                stat_total: "เรื่องทั้งหมด",
-                stat_pending: "กำลังดำเนินการ",
-                stat_resolved: "แก้ไขเสร็จสิ้น",
-                graph_heading: "กราฟภาพรวมสัดส่วนสถานะเรื่องร้องเรียน",
-                status_received: "รับเรื่องแล้ว",
-                status_in_progress: "กำลังดำเนินการ",
-                status_completed: "แก้ไขเรียบร้อย",
-                placeholder_search: "ค้นหารหัส, หัวข้อ หรือผู้แจ้ง...",
-                filter_status: "กรองสถานะ:",
-                opt_all: "ทั้งหมด",
-                th_ticket: "รหัส Ticket",
-                th_subject_dept: "หัวข้อเรื่อง / หน่วยงาน",
-                th_evidence: "หลักฐาน",
-                th_sender: "ผู้แจ้ง & สถานะ",
-                th_priority: "ความเร่งด่วน",
-                th_status: "สถานะ",
-                th_reply: "ตอบกลับ",
-                th_manage: "จัดการ",
-                setting_heading: "การตั้งค่าระบบและลูกเล่น",
-                setting_sub: "ปรับแต่งโหมดการแสดงผล เสียงเอฟเฟกต์ ภาษา และจัดการข้อมูลส่วนตัวในเบราว์เซอร์ของคุณ",
-                lang_settings_title: "ภาษาของระบบ (Language)",
-                lang_select_label: "เลือกภาษาที่ต้องการใช้งาน",
-                lang_select_sub: "สลับระหว่างภาษาไทยและภาษาอังกฤษทันที",
-                appearance_title: "การแสดงผลและธีม",
-                theme_mode_label: "โหมดหน้าจอ (Theme)",
-                theme_mode_sub: "สลับระหว่างโหมดสว่างและโหมดมืด",
-                theme_light: "สว่าง",
-                theme_dark: "มืด",
-                sepia_label: "โหมดถนอมสายตา (Sepia Tone)",
-                sepia_sub: "ปรับโทนสีหน้าให้อุ่นขึ้น ลดอาการล้าทางสายตา",
-                fontsize_label: "ขนาดตัวอักษรเว็บไซต์",
-                fontsize_sub: "ปรับขนาดฟอนต์ให้เหมาะสมกับการอ่านของคุณ",
-                font_normal: "ปกติ (Default)",
-                font_large: "ใหญ่ (Large)",
-                font_xlarge: "ใหญ่มาก (Extra Large)",
-                audio_title: "เสียงและเอฟเฟกต์",
-                sound_label: "เสียงกดปุ่มและแจ้งเตือน (Sound FX)",
-                sound_sub: "เปิด/ปิดเสียงตอบสนองเวลากดปุ่มในระบบ",
-                storage_title: "ข้อมูลและแคชในเครื่อง",
-                clear_history_label: "ล้างประวัติการแจ้งเรื่องในเครื่องนี้",
-                clear_history_sub: "ล้างรหัสติดตามเรื่องร้องเรียนที่บันทึกไว้ในเบราว์เซอร์",
-                btn_clear_history: "ล้างประวัติของฉัน",
-                modal_success_title: "ส่งเรื่องร้องเรียนสำเร็จ!",
-                modal_success_sub: "บันทึกรหัสติดตามลงประวัติของคุณเรียบร้อยแล้ว",
-                btn_view_history: "ดูประวัติของฉัน",
-                btn_ok: "ตกลง",
-                modal_img_title: "รูปภาพหลักฐานประกอบ",
-                modal_reply_title: "ตอบกลับเรื่องร้องเรียน",
-                modal_user_issue: "รายละเอียดปัญหาของผู้แจ้ง",
-                modal_type_reply: "พิมพ์ข้อความตอบกลับถึงผู้ใช้",
-                placeholder_reply: "พิมพ์ข้อความชี้แจงความคืบหน้า หรือวิธีแก้ไขปัญหา...",
-                btn_cancel: "ยกเลิก",
-                btn_send_reply: "ส่งข้อความตอบกลับ"
-            },
-            en: {
-                app_title: "Enterprise Help Desk System | LOEI UNIVERSITY",
-                university_name: "LOEI UNIVERSITY",
-                nav_submit: "Submit",
-                nav_history: "History",
-                nav_admin: "Admin",
-                nav_dashboard: "Dashboard",
-                nav_setting: "Settings",
-                form_heading: "Submit a Complaint / Feedback",
-                form_subheading: "Central university support system. Fast, secure, and trackable instantly in your history.",
-                label_reporter_status: "Reporter Status",
-                opt_select_reporter_status: "-- Select Reporter Status --",
-                opt_student: "👨‍🎓 Student",
-                opt_staff: "👩‍🏫 Faculty / Staff",
-                opt_external: "🌐 External / Visitor",
-                label_category: "Related Department / Faculty",
-                opt_select_cat: "-- Select Department / Faculty --",
-                group_faculties: "Faculties",
-                group_offices: "Offices & Support Units",
-                opt_other: "❓ Other Departments",
-                label_priority: "Priority Level",
-                opt_normal: "🟢 Normal (1-3 Working Days)",
-                opt_urgent: "🟡 Urgent (Within 24 Hours)",
-                opt_very_urgent: "🔴 Most Urgent (Immediate Fix)",
-                label_subject: "Subject",
-                placeholder_subject: "Enter a brief subject, e.g., Broken socket in classroom",
-                label_description: "Complaint Details",
-                placeholder_description: "Describe the incident or problem in detail...",
-                label_attachment: "Attach Evidence Image (Optional)",
-                text_file_upload: "Click to select evidence image file",
-                text_file_hint: "Supports JPG, PNG up to 5MB",
-                label_anonymous: "Submit Anonymously",
-                sub_anonymous: "Your personal information will be kept strictly confidential",
-                placeholder_fullname: "Full Name / Student ID",
-                placeholder_contact: "Phone Number or Email",
-                btn_submit: "Submit Complaint to University",
-                history_heading: "My Complaint History",
-                history_subheading: "Click on the card to view details and specific evidence images of each item",
-                admin_login_heading: "Administrator Login",
-                admin_login_sub: "Enter your username and password to access the admin dashboard",
-                label_username: "Username",
-                placeholder_username: "Enter username",
-                label_password: "Password",
-                placeholder_password: "Enter password",
-                btn_login: "Admin Login",
-                dash_heading: "Dashboard & Overview Statistics (Admin)",
-                dash_sub: "Summary of overall statistics and system complaint management",
-                btn_mock: "Generate Mock Data",
-                btn_clear: "Clear Data",
-                btn_logout: "Logout",
-                stat_total: "Total Tickets",
-                stat_pending: "In Progress",
-                stat_resolved: "Resolved",
-                graph_heading: "Complaint Status Proportion Overview Chart",
-                status_received: "Received",
-                status_in_progress: "In Progress",
-                status_completed: "Resolved",
-                placeholder_search: "Search ID, subject, or sender...",
-                filter_status: "Filter Status:",
-                opt_all: "All",
-                th_ticket: "Ticket ID",
-                th_subject_dept: "Subject / Dept",
-                th_evidence: "Evidence",
-                th_sender: "Sender & Status",
-                th_priority: "Priority",
-                th_status: "Status",
-                th_reply: "Reply",
-                th_manage: "Manage",
-                setting_heading: "System Settings & Features",
-                setting_sub: "Customize display modes, sound effects, language, and browser storage",
-                lang_settings_title: "System Language",
-                lang_select_label: "Select Preferred Language",
-                lang_select_sub: "Switch instantly between Thai and English",
-                appearance_title: "Display & Theme",
-                theme_mode_label: "Screen Theme",
-                theme_mode_sub: "Toggle between light and dark modes",
-                theme_light: "Light",
-                theme_dark: "Dark",
-                sepia_label: "Eye Care Mode (Sepia Tone)",
-                sepia_sub: "Warmer tone to reduce eye strain",
-                fontsize_label: "Website Font Size",
-                fontsize_sub: "Adjust font size for better readability",
-                font_normal: "Normal (Default)",
-                font_large: "Large",
-                font_xlarge: "Extra Large",
-                audio_title: "Sound & Effects",
-                sound_label: "Sound Effects (Sound FX)",
-                sound_sub: "Play sound on button click or successful submission",
-                storage_title: "Local Storage & Cache",
-                clear_history_label: "Clear Complaint History on This Device",
-                clear_history_sub: "Clear tracked ticket IDs stored in your browser",
-                btn_clear_history: "Clear My History",
-                modal_success_title: "Complaint Submitted Successfully!",
-                modal_success_sub: "Tracking ID has been saved to your history successfully",
-                btn_view_history: "View My History",
-                btn_ok: "OK",
-                modal_img_title: "Evidence Image",
-                modal_reply_title: "Reply to Complaint",
-                modal_user_issue: "User's Problem Details",
-                modal_type_reply: "Type reply message to user",
-                placeholder_reply: "Type progress update or resolution method...",
-                btn_cancel: "Cancel",
-                btn_send_reply: "Send Reply Message"
-            }
-        };
-
-        const STORAGE_KEY = 'lru_complaints_pinkblue_v3';
-        const MY_TICKETS_KEY = 'user_my_tickets_v3';
+    <!-- Main Mobile Container -->
+    <div class="relative z-10 max-w-md mx-auto px-4 py-6 flex flex-col items-center min-h-screen justify-between">
         
-        let isAdminLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
-        let failedAttempts = 0;
-        const CORRECT_PIN = "admin123";
-        let soundFxEnabled = localStorage.getItem('lru_sound_fx') !== 'false';
-        let currentLang = localStorage.getItem('lru_lang') || 'th';
+        <!-- Header / Sci-Fi HUD Control Widget -->
+        <header class="w-full flex justify-between items-center mb-6 font-mono text-xs cyber-stagger" style="animation-delay: 0.05s;">
+            <!-- Left: Realtime System Status Display -->
+            <div class="flex flex-col text-cyber-green">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full animate-ping" style="background: var(--cyber-theme-color);"></span>
+                    <span class="font-bold tracking-wider"> ONLINE</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5 flex items-center gap-2">
+                    <span id="cyber-clock">00:00:00 LOCAL</span>
+                    <span>|</span>
+                    <span id="ping-counter" class="text-cyber-cyan">PING: 12ms</span>
+                </div>
+            </div>
+            
+            <!-- Right: Interactive Controls (Sound Toggle & Share Button) -->
+            <div class="flex items-center gap-2">
+                <!-- Sound Audio Effects Toggle -->
+                <button id="sound-btn" title="Toggle UI Sound FX" class="cyber-card p-2 text-cyber-green hover:text-white active:scale-95 transition-all">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-xs"></i>
+                </button>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initTheme();
-            initSettingsUI();
-            switchLanguage(currentLang, false);
-            updateAuthUI();
-            updateMyHistoryBadge();
+                <!-- Share Link Button -->
+                <button id="share-btn" class="cyber-card px-3 py-2 text-xs font-mono text-cyber-green hover:text-white flex items-center gap-1.5 active:scale-95 transition-all">
+                    <i class="fa-solid fa-share-nodes text-xs"></i>
+                    <span>[SHARE]</span>
+                </button>
+            </div>
+        </header>
+
+      <!-- Ambient Synth BGM Player Floating Widget -->
+<div class="w-full mb-5 cyber-card p-2.5 flex items-center justify-between font-mono text-xs cyber-stagger" style="animation-delay: 0.08s;">
+    <!-- แท็กเล่นเพลง MP3 (สำหรับปุ่ม Play) -->
+    <audio id="bgm-audio" src="http://youtube.com/watch?v=NaE40w3riSQ" loop preload="auto"></audio>
+
+    <div class="flex items-center gap-2.5">
+        <!-- ปุ่ม Play / Pause สำหรับเปิดเพลงในเว็บ -->
+        <button id="bgm-play-btn" class="w-8 h-8 rounded bg-cyber-black border border-cyber-green/50 text-cyber-green flex items-center justify-center hover:bg-cyber-green hover:text-black transition-colors cursor-pointer shrink-0">
+            <i id="bgm-icon" class="fa-solid fa-play text-xs"></i>
+        </button>
+
+        <!-- คลิกส่วนนี้แล้วจะเด้งเปิดลิงก์เว็บที่แปะไว้ -->
+        <a href="https://open.spotify.com/intl-th/track/1sczjXEYHpbpCsaA25ZzPv?si=5d717f4187f94899" target="_blank" rel="noopener noreferrer" class="text-left group cursor-pointer block">
+            <div class="text-[11px] font-bold text-slate-200 group-hover:text-cyber-green transition-colors flex items-center gap-1">
+                <span id="bgm-title">starfall - intentions</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60 group-hover:opacity-100 transition-opacity"></i>
+            </div>
+            <div class="text-[9px] text-slate-400 group-hover:text-slate-300 transition-colors">CLICK TO OPEN SONG LINK</div>
+        </a>
+    </div>
+
+    <!-- Dynamic Equalizer Bars -->
+    <div id="eq-bars" class="flex items-end gap-1 h-5 px-2">
+        <div class="eq-bar w-1 bg-cyber-green h-2 transition-all duration-100"></div>
+        <div class="eq-bar w-1 bg-cyber-green h-4 transition-all duration-100"></div>
+        <div class="eq-bar w-1 bg-cyber-green h-1 transition-all duration-100"></div>
+        <div class="eq-bar w-1 bg-cyber-green h-3 transition-all duration-100"></div>
+    </div>
+</div>
+
+        <!-- Profile Section -->
+        <section class="w-full flex flex-col items-center text-center mb-6 cyber-stagger" style="animation-delay: 0.1s;">
+            <!-- Advanced Target Reticle & Audio-Reactive Avatar Container -->
+            <div class="relative mb-5 group cursor-pointer" id="avatar-container">
+                <!-- Audio Equalizer Canvas Ring around Avatar -->
+                <canvas id="avatar-eq-canvas" class="absolute -inset-6 w-[160px] h-[160px] pointer-events-none z-0"></canvas>
+
+                <!-- Outer Tech Reticle 1 (Clockwise) -->
+                <div class="absolute -inset-3 rounded-full border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
+                <!-- Outer Tech Reticle 2 (Counter-Clockwise) -->
+                <div class="absolute -inset-1.5 rounded-full border border-cyber-cyan/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
+                
+                <!-- Main Avatar Image Frame -->
+                <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
+                    <img id="profile-img" src="https://i.pinimg.com/1200x/59/00/74/5900743a2378736b32ffb0526f269b0f.jpg" alt="Cyberpunk Avatar" class="w-full h-full object-cover rounded-full filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
+                </div>
+
+                <!-- Live Status Badge -->
+                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--cyber-theme-color);"></span>
+                    <span>Nxmeicxqz: LVL_9</span>
+                </div>
+            </div>
+
+            <!-- Profile Name with Glitch Effect -->
+            <h1 class="font-mono text-2xl sm:text-3xl font-bold tracking-wider text-white mb-1">
+                <span id="profile-name" class="glitch-text text-cyber-green" data-text="NEO_CYBER">NXMEICXQZ</span>
+            </h1>
+            <p class="font-mono text-xs text-cyber-cyan tracking-widest uppercase mb-3">&lt; ALL LINK SOCIAL MEDIA &gt;</p>
+            
+            <!-- Terminal Typing Bio Box -->
+            <div class="cyber-card p-3 w-full text-xs font-mono text-slate-300 leading-relaxed text-left border-l-2 border-l-cyber-green relative">
+                <span class="text-cyber-green font-bold">&gt; TERMINAL:</span> 
+                <span id="typing-text"></span><span class="animate-pulse text-cyber-green">_</span>
+            </div>
+        </section>
+
+        <!-- Social Links Stack -->
+        <main class="w-full space-y-3 mb-6 flex-1" id="links-container">
+
+            <!-- Link: Instagram -->
+            <a href="https://www.instagram.com/nxmeicxqz_/" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.15s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#e1306c] group-hover:text-white transition-colors duration-300">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#e1306c] transition-colors">INSTAGRAM</h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Instagram official</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#e1306c] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+ <!-- Link: Instagram -->
+            <a href="https://www.instagram.com/frosttft_/agram.com/nxmeicxqz_/" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.15s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#e1306c] group-hover:text-white transition-colors duration-300">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#e1306c] transition-colors">INSTAGRAM</h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Private Instagram</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#e1306c] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+            <!-- Link: TikTok -->
+            <a href="https://www.tiktok.com/@_iice0011?_r=1&_t=ZS-9AuQWFiu2nE" target="_blank" class="social-link cyber-card glow-tiktok block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.2s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#00f2ea] group-hover:text-black transition-colors duration-300">
+                            <i class="fa-brands fa-tiktok text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#00f2ea] transition-colors">TIKTOK</h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Tiktok official</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#00f2ea] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+            <!-- Link: Facebook -->
+            <a href="https://facebook.com" target="_blank" class="social-link cyber-card glow-fb block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.25s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1877f2] group-hover:text-white transition-colors duration-300">
+                            <i class="fa-brands fa-facebook-f text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#1877f2] transition-colors">FACEBOOK</h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Facebook Official</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#1877f2] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+            <!-- Link: Discord -->
+            <a href="https://ptb.discord.com/users/599163177845915699" target="_blank" class="social-link cyber-card glow-dc block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.3s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#5865f2] group-hover:text-white transition-colors duration-300">
+                            <i class="fa-brands fa-discord text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#5865f2] transition-colors">DISCORD </h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Discord Official</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#5865f2] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+
+            <!-- Link: Spotify -->
+            <a href="https://open.spotify.com/user/31egvhfxsidtdg7t6vvphrarknjy?si=7abab4564e20406e" target="_blank" class="social-link cyber-card glow-spotify block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.4s;">
+                <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+                <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+                <div class="flex items-center justify-between pointer-events-none">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1ed760] group-hover:text-black transition-colors duration-300">
+                            <i class="fa-brands fa-spotify text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#1ed760] transition-colors">SPOTIFY </h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Spotify Official</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#1ed760] group-hover:translate-x-1 transition-all"></i>
+                </div>
+            </a>
+
+           <a href="https://steamcommunity.com/profiles/76561198989348642/" target="_blank" class="social-link cyber-card glow-steam block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.4s;">
+    <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
+    <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
+    <div class="flex items-center justify-between pointer-events-none">
+        <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded bg-cyber-black border border-cyber-green/40 flex items-center justify-center text-cyber-green group-hover:bg-[#1b2838] group-hover:text-[#66c0f4] group-hover:border-[#66c0f4] transition-colors duration-300">
+                <i class="fa-brands fa-steam text-xl"></i>
+            </div>
+            <div class="text-left">
+                <h2 class="font-mono text-sm font-bold text-slate-100 group-hover:text-[#66c0f4] transition-colors">STEAM </h2>
+                <p class="text-[11px] text-slate-400 font-mono">Steam Profile</p>
+            </div>
+        </div>
+        <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#66c0f4] group-hover:translate-x-1 transition-all"></i>
+    </div>
+</a>
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full text-center font-mono text-[10px] text-slate-500 py-3 cyber-stagger" style="animation-delay: 0.5s;">
+            <p class="text-cyber-green/70 tracking-widest">[ Nxmeicxqz ]</p>
+            <p class="mt-1">ENCRYPTED CONNECTION // ALL SYSTEMS NOMINAL</p>
+        </footer>
+
+    </div>
+
+    <!-- HUD Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-cyber-dark border border-cyber-green px-4 py-2.5 text-xs font-mono text-cyber-green shadow-[0_0_20px_var(--cyber-glow-color)] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 rounded">
+        <i class="fa-solid fa-terminal text-cyber-cyan animate-pulse"></i>
+        <span id="toast-text">[SYS_LOG]: COPIED_TO_CLIPBOARD</span>
+    </div>
+
+    <!-- JavaScript Logic & Animations -->
+    <script>
+        // --- 1. Custom Cyberpunk Cursor (Desktop) ---
+        const cursorRing = document.getElementById('cyber-cursor');
+        const cursorDot = document.getElementById('cyber-cursor-dot');
+        let mouseX = 0, mouseY = 0;
+        let ringX = 0, ringY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+            
+            // Add particle spark on cursor move
+            if (Math.random() > 0.4) {
+                createSparks(mouseX, mouseY, 1);
+            }
         });
 
-        function switchLanguage(lang, showMsg = true) {
-            currentLang = lang;
-            localStorage.setItem('lru_lang', lang);
-            playClickSound();
+        function animateCursor() {
+            ringX += (mouseX - ringX) * 0.2;
+            ringY += (mouseY - ringY) * 0.2;
+            cursorRing.style.left = `${ringX}px`;
+            cursorRing.style.top = `${ringY}px`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
 
-            const btnTh = document.getElementById('langBtnTh');
-            const btnEn = document.getElementById('langBtnEn');
-            if (btnTh && btnEn) {
-                if (lang === 'th') {
-                    btnTh.className = "px-4 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-sm bg-white text-pink-600";
-                    btnEn.className = "px-4 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 dark:hover:text-white";
-                } else {
-                    btnEn.className = "px-4 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-sm bg-white text-pink-600";
-                    btnTh.className = "px-4 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-slate-500 hover:text-slate-800 dark:hover:text-white";
-                }
-            }
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
+        // Cursor Enlarge on Hover Interactive Elements
+        document.querySelectorAll('a, button, input').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorRing.style.width = '35px';
+                cursorRing.style.height = '35px';
+                cursorRing.style.backgroundColor = 'rgba(0, 255, 136, 0.15)';
             });
-
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang] && translations[lang][key]) {
-                    el.setAttribute('placeholder', translations[lang][key]);
-                }
+            el.addEventListener('mouseleave', () => {
+                cursorRing.style.width = '20px';
+                cursorRing.style.height = '20px';
+                cursorRing.style.backgroundColor = 'transparent';
             });
+        });
 
-            document.querySelectorAll('[data-i18n-label]').forEach(el => {
-                const key = el.getAttribute('data-i18n-label');
-                if (translations[lang] && translations[lang][key]) {
-                    el.setAttribute('label', translations[lang][key]);
-                }
-            });
 
-            if (showMsg) {
-                showToast(lang === 'th' ? 'เปลี่ยนเป็นภาษาไทยเรียบร้อย' : 'Switched to English successfully', 'info');
+        // --- 2. Particle Sparks & Click Energy Burst Canvas ---
+        const particleCanvas = document.getElementById('particle-canvas');
+        const pCtx = particleCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeParticleCanvas() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+        resizeParticleCanvas();
+        window.addEventListener('resize', resizeParticleCanvas);
+
+        function createSparks(x, y, count = 12) {
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * (count > 5 ? 6 : 2),
+                    vy: (Math.random() - 0.5) * (count > 5 ? 6 : 2),
+                    size: Math.random() * 2.5 + 1,
+                    alpha: 1,
+                    color: themeColor
+                });
             }
         }
 
-        function playClickSound() {
-            if (!soundFxEnabled) return;
+        function drawParticles() {
+            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.025;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                pCtx.save();
+                pCtx.globalAlpha = p.alpha;
+                pCtx.fillStyle = p.color;
+                pCtx.shadowBlur = 8;
+                pCtx.shadowColor = p.color;
+                pCtx.fillRect(p.x, p.y, p.size, p.size);
+                pCtx.restore();
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+
+        window.addEventListener('click', (e) => {
+            createSparks(e.clientX, e.clientY, 16);
+        });
+
+
+        // --- 3. Web Audio API (Sound FX & Synth Ambient BGM) ---
+        let soundEnabled = true;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playBeep(freq = 800, duration = 0.05, type = 'sine') {
+            if (!soundEnabled) return;
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                initAudio();
                 const osc = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(580, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
-                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.08);
+                osc.stop(audioCtx.currentTime + duration);
             } catch (e) {}
         }
 
-        function playSuccessChime() {
-            if (!soundFxEnabled) return;
+        function playChime() {
+            if (!soundEnabled) return;
+            playBeep(523.25, 0.08, 'triangle');
+            setTimeout(() => playBeep(659.25, 0.08, 'triangle'), 60);
+            setTimeout(() => playBeep(783.99, 0.12, 'triangle'), 120);
+        }
+
+        // Procedural Synthwave BGM Generator
+        let bgmPlaying = false;
+        let bgmInterval;
+        const notes = [110, 130.81, 146.83, 164.81, 196.00, 220.00]; // Cyber minor scale
+        let noteIdx = 0;
+
+        function playSynthStep() {
+            if (!bgmPlaying) return;
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, index) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime + index * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.08 + 0.25);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(audioCtx.currentTime + index * 0.08);
-                    osc.stop(audioCtx.currentTime + index * 0.08 + 0.25);
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                
+                const freq = notes[noteIdx % notes.length];
+                noteIdx++;
+
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.35);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+
+                // Animate Equalizer Bars
+                document.querySelectorAll('.eq-bar').forEach(bar => {
+                    bar.style.height = `${Math.floor(Math.random() * 16) + 4}px`;
                 });
-            } catch (e) {}
+            } catch(e) {}
         }
 
-        function initTheme() {
-            const savedTheme = localStorage.getItem('lru_theme') || 'light';
-            setThemeMode(savedTheme, false);
+        const bgmBtn = document.getElementById('bgm-play-btn');
+        const bgmIcon = document.getElementById('bgm-icon');
 
-            const savedSepia = localStorage.getItem('lru_sepia') === 'true';
-            if (savedSepia) {
-                document.body.classList.add('sepia-mode');
-            }
-
-            const savedFontSize = localStorage.getItem('lru_font_size') || 'normal';
-            setFontSize(savedFontSize, false);
-        }
-
-        function initSettingsUI() {
-            const sepiaToggle = document.getElementById('sepiaToggle');
-            if (sepiaToggle) {
-                sepiaToggle.checked = localStorage.getItem('lru_sepia') === 'true';
-            }
-
-            const soundToggle = document.getElementById('soundFxToggle');
-            if (soundToggle) {
-                soundToggle.checked = soundFxEnabled;
-            }
-
-            const fontSelect = document.getElementById('fontSizeSelect');
-            if (fontSelect) {
-                fontSelect.value = localStorage.getItem('lru_font_size') || 'normal';
-            }
-        }
-
-        function setThemeMode(mode, showMsg = true) {
-            playClickSound();
-            const btnLight = document.getElementById('themeBtnLight');
-            const btnDark = document.getElementById('themeBtnDark');
-
-            if (mode === 'dark') {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('lru_theme', 'dark');
-                if(btnLight && btnDark) {
-                    btnLight.className = "px-3.5 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-slate-400 hover:text-white";
-                    btnDark.className = "px-3.5 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 bg-slate-700 text-indigo-300 shadow-sm";
-                }
-                if(showMsg) showToast(currentLang === 'th' ? 'เปิดใช้งานโหมดมืดเรียบร้อย' : 'Dark mode enabled', 'info');
+        bgmBtn.addEventListener('click', () => {
+            initAudio();
+            bgmPlaying = !bgmPlaying;
+            if (bgmPlaying) {
+                bgmIcon.className = 'fa-solid fa-pause text-xs';
+                bgmInterval = setInterval(playSynthStep, 220);
+                showToast('[SYS_LOG]: AMBIENT_SYNTH_STARTED');
             } else {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('lru_theme', 'light');
-                if(btnLight && btnDark) {
-                    btnDark.className = "px-3.5 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-800";
-                    btnLight.className = "px-3.5 py-2 rounded-xl font-bold transition-all flex items-center justify-center gap-1.5 bg-white text-pink-600 shadow-sm";
-                }
-                if(showMsg) showToast(currentLang === 'th' ? 'เปิดใช้งานโหมดสว่างเรียบร้อย' : 'Light mode enabled', 'info');
+                bgmIcon.className = 'fa-solid fa-play text-xs';
+                clearInterval(bgmInterval);
+                document.querySelectorAll('.eq-bar').forEach(bar => bar.style.height = '4px');
+                showToast('[SYS_LOG]: AMBIENT_SYNTH_MUTED');
             }
-        }
-
-        function toggleSepiaMode(enabled) {
-            playClickSound();
-            if (enabled) {
-                document.body.classList.add('sepia-mode');
-                localStorage.setItem('lru_sepia', 'true');
-                showToast(currentLang === 'th' ? 'เปิดโหมดถนอมสายตาเรียบร้อย' : 'Eye care mode enabled', 'info');
-            } else {
-                document.body.classList.remove('sepia-mode');
-                localStorage.setItem('lru_sepia', 'false');
-                showToast(currentLang === 'th' ? 'ปิดโหมดถนอมสายตาแล้ว' : 'Eye care mode disabled', 'info');
-            }
-        }
-
-        function setFontSize(size, showMsg = true) {
-            playClickSound();
-            localStorage.setItem('lru_font_size', size);
-            const bodyEl = document.body;
-            bodyEl.classList.remove('text-sm', 'text-base', 'text-lg');
-
-            if (size === 'large') {
-                bodyEl.style.fontSize = '1.05rem';
-                if(showMsg) showToast(currentLang === 'th' ? 'ปรับขนาดตัวอักษรเป็น: ใหญ่' : 'Font size: Large', 'info');
-            } else if (size === 'xlarge') {
-                bodyEl.style.fontSize = '1.15rem';
-                if(showMsg) showToast(currentLang === 'th' ? 'ปรับขนาดตัวอักษรเป็น: ใหญ่มาก' : 'Font size: Extra Large', 'info');
-            } else {
-                bodyEl.style.fontSize = '1rem';
-                if(showMsg) showToast(currentLang === 'th' ? 'ปรับขนาดตัวอักษรเป็น: ปกติ' : 'Font size: Normal', 'info');
-            }
-        }
-
-        function toggleSoundFx(enabled) {
-            soundFxEnabled = enabled;
-            localStorage.setItem('lru_sound_fx', enabled);
-            if (enabled) {
-                showToast(currentLang === 'th' ? 'เปิดเสียงเอฟเฟกต์แล้ว' : 'Sound effects enabled', 'info');
-            } else {
-                showToast(currentLang === 'th' ? 'ปิดเสียงเอฟเฟกต์แล้ว' : 'Sound effects disabled', 'info');
-            }
-        }
-
-        function clearMyLocalTickets() {
-            playClickSound();
-            if (confirm(currentLang === 'th' ? 'คุณต้องการล้างประวัติการแจ้งเรื่องในเครื่องนี้ทั้งหมดใช่หรือไม่?' : 'Are you sure you want to clear your complaint history on this device?')) {
-                localStorage.removeItem(MY_TICKETS_KEY);
-                updateMyHistoryBadge();
-                showToast(currentLang === 'th' ? 'ล้างประวัติในเครื่องเรียบร้อยแล้ว' : 'Local history cleared successfully', 'info');
-            }
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if(!container) return;
-            const toast = document.createElement('div');
-            
-            let bgClass = 'bg-pink-600 text-white';
-            let icon = 'fa-circle-check';
-            if(type === 'error') {
-                bgClass = 'bg-rose-600 text-white';
-                icon = 'fa-circle-xmark';
-            } else if(type === 'info') {
-                bgClass = 'bg-sky-600 text-white';
-                icon = 'fa-circle-info';
-            }
-
-            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl text-xs font-semibold animate-toast ${bgClass}`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-sm shrink-0"></i> <span class="truncate">${message}</span>`;
-            
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(50px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function updateCharCount(textarea) {
-            const len = textarea.value.length;
-            const counter = document.getElementById('charCount');
-            if(counter) counter.innerText = `${len} / 500 ${(currentLang === 'th' ? 'ตัวอักษร' : 'chars')}`;
-        }
-
-        function handleFileSelect(input) {
-            const display = document.getElementById('fileNameDisplay');
-            if(!display) return;
-            if(input.files && input.files[0]) {
-                const file = input.files[0];
-                if(file.size > 5 * 1024 * 1024) {
-                    showToast(currentLang === 'th' ? 'ขนาดไฟล์ใหญ่เกิน 5MB กรุณาเลือกใหม่' : 'File size exceeds 5MB limit', 'error');
-                    input.value = '';
-                    display.innerText = translations[currentLang].text_file_upload;
-                    display.classList.remove('text-pink-600', 'font-bold');
-                    return;
-                }
-                display.innerText = `${(currentLang === 'th' ? 'เลือกไฟล์แล้ว:' : 'Selected:')} ${file.name}`;
-                display.classList.add('text-pink-600', 'font-bold');
-            } else {
-                display.innerText = translations[currentLang].text_file_upload;
-                display.classList.remove('text-pink-600', 'font-bold');
-            }
-        }
-
-        function toggleAnonymous(isAnon) {
-            const contactFields = document.getElementById('contactFields');
-            const fullnameInput = document.getElementById('userName');
-            const contactInput = document.getElementById('contact');
-            if(isAnon) {
-                contactFields.style.opacity = '0.4';
-                contactFields.style.pointerEvents = 'none';
-                fullnameInput.value = '';
-                contactInput.value = '';
-            } else {
-                contactFields.style.opacity = '1';
-                contactFields.style.pointerEvents = 'auto';
-            }
-        }
-
-        // =========================
-        // FIREBASE REAL-TIME DATA
-        // =========================
-        let complaintsCache = [];
-
-        function getComplaints() {
-            return complaintsCache || [];
-        }
-
-        // บันทึกข้อมูลทั้งหมดลง Firebase Realtime Database
-        function saveComplaints(data) {
-            try {
-                const firebaseData = {};
-                data.forEach(item => {
-                    if (!item || !item.id) return;
-                    const key = item.id.replace(/[^a-zA-Z0-9_-]/g, '');
-                    firebaseData[key] = item;
-                });
-
-                database.ref('complaints').set(firebaseData)
-                    .catch(error => {
-                        console.error('Firebase save error:', error);
-                        showToast(currentLang === 'th' ? 'ไม่สามารถบันทึกข้อมูลไป Firebase ได้' : 'Unable to save data to Firebase', 'error');
-                    });
-
-                return true;
-            } catch (e) {
-                console.error(e);
-                showToast(currentLang === 'th' ? 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' : 'Error saving data', 'error');
-                return false;
-            }
-        }
-
-        // ฟังข้อมูลจาก Firebase แบบ Real-time
-        database.ref('complaints').on('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            complaintsCache = Object.values(data).sort((a, b) => {
-                return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-            });
-
-            // อัปเดตทุกส่วนของหน้าเมื่อมีข้อมูลใหม่
-            renderAdminDashboard();
-            renderMyHistory();
-            updateMyHistoryBadge();
-        }, (error) => {
-            console.error('Firebase realtime error:', error);
-            showToast(currentLang === 'th' ? 'เชื่อมต่อฐานข้อมูล Firebase ไม่สำเร็จ' : 'Firebase connection failed', 'error');
         });
 
-        function getMyTickets() {
-            return JSON.parse(localStorage.getItem(MY_TICKETS_KEY)) || [];
-        }
+        // Audio Toggle Switch
+        const soundBtn = document.getElementById('sound-btn');
+        const soundIcon = document.getElementById('sound-icon');
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundIcon.className = soundEnabled ? 'fa-solid fa-volume-high text-xs' : 'fa-solid fa-volume-xmark text-xs text-slate-500';
+            if (soundEnabled) playChime();
+        });
 
-        function addMyTicketId(ticketId) {
-            let myTickets = getMyTickets();
-            if (!myTickets.includes(ticketId)) {
-                myTickets.unshift(ticketId);
-                localStorage.setItem(MY_TICKETS_KEY, JSON.stringify(myTickets));
-                updateMyHistoryBadge();
+
+        // --- 4. Audio-Reactive Visualizer Canvas around Avatar ---
+        const avCanvas = document.getElementById('avatar-eq-canvas');
+        const avCtx = avCanvas.getContext('2d');
+        avCanvas.width = 160; avCanvas.height = 160;
+
+        function drawAvatarEq() {
+            avCtx.clearRect(0, 0, avCanvas.width, avCanvas.height);
+            const centerX = 80, centerY = 80, radius = 62;
+            const bars = 32;
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
+
+            for (let i = 0; i < bars; i++) {
+                const angle = (i / bars) * Math.PI * 2;
+                const barHeight = bgmPlaying ? Math.random() * 12 + 2 : (Math.sin(Date.now() * 0.005 + i) * 3 + 4);
+                
+                const x1 = centerX + Math.cos(angle) * radius;
+                const y1 = centerY + Math.sin(angle) * radius;
+                const x2 = centerX + Math.cos(angle) * (radius + barHeight);
+                const y2 = centerY + Math.sin(angle) * (radius + barHeight);
+
+                avCtx.beginPath();
+                avCtx.moveTo(x1, y1);
+                avCtx.lineTo(x2, y2);
+                avCtx.strokeStyle = themeColor;
+                avCtx.lineWidth = 2;
+                avCtx.stroke();
             }
+            requestAnimationFrame(drawAvatarEq);
         }
+        drawAvatarEq();
 
-        function updateMyHistoryBadge() {
-            const myTickets = getMyTickets();
-            const badge = document.getElementById('myHistoryBadge');
-            if (badge) {
-                if (myTickets.length > 0) {
-                    badge.innerText = myTickets.length;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
+
+        // --- 5. Real-time Clock & System Ping ---
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('cyber-clock').textContent = `${h}:${m}:${s} LOCAL`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        setInterval(() => {
+            const ping = Math.floor(Math.random() * 8) + 10;
+            document.getElementById('ping-counter').textContent = `PING: ${ping}ms`;
+        }, 3000);
+
+
+        // --- 6. Matrix Digital Rain Canvas ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF';
+        const fontSize = 14;
+        let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(3, 7, 12, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
+            ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillStyle = Math.random() > 0.85 ? '#00e5ff' : themeColor;
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
+                drops[i]++;
             }
         }
+        setInterval(drawMatrix, 33);
 
-        function updateAuthUI() {
-            const navContainer = document.getElementById('mainNav');
-            if (!navContainer) return;
 
-            if (isAdminLoggedIn) {
-                navContainer.innerHTML = `
-                    <button onclick="switchTab('admin')" id="tab-admin" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all duration-300 shadow-sm bg-white dark:bg-slate-700 text-pink-600 dark:text-pink-400 flex items-center gap-1 transform active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-gauge-high text-pink-500"></i><span>${translations[currentLang].nav_dashboard}</span>
-                    </button>
-                    <button onclick="switchTab('setting')" id="tab-setting" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all duration-300 text-slate-600 dark:text-slate-300 hover:text-pink-600 flex items-center gap-1 transform active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-gear"></i><span>${translations[currentLang].nav_setting}</span>
-                    </button>
-                `;
-            } else {
-                navContainer.innerHTML = `
-                    <button onclick="switchTab('submit')" id="tab-submit" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all duration-300 shadow-sm bg-white dark:bg-slate-700 text-pink-600 dark:text-pink-400 flex items-center gap-1 transform active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-pen-to-square"></i><span>${translations[currentLang].nav_submit}</span>
-                    </button>
-                    <button onclick="switchTab('my-history')" id="tab-my-history" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all duration-300 text-slate-600 dark:text-slate-300 hover:text-pink-600 flex items-center gap-1 transform active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-clock-rotate-left"></i><span>${translations[currentLang].nav_history}</span>
-                        <span id="myHistoryBadge" class="px-1.5 py-0.2 rounded-full bg-pink-500 text-white text-[9px] hidden">0</span>
-                    </button>
-                    <button onclick="switchTab('admin-login')" id="tab-admin-login" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all duration-300 text-slate-600 dark:text-slate-300 hover:text-pink-600 flex items-center gap-1 transform active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-lock text-pink-500"></i><span>${translations[currentLang].nav_admin}</span>
-                    </button>
-                    <button onclick="switchTab('setting')" id="tab-setting" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-all duration-300 text-slate-600 dark:text-slate-300 hover:text-pink-600 flex items-center gap-1 transform active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-gear"></i><span>${translations[currentLang].nav_setting}</span>
-                    </button>
-                `;
-                updateMyHistoryBadge();
+        // --- 7. Terminal Bio Typing Animation ---
+        const bioText = " ยินดีต้อนรับสู่ศูนย์รวมช่องทางโซเชียลมีเดีย";
+        const typingContainer = document.getElementById('typing-text');
+        let charIndex = 0;
+
+        function typeBio() {
+            if (charIndex < bioText.length) {
+                typingContainer.textContent += bioText.charAt(charIndex);
+                charIndex++;
+                if (charIndex % 3 === 0) playBeep(400 + Math.random() * 200, 0.02, 'sawtooth');
+                setTimeout(typeBio, 35);
             }
         }
+        setTimeout(typeBio, 600);
 
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            playClickSound();
-            const pass = document.getElementById('adminPass').value.trim();
-            const errEl = document.getElementById('adminAuthError');
 
-            if (pass === CORRECT_PIN) {
-                isAdminLoggedIn = true;
-                failedAttempts = 0;
-                sessionStorage.setItem('isAdminLoggedIn', 'true');
-                updateAuthUI();
-                switchTab('admin');
-                playSuccessChime();
-                showToast(currentLang === 'th' ? 'เข้าสู่ระบบแอดมินสำเร็จ' : 'Admin login successful', 'success');
-                if(errEl) errEl.classList.add('hidden');
-            } else {
-                failedAttempts++;
-                let warningText = currentLang === 'th' ? `รหัสผ่านไม่ถูกต้อง (ครั้งที่ ${failedAttempts})` : `Incorrect password (attempt ${failedAttempts})`;
-                if (failedAttempts === 3 && currentLang === 'th') warningText += "<br>⚠️ นึกดีๆลืมรหัสรึป่าว";
-                else if (failedAttempts === 5 && currentLang === 'th') warningText += "<br>⚠️ ผิดมากเกินไปแล้วนะ ลองเช็คดีๆ";
-                else if (failedAttempts >= 6 && currentLang === 'th') warningText += "<br>⚠️ คงลืมจริงๆแหละ ลองเช็คดีๆ";
-                else if (failedAttempts === 3 && currentLang === 'en') warningText += "<br>⚠️ Are you sure you remember the password?";
-                else if (failedAttempts === 5 && currentLang === 'en') warningText += "<br>⚠️ Too many failed attempts, please check again.";
-                else if (failedAttempts >= 6 && currentLang === 'en') warningText += "<br>⚠️ You must have really forgotten it, please check again.";
+        // --- 8. 3D Tilt Effect on Link Hover ---
+        const cards = document.querySelectorAll('.social-link');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => playBeep(900, 0.04, 'sine'));
+            card.addEventListener('click', () => playBeep(1400, 0.08, 'triangle'));
 
-                if(errEl) {
-                    errEl.innerHTML = warningText;
-                    errEl.classList.remove('hidden');
-                }
-                showToast(currentLang === 'th' ? 'รหัสผ่านไม่ถูกต้อง' : 'Incorrect password', 'error');
-            }
-        }
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -6;
+                const rotateY = ((x - centerX) / centerX) * 6;
 
-        function adminLogout() {
-            playClickSound();
-            isAdminLoggedIn = false;
-            sessionStorage.removeItem('isAdminLoggedIn');
-            updateAuthUI();
-            switchTab('submit');
-            showToast(currentLang === 'th' ? 'ออกจากระบบเรียบร้อยแล้ว' : 'Logged out successfully', 'info');
-        }
-
-        function switchTab(tab) {
-            playClickSound();
-            
-            if (tab === 'admin' && !isAdminLoggedIn) {
-                showToast(currentLang === 'th' ? 'กรุณาเข้าสู่ระบบแอดมินก่อนใช้งานแดชบอร์ด' : 'Please login as admin first', 'error');
-                switchTab('admin-login');
-                return;
-            }
-
-            if (isAdminLoggedIn && (tab === 'submit' || tab === 'my-history' || tab === 'admin-login')) {
-                tab = 'admin';
-            }
-
-            ['submit', 'my-history', 'admin-login', 'admin', 'setting'].forEach(t => {
-                const sec = document.getElementById(`sec-${t}`);
-                if(sec) sec.classList.add('hidden');
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
             });
 
-            const targetSec = document.getElementById(`sec-${tab}`);
-            if(targetSec) {
-                targetSec.classList.remove('hidden');
-            }
-
-            if (tab === 'my-history') {
-                renderMyHistory();
-            } else if (tab === 'admin') {
-                renderAdminDashboard();
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function closeModal() {
-            playClickSound();
-            document.getElementById('successModal').classList.remove('flex');
-            document.getElementById('successModal').classList.add('hidden');
-            document.getElementById('complaintForm').reset();
-            document.getElementById('fileNameDisplay').innerText = translations[currentLang].text_file_upload;
-            document.getElementById('fileNameDisplay').classList.remove('text-pink-600', 'font-bold');
-            document.getElementById('charCount').innerText = `0 / 500 ${(currentLang === 'th' ? 'ตัวอักษร' : 'chars')}`;
-            toggleAnonymous(false);
-            switchTab('submit');
-        }
-
-        function closeModalToHistory() {
-            playClickSound();
-            document.getElementById('successModal').classList.remove('flex');
-            document.getElementById('successModal').classList.add('hidden');
-            document.getElementById('complaintForm').reset();
-            document.getElementById('fileNameDisplay').innerText = translations[currentLang].text_file_upload;
-            document.getElementById('fileNameDisplay').classList.remove('text-pink-600', 'font-bold');
-            document.getElementById('charCount').innerText = `0 / 500 ${(currentLang === 'th' ? 'ตัวอักษร' : 'chars')}`;
-            toggleAnonymous(false);
-            switchTab('my-history');
-        }
-
-        function renderMyHistory() {
-            const container = document.getElementById('myHistoryContainer');
-            if (!container) return;
-
-            const myTickets = getMyTickets();
-            const allComplaints = getComplaints();
-            const myData = allComplaints.filter(item => myTickets.includes(item.id));
-
-            if (myData.length === 0) {
-                container.innerHTML = `
-                    <div class="glass-card rounded-3xl p-8 text-center space-y-3 shadow-sm">
-                        <div class="w-12 h-12 rounded-2xl bg-pink-50 dark:bg-slate-800 text-pink-400 flex items-center justify-center text-xl mx-auto">
-                            <i class="fa-solid fa-inbox"></i>
-                        </div>
-                        <p class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">ยังไม่มีประวัติเรื่องร้องเรียนในอุปกรณ์นี้</p>
-                        <button onclick="switchTab('submit')" class="px-4 py-2 bg-pink-500 text-white rounded-xl text-xs font-bold hover:bg-pink-600 transition-all shadow-sm">
-                            แจ้งเรื่องร้องเรียนตอนนี้
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = myData.map(item => {
-                let badgeColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300';
-                if (item.status === 'กำลังดำเนินการ') badgeColor = 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300';
-                if (item.status === 'แก้ไขเรียบร้อย') badgeColor = 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300';
-
-                return `
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3 shadow-md">
-                        <div class="flex items-center justify-between gap-2 border-b border-pink-100 dark:border-slate-800 pb-3">
-                            <span class="font-mono text-xs font-bold text-pink-600 dark:text-pink-400">${item.id}</span>
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${badgeColor}">${item.status}</span>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">${item.subject}</h4>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400"><i class="fa-solid fa-building mr-1"></i> ${item.category} (${item.reporterStatus})</p>
-                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-2 bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800 leading-relaxed">${item.description}</p>
-                        </div>
-                        
-                        ${item.attachment ? `
-                            <div class="pt-1">
-                                <button onclick="openImageModal('${item.attachment}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pink-50 dark:bg-slate-800 text-pink-600 dark:text-pink-400 hover:bg-pink-100 rounded-xl text-xs font-semibold transition-all border border-pink-200 dark:border-slate-700 shadow-sm">
-                                    <i class="fa-solid fa-image"></i> ดูรูปภาพหลักฐาน
-                                </button>
-                            </div>
-                        ` : ''}
-
-                        ${item.adminReply ? `
-                            <div class="p-3 bg-sky-50/80 dark:bg-slate-900/80 rounded-xl border border-sky-200 dark:border-slate-700 text-xs space-y-1">
-                                <p class="font-bold text-sky-700 dark:text-sky-400 flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> ข้อความตอบกลับจากแอดมิน:</p>
-                                <p class="text-slate-600 dark:text-slate-300">${item.adminReply}</p>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openImageModal(imgSrc) {
-            playClickSound();
-            const modal = document.getElementById('imageModal');
-            const preview = document.getElementById('modalImagePreview');
-            if(modal && preview) {
-                preview.src = imgSrc;
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        }
-
-        function closeImageModal() {
-            playClickSound();
-            const modal = document.getElementById('imageModal');
-            if(modal) {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-            }
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            playClickSound();
-
-            const userStatus = document.getElementById('userStatus').value;
-            const department = document.getElementById('department').value;
-            const urgency = document.getElementById('complaintUrgency').value;
-            const subject = document.getElementById('complaintTitle').value.trim();
-            const description = document.getElementById('complaintDetail').value.trim();
-            const isAnonymous = document.getElementById('isAnonymous').checked;
-            const userName = document.getElementById('userName').value.trim();
-            const contact = document.getElementById('contact').value.trim();
-            const fileInput = document.getElementById('attachment');
-
-            if (!userStatus || !department || !subject || !description) {
-                showToast(currentLang === 'th' ? 'กรุณากรอกข้อมูลในช่องที่มีเครื่องหมาย * ให้ครบถ้วน' : 'Please fill out all required fields marked with *', 'error');
-                return;
-            }
-
-            const ticketId = '#LRU-' + Math.floor(1000 + Math.random() * 9000);
-
-            let attachmentData = '';
-            const processSave = (imgBase64 = '') => {
-                const newComplaint = {
-                    id: ticketId,
-                    reporterStatus: userStatus,
-                    category: department,
-                    urgency: urgency,
-                    subject: subject,
-                    description: description,
-                    isAnonymous: isAnonymous,
-                    userName: isAnonymous ? 'ไม่ระบุตัวตน (Anonymous)' : (userName || 'ไม่ระบุชื่อ'),
-                    contact: isAnonymous ? '-' : (contact || '-'),
-                    attachment: imgBase64,
-                    status: 'รับเรื่องแล้ว',
-                    adminReply: '',
-                    createdAt: new Date().toISOString()
-                };
-
-                const firebaseKey = ticketId.replace(/[^a-zA-Z0-9_-]/g, '');
-                database.ref('complaints/' + firebaseKey).set(newComplaint)
-                    .then(() => {
-                        addMyTicketId(ticketId);
-                        playSuccessChime();
-                        document.getElementById('modalTicketId').innerText = ticketId;
-                        const successModal = document.getElementById('successModal');
-                        if(successModal) {
-                            successModal.classList.remove('hidden');
-                            successModal.classList.add('flex');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Firebase submit error:', error);
-                        showToast(currentLang === 'th' ? 'ส่งเรื่องไม่สำเร็จ กรุณาลองใหม่' : 'Submission failed. Please try again.', 'error');
-                    });
-            };
-
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(uploadEvent) {
-                    processSave(uploadEvent.target.result);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                processSave('');
-            }
-        }
-
-        function renderAdminDashboard() {
-            const complaints = getComplaints();
-            const searchVal = (document.getElementById('adminSearchInput')?.value || '').toLowerCase();
-            const statusFilter = document.getElementById('adminStatusFilter')?.value || 'ALL';
-
-            const total = complaints.length;
-            const pending = complaints.filter(c => c.status === 'รับเรื่องแล้ว' || c.status === 'กำลังดำเนินการ').length;
-            const resolved = complaints.filter(c => c.status === 'แก้ไขเรียบร้อย').length;
-
-            if(document.getElementById('stat-total')) document.getElementById('stat-total').innerText = total;
-            if(document.getElementById('stat-pending')) document.getElementById('stat-pending').innerText = pending;
-            if(document.getElementById('stat-resolved')) document.getElementById('stat-resolved').innerText = resolved;
-
-            const receivedCount = complaints.filter(c => c.status === 'รับเรื่องแล้ว').length;
-            const inProgCount = complaints.filter(c => c.status === 'กำลังดำเนินการ').length;
-            const resolvedCount = resolved;
-
-            const calcPercent = (count) => total > 0 ? Math.round((count / total) * 100) : 0;
-            
-            if(document.getElementById('graph-percent-received')) {
-                document.getElementById('graph-percent-received').innerText = calcPercent(receivedCount) + '%';
-                document.getElementById('graph-bar-received').style.width = calcPercent(receivedCount) + '%';
-            }
-            if(document.getElementById('graph-percent-pending')) {
-                document.getElementById('graph-percent-pending').innerText = calcPercent(inProgCount) + '%';
-                document.getElementById('graph-bar-pending').style.width = calcPercent(inProgCount) + '%';
-            }
-            if(document.getElementById('graph-percent-resolved')) {
-                document.getElementById('graph-percent-resolved').innerText = calcPercent(resolvedCount) + '%';
-                document.getElementById('graph-bar-resolved').style.width = calcPercent(resolvedCount) + '%';
-            }
-
-            const filtered = complaints.filter(item => {
-                const matchesSearch = item.id.toLowerCase().includes(searchVal) ||
-                                      item.subject.toLowerCase().includes(searchVal) ||
-                                      item.userName.toLowerCase().includes(searchVal) ||
-                                      item.category.toLowerCase().includes(searchVal);
-                const matchesStatus = statusFilter === 'ALL' || item.status === statusFilter;
-                return matchesSearch && matchesStatus;
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
             });
+        });
 
-            const tbody = document.getElementById('adminTableBody');
-            if(!tbody) return;
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400 font-medium text-xs">ไม่พบรายการเรื่องร้องเรียนที่ค้นหา</td></tr>`;
-                return;
-            }
+        // --- 9. Share Button & Toast System ---
+        const shareBtn = document.getElementById('share-btn');
+        const toast = document.getElementById('toast');
+        const toastText = document.getElementById('toast-text');
 
-            tbody.innerHTML = filtered.map(item => {
-                let badgeColor = 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300';
-                if (item.status === 'กำลังดำเนินการ') badgeColor = 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300';
-                if (item.status === 'แก้ไขเรียบร้อย') badgeColor = 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300';
+        function showToast(message) {
+            toastText.textContent = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100', '-translate-y-2');
 
-                let priorityBadge = 'text-emerald-600 bg-emerald-50 dark:bg-slate-800';
-                if (item.urgency === 'ด่วน') priorityBadge = 'text-amber-600 bg-amber-50 dark:bg-slate-800';
-                if (item.urgency === 'ด่วนที่สุด') priorityBadge = 'text-rose-600 bg-rose-50 dark:bg-slate-800';
-
-                return `
-                    <tr class="hover:bg-pink-50/40 dark:hover:bg-slate-800/40 transition-colors">
-                        <td class="p-3.5 sm:p-4 font-mono font-bold text-pink-600 dark:text-pink-400 whitespace-nowrap">${item.id}</td>
-                        <td class="p-3.5 sm:p-4 max-w-xs">
-                            <p class="font-bold text-slate-900 dark:text-white truncate">${item.subject}</p>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate"><i class="fa-solid fa-building mr-1"></i> ${item.category} (${item.reporterStatus})</p>
-                        </td>
-                        <td class="p-3.5 sm:p-4 whitespace-nowrap">
-                            ${item.attachment ? `
-                                <button onclick="openImageModal('${item.attachment}')" class="px-2.5 py-1 bg-pink-50 dark:bg-slate-800 text-pink-600 dark:text-pink-400 rounded-lg text-xs font-semibold hover:bg-pink-100 transition-all border border-pink-200 dark:border-slate-700 shadow-sm">
-                                    <i class="fa-solid fa-image"></i> รูปภาพ
-                                </button>
-                            ` : '<span class="text-slate-400 text-xs">ไม่มีหลักฐาน</span>'}
-                        </td>
-                        <td class="p-3.5 sm:p-4 text-xs">
-                            <p class="font-bold text-slate-800 dark:text-slate-200 truncate">${item.userName}</p>
-                            <p class="text-[11px] text-slate-400 truncate">${item.contact}</p>
-                        </td>
-                        <td class="p-3.5 sm:p-4 whitespace-nowrap">
-                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold ${priorityBadge}">${item.urgency}</span>
-                        </td>
-                        <td class="p-3.5 sm:p-4 whitespace-nowrap">
-                            <select onchange="updateTicketStatus('${item.id}', this.value)" class="px-2.5 py-1.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white cursor-pointer shadow-sm ${badgeColor}">
-                                <option value="รับเรื่องแล้ว" ${item.status === 'รับเรื่องแล้ว' ? 'selected' : ''}>🟠 รับเรื่องแล้ว</option>
-                                <option value="กำลังดำเนินการ" ${item.status === 'กำลังดำเนินการ' ? 'selected' : ''}>🔵 กำลังดำเนินการ</option>
-                                <option value="แก้ไขเรียบร้อย" ${item.status === 'แก้ไขเรียบร้อย' ? 'selected' : ''}>🟢 แก้ไขเรียบร้อย</option>
-                            </select>
-                        </td>
-                        <td class="p-3.5 sm:p-4 text-center whitespace-nowrap">
-                            <button onclick="openReplyModal('${item.id}')" class="px-3 py-1.5 bg-sky-50 dark:bg-slate-800 text-sky-600 dark:text-sky-400 hover:bg-sky-100 rounded-xl text-xs font-bold transition-all border border-sky-200 dark:border-slate-700 shadow-sm">
-                                <i class="fa-solid fa-comment-dots"></i> ตอบกลับ
-                            </button>
-                        </td>
-                        <td class="p-3.5 sm:p-4 text-center whitespace-nowrap">
-                            <button onclick="deleteTicket('${item.id}')" class="p-2 bg-rose-50 dark:bg-slate-800 text-rose-600 dark:text-rose-400 hover:bg-rose-100 rounded-xl text-xs font-bold transition-all border border-rose-200 dark:border-slate-700 shadow-sm">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', '-translate-y-2');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
         }
 
-        function updateTicketStatus(ticketId, newStatus) {
-            playClickSound();
-            const key = ticketId.replace(/[^a-zA-Z0-9_-]/g, '');
-            database.ref('complaints/' + key + '/status').set(newStatus)
-                .then(() => {
-                    showToast(currentLang === 'th' ? `อัปเดตสถานะ ${ticketId} เป็น "${newStatus}" เรียบร้อย` : `Updated status for ${ticketId}`, 'success');
-                })
-                .catch(error => {
-                    console.error(error);
-                    showToast(currentLang === 'th' ? 'อัปเดตสถานะไม่สำเร็จ' : 'Status update failed', 'error');
-                });
-        }
+        shareBtn.addEventListener('click', () => {
+            playChime();
+            const input = document.createElement('input');
+            input.value = window.location.href;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
 
-        function openReplyModal(ticketId) {
-            playClickSound();
-            const complaints = getComplaints();
-            const item = complaints.find(c => c.id === ticketId);
-            if (!item) return;
+            showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
+        });
 
-            document.getElementById('currentReplyId').value = ticketId;
-            document.getElementById('replyTicketTitle').innerText = `${translations[currentLang].modal_reply_title}: ${item.subject}`;
-            document.getElementById('replyTicketSub').innerText = `รหัส: ${item.id} | ผู้แจ้ง: ${item.userName}`;
-            document.getElementById('replyTicketDesc').innerText = item.description;
-            document.getElementById('adminReplyText').value = item.adminReply || '';
-
-            const modal = document.getElementById('replyModal');
-            if(modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        }
-
-        function closeReplyModal() {
-            playClickSound();
-            const modal = document.getElementById('replyModal');
-            if(modal) {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-            }
-        }
-
-        function submitAdminReply() {
-            playClickSound();
-            const ticketId = document.getElementById('currentReplyId').value;
-            const replyText = document.getElementById('adminReplyText').value.trim();
-            const item = getComplaints().find(c => c.id === ticketId);
-            if (!item) return;
-
-            const updates = {
-                adminReply: replyText
-            };
-            if (replyText && item.status === 'รับเรื่องแล้ว') {
-                updates.status = 'กำลังดำเนินการ';
-            }
-
-            const key = ticketId.replace(/[^a-zA-Z0-9_-]/g, '');
-            database.ref('complaints/' + key).update(updates)
-                .then(() => {
-                    closeReplyModal();
-                    showToast(currentLang === 'th' ? 'บันทึกข้อความตอบกลับเรียบร้อยแล้ว' : 'Reply sent successfully', 'success');
-                })
-                .catch(error => {
-                    console.error(error);
-                    showToast(currentLang === 'th' ? 'บันทึกข้อความตอบกลับไม่สำเร็จ' : 'Reply failed', 'error');
-                });
-        }
-
-        function deleteTicket(ticketId) {
-            playClickSound();
-            if (confirm(currentLang === 'th' ? `คุณต้องการลบเรื่องร้องเรียนรหัส ${ticketId} ใช่หรือไม่?` : `Are you sure you want to delete ${ticketId}?`)) {
-                const key = ticketId.replace(/[^a-zA-Z0-9_-]/g, '');
-                database.ref('complaints/' + key).remove()
-                    .then(() => {
-                        showToast(currentLang === 'th' ? 'ลบรายการเรียบร้อยแล้ว' : 'Item deleted', 'info');
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        showToast(currentLang === 'th' ? 'ลบรายการไม่สำเร็จ' : 'Delete failed', 'error');
-                    });
-            }
-        }
-
-        function generateMockData() {
-            playClickSound();
-            const mockItems = [
-                {
-                    id: '#LRU-9921',
-                    reporterStatus: 'นักศึกษา',
-                    category: 'สำนักวิทยบริการและเทคโนโลยีสารสนเทศ',
-                    urgency: 'ด่วน',
-                    subject: 'Wi-Fi ในหอพักนักศึกษาหลุดบ่อยมากในช่วงค่ำ',
-                    description: 'เชื่อมต่อแล้วสัญญาณหลุดทุกๆ 10 นาที ทำให้ไม่สามารถส่งงานอาจารย์ทันกำหนดได้',
-                    isAnonymous: false,
-                    userName: 'นายสมชาย ใจดี (65412301)',
-                    contact: '0891234567',
-                    attachment: '',
-                    status: 'รับเรื่องแล้ว',
-                    adminReply: '',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: '#LRU-8842',
-                    reporterStatus: 'อาจารย์ / บุคลากร',
-                    category: 'คณะเทคโนโลยี',
-                    urgency: 'ด่วนที่สุด',
-                    subject: 'โปรเจคเตอร์ห้อง Lab คอมพิวเตอร์ 3 ภาพไม่ติด',
-                    description: 'เวลาเปิดใช้งานหลอดภาพกระพริบแล้วตัดดับ มีกลิ่นไหม้จางๆ บริเวณเครื่องฉาย',
-                    isAnonymous: false,
-                    userName: 'ดร.วิชัย รักเรียน',
-                    contact: 'vichai@lru.ac.th',
-                    attachment: '',
-                    status: 'กำลังดำเนินการ',
-                    adminReply: 'ได้รับเรื่องแล้ว กำลังให้เจ้าหน้าที่เข้าตรวจสอบหน้างาน',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: '#LRU-7719',
-                    reporterStatus: 'นักศึกษา',
-                    category: 'กองพัฒนานักศึกษา',
-                    urgency: 'ปกติ',
-                    subject: 'ขอเพิ่มไฟส่องสว่างบริเวณทางเดินโรงอาหาร',
-                    description: 'ช่วงเวลากลางคืนทางเดินมืดเกินไป อาจเป็นอันตรายต่อนักศึกษาที่เดินกลับหอพักดึก',
-                    isAnonymous: true,
-                    userName: 'ไม่ระบุตัวตน (Anonymous)',
-                    contact: '-',
-                    attachment: '',
-                    status: 'แก้ไขเรียบร้อย',
-                    adminReply: 'ดำเนินการเปลี่ยนหลอดไฟส่องสว่าง LED ใหม่เรียบร้อยแล้วครับ',
-                    createdAt: new Date().toISOString()
-                }
-            ];
-
-            let complaints = getComplaints();
-            mockItems.forEach(mock => {
-                if (!complaints.some(c => c.id === mock.id)) {
-                    complaints.unshift(mock);
-                    addMyTicketId(mock.id);
-                }
-            });
-
-            if (saveComplaints(complaints)) {
-                renderAdminDashboard();
-                showToast(currentLang === 'th' ? 'สร้างข้อมูลตัวอย่างสำเร็จ' : 'Mock data generated', 'success');
-            }
-        }
-
-        function clearAllData() {
-            playClickSound();
-            if (confirm(currentLang === 'th' ? 'คุณต้องการล้างข้อมูลเรื่องร้องเรียนทั้งหมดในระบบใช่หรือไม่?' : 'Are you sure you want to clear all complaints?')) {
-                database.ref('complaints').remove()
-                    .then(() => {
-                        showToast(currentLang === 'th' ? 'ล้างข้อมูลทั้งหมดในระบบเรียบร้อย' : 'All data cleared', 'info');
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        showToast(currentLang === 'th' ? 'ล้างข้อมูลไม่สำเร็จ' : 'Clear failed', 'error');
-                    });
-            }
-        }
+        // Avatar Interactive Click FX
+        document.getElementById('avatar-container').addEventListener('click', () => {
+            playBeep(300, 0.1, 'sawtooth');
+            setTimeout(() => playBeep(600, 0.1, 'square'), 50);
+            showToast('[SYS_LOG]: BIOMETRIC_SCAN_COMPLETE');
+        });
     </script>
 </body>
 </html>
