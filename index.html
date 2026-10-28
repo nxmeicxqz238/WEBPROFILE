@@ -186,7 +186,7 @@
         }
 
         @keyframes glitch-1 { 0% { clip: rect(15px, 9999px, 35px, 0); } 100% { clip: rect(45px, 9999px, 75px, 0); } }
-        @keyframes glitch-2 { 0% { clip: rect(65px, 9999px, 20px, 0); } 100% { clip: rect(10px, 9999px, 85px, 0); } }
+        @keyframes glitch-2 { 0% { clip: rect(65px, 9999px, 80px, 0); } 100% { clip: rect(10px, 9999px, 85px, 0); } }
 
         /* Custom Social Glow Colors */
         .glow-ig:hover { box-shadow: 0 0 18px rgba(225, 48, 108, 0.4), inset 0 0 10px rgba(225, 48, 108, 0.2); border-color: #e1306c; }
@@ -241,24 +241,57 @@
         #custom-alert-overlay.active .alert-box {
             transform: scale(1);
         }
+
+        /* --- MEME JUMPSCARE OVERLAY & SHAKE ANIMATION --- */
+        #jumpscare-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease-in-out;
+        }
+        #jumpscare-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+            animation: jumpscare-shake 0.08s infinite alternate;
+        }
+        @keyframes jumpscare-shake {
+            0% { transform: translate(5px, 5px) scale(1.05) rotate(1deg); filter: invert(0); }
+            50% { transform: translate(-5px, -8px) scale(1.08) rotate(-1deg); filter: invert(0.2); }
+            100% { transform: translate(8px, -3px) scale(1.03) rotate(2deg); filter: contrast(150%); }
+        }
     </style>
 </head>
 <body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
 
+    <!-- --- MEME JUMPSCARE OVERLAY --- -->
+    <div id="jumpscare-overlay">
+        <!-- รูปมีมกวนๆ -->
+        <img id="jumpscare-img" src="https://i.pinimg.com/736x/23/80/ff/2380ffb4293ae16f29eac233a63a044f.jpg" alt="Campaign Meme" class="max-h-[75vh] max-w-[90vw] object-contain border-4 border-red-600 shadow-[0_0_50px_#ff0055]">
+        <div class="mt-4 font-mono text-xl md:text-3xl font-bold text-yellow-400 bg-black/80 px-4 py-2 border-2 border-yellow-400 shadow-[0_0_20px_#facc15] glitch-text" data-text=" ขี้เสือกอีกละ !">
+           ขี้เสือกอีกละ !
+        </div>
+    </div>
+
     <!-- --- GIANT CYBER ALERT MODAL WITH GIF --- -->
     <div id="custom-alert-overlay">
         <div class="alert-box font-mono">
-            <!-- ใส่ลิงก์ GIF ที่ต้องการตรงนี้ (สามารถเปลี่ยน URL รูป GIF ได้ตามใจชอบ) -->
             <div class="mb-4 flex justify-center">
                 <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Cyber GIF" class="w-28 h-28 object-cover rounded border border-cyber-green shadow-[0_0_15px_var(--cyber-glow-color)]">
             </div>
             <div class="text-xs text-cyber-cyan tracking-widest mb-1">&lt; SYSTEM NOTIFICATION &gt;</div>
             <h2 class="text-2xl font-bold text-[var(--text-base)] mb-3 glitch-text" data-text="WELCOME!">WELCOME!</h2>
             <p class="text-sm text-[var(--sub-text)] mb-6 leading-relaxed">
-               <span class="text-cyber-green font-bold">ฮั่นแน่ 🔥 มาส่องกันอะดิรู้น้า</span> 
+               <span class="text-cyber-green font-bold">ฮั่นแน่ ! มาส่องกันอะดิรู้น้า</span> 
             </p>
             <button id="alert-close-btn" class="w-full py-3 bg-cyber-green text-black font-bold text-sm tracking-wider hover:bg-cyber-cyan transition-colors shadow-[0_0_15px_var(--cyber-glow-color)] cursor-pointer">
-                [ กดปุ่มนี้ เพื่อเพิ่มดาเมจ 🔥 ]
+                [ กดปุ่มนี้ ถ้าอยากส่องต่อ ]
             </button>
         </div>
     </div>
@@ -354,8 +387,6 @@
         </section>
 
         <main class="w-full space-y-3 mb-6 flex-1" id="links-container">
-           
-
             <a href="https://www.instagram.com/nxmeicxqz_/" target="_blank" class="social-link cyber-card glow-ig block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.15s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -474,7 +505,7 @@
                     <i class="fa-solid fa-chevron-right font-mono text-cyber-green/50 group-hover:text-[#66c0f4] group-hover:translate-x-1 transition-all"></i>
                 </div>
             </a>
- <!-- เพิ่มลิงก์ Roblox ตรงนี้ -->
+
             <a href="https://www.roblox.com/th/users/9231792938/profile" target="_blank" class="social-link cyber-card glow-roblox block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.12s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
@@ -524,6 +555,79 @@
 
     <!-- JavaScript Optimized for 120 FPS Rendering -->
     <script>
+        // --- Web Audio API ---
+        let soundEnabled = true;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playBeep(freq = 800, duration = 0.05, type = 'sine') {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playChime() {
+            if (!soundEnabled) return;
+            playBeep(523.25, 0.08, 'triangle');
+            setTimeout(() => playBeep(659.25, 0.08, 'triangle'), 60);
+            setTimeout(() => playBeep(783.99, 0.12, 'triangle'), 120);
+        }
+
+        // --- FAHHHHHH JUMPSCARE AUDIO PLAYER (Direct MP3 from MyInstants) ---
+        function triggerJumpscareSound() {
+            if (!soundEnabled) return;
+            try {
+                // เล่นไฟล์เสียง "Fahhhhhhhhh" จาก MyInstants[cite: 2]
+                const memeAudio = new Audio('https://www.myinstants.com/media/sounds/fahhhhhhhhhhhhhh-3525.mp3');
+                memeAudio.volume = 1.0;
+                memeAudio.play().catch(e => {
+                    // Fallback ถ้า Browser บล็อก Autoplay จะใช้ระบบ Web Audio API สังเคราะห์เสียงแทน
+                    initAudio();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 1.5);
+                    gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 1.5);
+                });
+            } catch(e) {}
+        }
+
+        // --- Jumpscare Execution Function ---
+        function triggerMemeJumpscare() {
+            const jumpscareOverlay = document.getElementById('jumpscare-overlay');
+            jumpscareOverlay.classList.add('active');
+            triggerJumpscareSound();
+
+            // แสดงมีมสแกน 1.8 วินาทีแล้วค่อยซ่อน
+            setTimeout(() => {
+                jumpscareOverlay.classList.remove('active');
+            }, 1800);
+        }
+
         // --- Show Giant Alert Modal On Load ---
         window.addEventListener('DOMContentLoaded', () => {
             const alertOverlay = document.getElementById('custom-alert-overlay');
@@ -534,10 +638,10 @@
                 alertOverlay.classList.add('active');
             }, 200);
 
-            // กดปุ่มเพื่อปิด Modal เข้าใช้งานเว็บ
+            // กดปุ่มปิด Modal -> เรียก Jumpscare มีม + เสียง Fahhh ทันที
             alertCloseBtn.addEventListener('click', () => {
                 alertOverlay.classList.remove('active');
-                playChime();
+                triggerMemeJumpscare();
             });
         });
 
@@ -568,7 +672,7 @@
             if (typeof playChime === 'function') playChime();
         });
 
-        // --- Optimized Cursor Engine (120 FPS Target via translate3d) ---
+        // --- Optimized Cursor Engine ---
         const cursorRing = document.getElementById('cyber-cursor');
         const cursorDot = document.getElementById('cyber-cursor-dot');
         let mouseX = 0, mouseY = 0;
@@ -605,7 +709,7 @@
             });
         });
 
-        // --- Optimized Particle System ---
+        // --- Particle System ---
         const particleCanvas = document.getElementById('particle-canvas');
         const pCtx = particleCanvas.getContext('2d', { alpha: true });
         let particles = [];
@@ -658,39 +762,7 @@
             createSparks(e.clientX, e.clientY, 12);
         });
 
-        // --- Web Audio API ---
-        let soundEnabled = true;
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx;
-
-        function initAudio() {
-            if (!audioCtx) audioCtx = new AudioContext();
-        }
-
-        function playBeep(freq = 800, duration = 0.05, type = 'sine') {
-            if (!soundEnabled) return;
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch (e) {}
-        }
-
-        function playChime() {
-            if (!soundEnabled) return;
-            playBeep(523.25, 0.08, 'triangle');
-            setTimeout(() => playBeep(659.25, 0.08, 'triangle'), 60);
-            setTimeout(() => playBeep(783.99, 0.12, 'triangle'), 120);
-        }
-
+        // --- Synth BGM ---
         let bgmPlaying = false;
         let bgmInterval;
         const notes = [110, 130.81, 146.83, 164.81, 196.00, 220.00];
@@ -790,7 +862,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // --- Matrix Digital Rain (Optimized for High Refresh Rate) ---
+        // --- Matrix Digital Rain ---
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d', { alpha: false });
 
