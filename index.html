@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>❄️</title>
+    <title>Nxmeicxqz // LINK_HUB</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -207,12 +207,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Custom Giant Cyber Alert Modal --- */
-        #custom-alert-overlay {
+        /* --- FINGERPRINT SCANNER OVERLAY --- */
+        #fingerprint-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(3, 7, 12, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(3, 7, 12, 0.95);
+            backdrop-filter: blur(12px);
             z-index: 99999;
             display: flex;
             align-items: center;
@@ -220,79 +220,61 @@
             padding: 1rem;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
         }
-        #custom-alert-overlay.active {
+        #fingerprint-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
-        .alert-box {
-            background: rgba(8, 16, 24, 0.95);
+        .fp-box {
+            background: rgba(8, 16, 24, 0.98);
             border: 2px solid var(--cyber-theme-color);
-            box-shadow: 0 0 40px var(--cyber-glow-color), inset 0 0 20px var(--cyber-glow-color);
-            max-width: 420px;
+            box-shadow: 0 0 50px var(--cyber-glow-color), inset 0 0 25px var(--cyber-glow-color);
+            max-width: 380px;
             width: 100%;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
             clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.3, 1);
-        }
-        #custom-alert-overlay.active .alert-box {
-            transform: scale(1);
         }
 
-        /* --- MEME JUMPSCARE OVERLAY & SHAKE ANIMATION --- */
-        #jumpscare-overlay {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 999999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.15s ease-in-out;
+        /* Animation สแกนนิ้ววิ่งขึ้นลง */
+        @keyframes scanLaser {
+            0% { top: 0%; opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.8; }
         }
-        #jumpscare-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-            animation: jumpscare-shake 0.08s infinite alternate;
+        .scanner-laser {
+            position: absolute;
+            left: 0; width: 100%; height: 3px;
+            background: var(--cyber-theme-color);
+            box-shadow: 0 0 15px var(--cyber-theme-color);
+            animation: scanLaser 1.5s ease-in-out infinite alternate;
+            display: none;
         }
-        @keyframes jumpscare-shake {
-            0% { transform: translate(5px, 5px) scale(1.05) rotate(1deg); filter: invert(0); }
-            50% { transform: translate(-5px, -8px) scale(1.08) rotate(-1deg); filter: invert(0.2); }
-            100% { transform: translate(8px, -3px) scale(1.03) rotate(2deg); filter: contrast(150%); }
+        #fingerprint-overlay.scanning .scanner-laser {
+            display: block;
         }
     </style>
 </head>
 <body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
 
-    <!-- --- MEME JUMPSCARE OVERLAY --- -->
-    <div id="jumpscare-overlay">
-        <!-- รูปมีมกวนๆ -->
-        <img id="jumpscare-img" src="https://i.pinimg.com/736x/23/80/ff/2380ffb4293ae16f29eac233a63a044f.jpg" alt="Campaign Meme" class="max-h-[75vh] max-w-[90vw] object-contain border-4 border-red-600 shadow-[0_0_50px_#ff0055]">
-        <div class="mt-4 font-mono text-xl md:text-3xl font-bold text-yellow-400 bg-black/80 px-4 py-2 border-2 border-yellow-400 shadow-[0_0_20px_#facc15] glitch-text" data-text=" ขี้เสือกอีกละ !">
-           ขี้เสือกอีกละ !
-        </div>
-    </div>
-
-    <!-- --- GIANT CYBER ALERT MODAL WITH GIF --- -->
-    <div id="custom-alert-overlay">
-        <div class="alert-box font-mono">
-            <div class="mb-4 flex justify-center">
-                <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Cyber GIF" class="w-28 h-28 object-cover rounded border border-cyber-green shadow-[0_0_15px_var(--cyber-glow-color)]">
+    <!-- --- FINGERPRINT AUTH OVERLAY --- -->
+    <div id="fingerprint-overlay">
+        <div class="fp-box font-mono relative overflow-hidden">
+            <div class="scanner-laser"></div>
+            
+            <div class="text-xs text-cyber-cyan tracking-widest mb-1">&lt; BIOMETRIC_SECURITY &gt;</div>
+            <h2 class="text-xl font-bold text-[var(--text-base)] mb-6 glitch-text" data-text="IDENTITY VERIFICATION">IDENTITY VERIFICATION</h2>
+            
+            <!-- ปุ่มสแกนลายนิ้วมือ -->
+            <div id="fingerprint-btn" class="w-24 h-24 mx-auto mb-6 rounded-full border-2 border-cyber-green/60 bg-cyber-black flex items-center justify-center cursor-pointer hover:border-cyber-green hover:shadow-[0_0_25px_var(--cyber-glow-color)] transition-all relative group active:scale-95">
+                <i class="fa-solid fa-fingerprint text-4xl text-cyber-green group-hover:scale-110 transition-transform"></i>
+                <div class="absolute inset-0 rounded-full border border-cyber-cyan/30 spin-clockwise pointer-events-none"></div>
             </div>
-            <div class="text-xs text-cyber-cyan tracking-widest mb-1">&lt; SYSTEM NOTIFICATION &gt;</div>
-            <h2 class="text-2xl font-bold text-[var(--text-base)] mb-3 glitch-text" data-text="WELCOME!">WELCOME!</h2>
-            <p class="text-sm text-[var(--sub-text)] mb-6 leading-relaxed">
-               <span class="text-cyber-green font-bold">ฮั่นแน่ ! มาส่องกันอะดิรู้น้า</span> 
+
+            <p id="fp-status-text" class="text-xs text-[var(--sub-text)] tracking-wider">
+                [ แตะที่ไอคอนลายนิ้วมือเพื่อสแกน ]
             </p>
-            <button id="alert-close-btn" class="w-full py-3 bg-cyber-green text-black font-bold text-sm tracking-wider hover:bg-cyber-cyan transition-colors shadow-[0_0_15px_var(--cyber-glow-color)] cursor-pointer">
-                [ กดปุ่มนี้ ถ้าอยากส่องต่อ ]
-            </button>
         </div>
     </div>
 
@@ -376,7 +358,7 @@
             </div>
 
             <h1 class="font-mono text-2xl sm:text-3xl font-bold tracking-wider text-[var(--text-base)] mb-1">
-                <span id="profile-name" class="glitch-text text-cyber-green" data-text="NXMEICXQZ ❄️">NXMEICXQZ ❄️</span>
+                <span id="profile-name" class="glitch-text text-cyber-green" data-text="NXMEICXQZ">NXMEICXQZ</span>
             </h1>
             <p class="font-mono text-xs text-cyber-cyan tracking-widest uppercase mb-3">&lt; ALL LINK SOCIAL MEDIA &gt;</p>
             
@@ -591,57 +573,34 @@
             setTimeout(() => playBeep(783.99, 0.12, 'triangle'), 120);
         }
 
-        // --- FAHHHHHH JUMPSCARE AUDIO PLAYER (Direct MP3 from MyInstants) ---
-        function triggerJumpscareSound() {
-            if (!soundEnabled) return;
-            try {
-                // เล่นไฟล์เสียง "Fahhhhhhhhh" จาก MyInstants[cite: 2]
-                const memeAudio = new Audio('https://www.myinstants.com/media/sounds/fahhhhhhhhhhhhhh-3525.mp3');
-                memeAudio.volume = 1.0;
-                memeAudio.play().catch(e => {
-                    // Fallback ถ้า Browser บล็อก Autoplay จะใช้ระบบ Web Audio API สังเคราะห์เสียงแทน
-                    initAudio();
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(900, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 1.5);
-                    gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 1.5);
-                });
-            } catch(e) {}
-        }
-
-        // --- Jumpscare Execution Function ---
-        function triggerMemeJumpscare() {
-            const jumpscareOverlay = document.getElementById('jumpscare-overlay');
-            jumpscareOverlay.classList.add('active');
-            triggerJumpscareSound();
-
-            // แสดงมีมสแกน 1.8 วินาทีแล้วค่อยซ่อน
-            setTimeout(() => {
-                jumpscareOverlay.classList.remove('active');
-            }, 1800);
-        }
-
-        // --- Show Giant Alert Modal On Load ---
+        // --- Fingerprint Scanner Logic ---
         window.addEventListener('DOMContentLoaded', () => {
-            const alertOverlay = document.getElementById('custom-alert-overlay');
-            const alertCloseBtn = document.getElementById('alert-close-btn');
+            const fpOverlay = document.getElementById('fingerprint-overlay');
+            const fpBtn = document.getElementById('fingerprint-btn');
+            const statusText = document.getElementById('fp-status-text');
 
-            // แสดง Modal ทันทีที่เข้าเว็บ
             setTimeout(() => {
-                alertOverlay.classList.add('active');
-            }, 200);
+                fpOverlay.classList.add('active');
+            }, 300);
 
-            // กดปุ่มปิด Modal -> เรียก Jumpscare มีม + เสียง Fahhh ทันที
-            alertCloseBtn.addEventListener('click', () => {
-                alertOverlay.classList.remove('active');
-                triggerMemeJumpscare();
+            fpBtn.addEventListener('click', () => {
+                initAudio();
+                fpOverlay.classList.add('scanning');
+                statusText.textContent = "[ กำลังตรวจสอบลายนิ้วมือ... ]";
+                playBeep(600, 0.1, 'sawtooth');
+
+                // จำลองการสแกน 1.5 วินาที
+                setTimeout(() => {
+                    playBeep(1200, 0.15, 'triangle');
+                    setTimeout(() => playBeep(1600, 0.2, 'triangle'), 100);
+                    
+                    statusText.textContent = "[ ยืนยันตัวตนสำเร็จ! กำลังเข้าสู่ระบบ... ]";
+                    statusText.classList.add('text-cyber-green');
+
+                    setTimeout(() => {
+                        fpOverlay.classList.remove('active', 'scanning');
+                    }, 800);
+                }, 1500);
             });
         });
 
