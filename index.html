@@ -859,7 +859,7 @@
 
         shareBtn.addEventListener('click', () => {
             playChime();
-            const shareUrl = "https://nxmeicxqz238.github.io/WEBPROFILE/";
+            const shareUrl = "จะกดแชร์ไปให้ใครจ๊ะ";
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
@@ -882,7 +882,7 @@
         document.getElementById('avatar-container').addEventListener('click', () => {
             playBeep(300, 0.08, 'sawtooth');
             setTimeout(() => playBeep(600, 0.08, 'square'), 40);
-            showToast('[SYS_LOG]: BIOMETRIC_SCAN_COMPLETE');
+            showToast('[SYS_LOG]: กดอะไรไม่มีอะไรให้ส่องซะหน่อย');
         });
     </script>
 </body>
