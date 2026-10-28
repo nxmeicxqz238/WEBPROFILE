@@ -862,7 +862,7 @@
             const shareUrl = "จะกดแชร์ไปให้ใครจ๊ะ";
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    showToast('[SYS_LOG]: URL_COPIED_TO_CLIPBOARD');
+                    showToast('[SYS_LOG]:จะกดแชร์ไปให้ใครจ๊ะ');
                 }).catch(() => fallbackCopyText(shareUrl));
             } else {
                 fallbackCopyText(shareUrl);
