@@ -205,9 +205,62 @@
         @keyframes cyberIn {
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* --- Custom Giant Cyber Alert Modal --- */
+        #custom-alert-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 12, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #custom-alert-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .alert-box {
+            background: rgba(8, 16, 24, 0.95);
+            border: 2px solid var(--cyber-theme-color);
+            box-shadow: 0 0 40px var(--cyber-glow-color), inset 0 0 20px var(--cyber-glow-color);
+            max-width: 420px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+        #custom-alert-overlay.active .alert-box {
+            transform: scale(1);
+        }
     </style>
 </head>
 <body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
+
+    <!-- --- GIANT CYBER ALERT MODAL WITH GIF --- -->
+    <div id="custom-alert-overlay">
+        <div class="alert-box font-mono">
+            <!-- ใส่ลิงก์ GIF ที่ต้องการตรงนี้ (สามารถเปลี่ยน URL รูป GIF ได้ตามใจชอบ) -->
+            <div class="mb-4 flex justify-center">
+                <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Cyber GIF" class="w-28 h-28 object-cover rounded border border-cyber-green shadow-[0_0_15px_var(--cyber-glow-color)]">
+            </div>
+            <div class="text-xs text-cyber-cyan tracking-widest mb-1">&lt; SYSTEM NOTIFICATION &gt;</div>
+            <h2 class="text-2xl font-bold text-[var(--text-base)] mb-3 glitch-text" data-text="WELCOME!">WELCOME!</h2>
+            <p class="text-sm text-[var(--sub-text)] mb-6 leading-relaxed">
+               <span class="text-cyber-green font-bold">ฮั่นแน่ ! มาส่องกันอะดิรู้น้า</span> 
+            </p>
+            <button id="alert-close-btn" class="w-full py-3 bg-cyber-green text-black font-bold text-sm tracking-wider hover:bg-cyber-cyan transition-colors shadow-[0_0_15px_var(--cyber-glow-color)] cursor-pointer">
+                [ ACCESS SYSTEM ]
+            </button>
+        </div>
+    </div>
 
     <div id="cyber-cursor" class="hidden md:block"></div>
     <div id="cyber-cursor-dot" class="hidden md:block"></div>
@@ -230,7 +283,7 @@
                     <span class="font-bold tracking-wider"> ONLINE </span>
                 </div>
                 <div class="text-[10px] text-[var(--sub-text)] mt-0.5 flex items-center gap-2">
-                    <span id="cyber-clock">00:00:00 LOCAL</span>
+                    <span id="cyber-clock">00:00:00 </span>
                     <span>|</span>
                     <span id="ping-counter" class="text-cyber-cyan">PING: 12ms</span>
                 </div>
@@ -451,6 +504,23 @@
 
     <!-- JavaScript Optimized for 120 FPS Rendering -->
     <script>
+        // --- Show Giant Alert Modal On Load ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const alertOverlay = document.getElementById('custom-alert-overlay');
+            const alertCloseBtn = document.getElementById('alert-close-btn');
+
+            // แสดง Modal ทันทีที่เข้าเว็บ
+            setTimeout(() => {
+                alertOverlay.classList.add('active');
+            }, 200);
+
+            // กดปุ่มเพื่อปิด Modal เข้าใช้งานเว็บ
+            alertCloseBtn.addEventListener('click', () => {
+                alertOverlay.classList.remove('active');
+                playChime();
+            });
+        });
+
         const themeBtn = document.getElementById('theme-btn');
         const themeIcon = document.getElementById('theme-icon');
         const html = document.documentElement;
