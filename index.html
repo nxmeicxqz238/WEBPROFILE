@@ -228,7 +228,6 @@
             pointer-events: auto;
         }
 
-        /* Laser Sweep Animations */
         @keyframes fpScanLaserVertical {
             0% { top: 0%; opacity: 0.8; background: #00ff88; box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88; }
             50% { opacity: 1; background: #00e5ff; box-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff; }
@@ -241,7 +240,6 @@
             100% { left: 100%; opacity: 0.8; background: #00e5ff; box-shadow: 0 0 15px #00e5ff; }
         }
 
-        /* DESKTOP UI SPECIFIC STYLING */
         .fp-desktop-card {
             background: rgba(8, 16, 24, 0.95);
             border: 1px solid var(--cyber-glow-color);
@@ -271,10 +269,9 @@
             display: block;
         }
 
-        /* Radial Pulse Wave Effect */
         .pulse-wave {
             position: absolute;
-            inset: -10px;
+            inset: -12px;
             border-radius: 50%;
             border: 2px solid var(--cyber-theme-color);
             opacity: 0;
@@ -282,12 +279,38 @@
         }
 
         .scanning .pulse-wave {
-            animation: pulseExpand 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            animation: pulseExpand 0.9s cubic-bezier(0, 0.2, 0.8, 1) infinite;
         }
 
         @keyframes pulseExpand {
-            0% { transform: scale(0.8); opacity: 0.8; }
-            100% { transform: scale(1.6); opacity: 0; }
+            0% { transform: scale(0.8); opacity: 0.9; }
+            100% { transform: scale(1.75); opacity: 0; }
+        }
+
+        /* 🔥 ULTRA-PREMIUM MOBILE SCANNER GLOW & SCANNING ANIMATION */
+        .mobile-scanner-glow {
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.25), inset 0 0 15px rgba(0, 255, 136, 0.15);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        #fingerprint-overlay.scanning #fp-mb-btn {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.6), inset 0 0 30px rgba(0, 255, 136, 0.4);
+            border-color: #00e5ff;
+        }
+
+        /* Biometric Ripple Effect on Touch */
+        @keyframes rippleWave {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+        .touch-ripple {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid #00e5ff;
+            pointer-events: none;
+            animation: rippleWave 0.8s linear infinite;
         }
     </style>
 </head>
@@ -296,21 +319,18 @@
     <!-- --- ADAPTIVE BIOMETRIC FINGERPRINT SCANNER OVERLAY --- -->
     <div id="fingerprint-overlay">
         
-        <!-- 💻 COMPUTER / DESKTOP UI (วิจิตร อะลอนโซ่ ไฮเทค คอนโซล) -->
+        <!-- 💻 COMPUTER / DESKTOP UI -->
         <div id="fp-desktop-ui" class="hidden md:flex flex-col items-center justify-center max-w-md w-full relative">
             <div class="fp-desktop-card w-full p-8 font-mono text-center relative overflow-hidden backdrop-blur-xl">
                 
-                <!-- Laser Sweepers -->
                 <div class="fp-laser-v"></div>
                 <div class="fp-laser-h"></div>
                 
-                <!-- Corner HUD Brackets -->
                 <div class="hud-bracket hud-tl" style="width: 16px; height: 16px;"></div>
                 <div class="hud-bracket hud-tr" style="width: 16px; height: 16px;"></div>
                 <div class="hud-bracket hud-bl" style="width: 16px; height: 16px;"></div>
                 <div class="hud-bracket hud-br" style="width: 16px; height: 16px;"></div>
 
-                <!-- Top Console Header -->
                 <div class="flex items-center justify-between text-[11px] text-cyber-cyan tracking-widest mb-4 border-b border-cyber-green/20 pb-2">
                     <span class="flex items-center gap-1.5">
                         <i class="fa-solid fa-shield-halved text-cyber-green animate-pulse"></i>
@@ -324,23 +344,17 @@
                 </h2>
                 <p class="text-[11px] text-[var(--sub-text)] mb-8 tracking-widest uppercase">&lt; RECOGNITION_MODULE_V2.5 &gt;</p>
 
-                <!-- Interactive Fingerprint Portal -->
                 <div id="fp-dt-btn" class="w-32 h-32 mx-auto mb-8 rounded-2xl border border-cyber-green/40 bg-cyber-black/80 flex items-center justify-center cursor-pointer hover:border-cyber-green hover:shadow-[0_0_35px_var(--cyber-glow-color)] transition-all duration-300 relative group active:scale-95">
                     
                     <div class="pulse-wave"></div>
-                    
-                    <!-- Fingerprint Center Icon -->
                     <i class="fa-solid fa-fingerprint text-6xl text-cyber-green group-hover:scale-110 group-hover:text-cyber-cyan transition-all duration-300 relative z-10"></i>
 
-                    <!-- Grid Pattern Background -->
                     <div class="absolute inset-0 bg-[linear-gradient(to_right,#00ff8815_1px,transparent_1px),linear-gradient(to_bottom,#00ff8815_1px,transparent_1px)] bg-[size:10px_10px] rounded-2xl pointer-events-none opacity-40"></div>
 
-                    <!-- HUD Reticles Ring -->
                     <div class="absolute -inset-3 rounded-full border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
                     <div class="absolute -inset-6 rounded-full border border-cyber-cyan/30 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 </div>
 
-                <!-- Live Status & Action Button -->
                 <div id="dt-status-container" class="mb-4">
                     <p id="fp-dt-status" class="text-xs text-[var(--sub-text)] tracking-wider mb-2 font-mono">
                         [ คลิกที่สัญลักษณ์ลายนิ้วมือเพื่อเริ่มสแกน ]
@@ -356,36 +370,46 @@
             </div>
         </div>
 
-        <!-- 📱 MOBILE PHONE UI (In-Display Optical Touch Scan) -->
-        <div id="fp-mobile-ui" class="flex md:hidden flex-col items-center justify-end h-full w-full pb-12 pt-8 font-mono text-center">
+        <!-- 📱 MOBILE PHONE UI (Ultra-Premium In-Display Optical Touch Scan) -->
+        <div id="fp-mobile-ui" class="flex md:hidden flex-col items-center justify-between h-full w-full pb-14 pt-10 font-mono text-center">
             
-            <div class="mt-auto mb-8">
-                <div class="text-xs text-cyber-cyan tracking-widest mb-1 flex items-center justify-center gap-2">
+            <div class="mt-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-dark/80 border border-cyber-green/30 mb-2">
                     <span class="w-2 h-2 rounded-full bg-cyber-green animate-ping"></span>
-                    <span>OPTICAL SENSOR READY</span>
+                    <span class="text-[11px] text-cyber-cyan tracking-widest font-bold">SECURE IN-DISPLAY SENSOR</span>
                 </div>
-                <h3 class="text-lg font-bold text-slate-100 tracking-wider">TOUCH AND HOLD SENSOR</h3>
-                <p id="fp-mb-status" class="text-[11px] text-[var(--sub-text)] mt-1">[ กดแตะค้างไว้ที่ไอคอนเพื่อสแกน ]</p>
+                <h3 class="text-xl font-bold text-slate-100 tracking-wider">SECURE VERIFICATION</h3>
+                <p id="fp-mb-status" class="text-xs text-[var(--sub-text)] mt-1.5 tracking-wide">[ แตะค้างไว้ที่เซนเซอร์เพื่อยืนยันตัวตน ]</p>
             </div>
 
-            <!-- In-Display Mobile Scanner Circle -->
-            <div id="fp-mb-btn" class="w-28 h-28 rounded-full border-2 border-cyber-green/80 bg-cyber-dark/90 flex items-center justify-center relative active:scale-95 transition-all shadow-[0_0_30px_rgba(0,255,136,0.2)] touch-none select-none">
+            <!-- Enhanced Mobile Touch Scanner Button with Dual Rotational Rings -->
+            <div class="relative flex items-center justify-center my-auto">
+                <!-- Outer Radar Rings -->
+                <div class="absolute -inset-8 rounded-full border border-dashed border-cyber-green/30 spin-clockwise pointer-events-none"></div>
+                <div class="absolute -inset-14 rounded-full border border-cyber-cyan/20 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 
-                <div class="fp-laser-v"></div>
-                <div class="pulse-wave"></div>
+                <div id="fp-mb-btn" class="w-32 h-32 rounded-full border-2 border-cyber-green bg-cyber-dark/95 flex items-center justify-center relative active:scale-95 transition-all mobile-scanner-glow touch-none select-none overflow-hidden cursor-pointer">
+                    
+                    <div class="fp-laser-v"></div>
+                    <div class="pulse-wave"></div>
+                    <div id="ripple-container"></div>
 
-                <!-- Glowing Fingerprint -->
-                <i class="fa-solid fa-fingerprint text-5xl text-cyber-green transition-all duration-200"></i>
+                    <!-- Glowing Fingerprint Icon -->
+                    <i id="fp-icon" class="fa-solid fa-fingerprint text-6xl text-cyber-green transition-all duration-300 relative z-10"></i>
 
-                <!-- Progress Ring around fingerprint -->
-                <svg class="absolute inset-[-6px] w-[120px] h-[120px] -rotate-90 pointer-events-none">
-                    <circle cx="60" cy="60" r="54" stroke="currentColor" stroke-width="3" fill="transparent" class="text-cyber-green/20" />
-                    <circle id="mb-progress-ring" cx="60" cy="60" r="54" stroke="currentColor" stroke-width="4" fill="transparent" stroke-dasharray="339.29" stroke-dashoffset="339.29" class="text-cyber-green transition-all duration-75" />
-                </svg>
+                    <!-- Smooth SVG Progress Ring -->
+                    <svg class="absolute inset-[-6px] w-[134px] h-[134px] -rotate-90 pointer-events-none z-20">
+                        <circle cx="67" cy="67" r="60" stroke="currentColor" stroke-width="3" fill="transparent" class="text-cyber-green/15" />
+                        <circle id="mb-progress-ring" cx="67" cy="67" r="60" stroke="currentColor" stroke-width="4.5" fill="transparent" stroke-dasharray="376.99" stroke-dashoffset="376.99" class="text-cyber-cyan transition-all duration-75 drop-shadow-[0_0_8px_#00e5ff]" />
+                    </svg>
+                </div>
             </div>
 
-            <div class="mt-8 text-[10px] text-slate-500 tracking-widest">
-                IN-DISPLAY BIOMETRIC SECURITY
+            <div class="mb-4">
+                <div class="text-[10px] text-slate-400 tracking-widest uppercase flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-lock text-[9px] text-cyber-green"></i>
+                    <span>NXMEICXQZ BIOMETRIC ENCRYPTION</span>
+                </div>
             </div>
         </div>
 
@@ -691,7 +715,6 @@
             const fpOverlay = document.getElementById('fingerprint-overlay');
             const isDesktop = window.innerWidth >= 768;
 
-            // Display overlay on start
             setTimeout(() => fpOverlay.classList.add('active'), 300);
 
             if (isDesktop) {
@@ -703,7 +726,6 @@
                 const dtTelemetry = document.getElementById('dt-telemetry');
                 const dtCard = document.querySelector('.fp-desktop-card');
 
-                // 3D Tilt Hover Effect for Desktop HUD Card
                 dtCard.parentElement.addEventListener('mousemove', (e) => {
                     const rect = dtCard.getBoundingClientRect();
                     const x = e.clientX - rect.left - rect.width / 2;
@@ -745,46 +767,58 @@
                 triggerBtn.addEventListener('click', startDesktopScan);
 
             } else {
-                // --- MOBILE ENGINE (Touch-and-Hold In-Display Sensor) ---
+                // --- MOBILE ENGINE (Ultra-Smooth Touch Hold & Ripple Effects) ---
                 const fpMbBtn = document.getElementById('fp-mb-btn');
                 const mbStatus = document.getElementById('fp-mb-status');
                 const mbRing = document.getElementById('mb-progress-ring');
-                const circumference = 339.29; // 2 * PI * 54
+                const fpIcon = document.getElementById('fp-icon');
+                const rippleContainer = document.getElementById('ripple-container');
+                const circumference = 376.99; // 2 * PI * 60
 
                 let holdTimer = null;
                 let holdProgress = 0;
 
                 function triggerHaptic() {
-                    if (navigator.vibrate) navigator.vibrate(25);
+                    if (navigator.vibrate) navigator.vibrate(30);
+                }
+
+                function createRipple() {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'touch-ripple';
+                    rippleContainer.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 800);
                 }
 
                 function startHold(e) {
                     e.preventDefault();
                     initAudio();
                     fpOverlay.classList.add('scanning');
-                    mbStatus.textContent = "[ กำลังอ่านค่าลายนิ้วมือ... ห้ามปล่อยมือ ]";
-                    mbStatus.className = "text-[11px] text-cyber-cyan mt-1 animate-pulse font-mono";
+                    mbStatus.textContent = "⚡ กำลังประมวลผลลายนิ้วมือ... ห้ามยกนิ้วออก";
+                    mbStatus.className = "text-xs text-cyber-cyan mt-1.5 animate-pulse font-mono font-bold";
+                    fpIcon.className = "fa-solid fa-fingerprint text-6xl text-cyber-cyan transition-all duration-300 relative z-10 scale-110";
                     holdProgress = 0;
+                    createRipple();
 
                     holdTimer = setInterval(() => {
-                        holdProgress += 4;
+                        holdProgress += 3.5;
                         const offset = circumference - (holdProgress / 100) * circumference;
                         mbRing.style.strokeDashoffset = offset;
                         triggerHaptic();
-                        playBeep(600 + holdProgress * 10, 0.02, 'sawtooth');
+                        playBeep(550 + holdProgress * 12, 0.025, 'sawtooth');
 
                         if (holdProgress >= 100) {
                             clearInterval(holdTimer);
-                            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+                            if (navigator.vibrate) navigator.vibrate([60, 120, 60]);
                             playChime();
-                            mbStatus.textContent = "✔ ยืนยันสิทธิ์สำเร็จ! เข้าสู่ระบบ...";
-                            mbStatus.className = "text-[11px] text-cyber-green font-bold mt-1 font-mono";
+                            mbStatus.textContent = "✔ ยืนยันตัวตนสำเร็จ! ปลดล็อกระบบ...";
+                            mbStatus.className = "text-xs text-cyber-green font-bold mt-1.5 font-mono";
+                            fpIcon.className = "fa-solid fa-shield-check text-6xl text-cyber-green transition-all duration-300 relative z-10 scale-125";
 
                             setTimeout(() => {
                                 fpOverlay.classList.remove('active', 'scanning');
-                            }, 600);
+                            }, 700);
                         }
-                    }, 30);
+                    }, 25);
                 }
 
                 function cancelHold() {
@@ -792,9 +826,10 @@
                         clearInterval(holdTimer);
                         fpOverlay.classList.remove('scanning');
                         mbRing.style.strokeDashoffset = circumference;
-                        mbStatus.textContent = "[ ยกเลิกการสแกน - กรุณากดแตะค้างไว้อีกครั้ง ]";
-                        mbStatus.className = "text-[11px] text-rose-400 mt-1 font-mono";
-                        playBeep(300, 0.08, 'square');
+                        fpIcon.className = "fa-solid fa-fingerprint text-6xl text-cyber-green transition-all duration-300 relative z-10";
+                        mbStatus.textContent = "✖ ยกเลิกการสแกน - กรุณากดแตะค้างไว้อีกครั้ง";
+                        mbStatus.className = "text-xs text-rose-400 mt-1.5 font-mono";
+                        playBeep(280, 0.08, 'square');
                     }
                 }
 
