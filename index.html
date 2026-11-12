@@ -127,6 +127,11 @@
             box-shadow: 0 0 22px var(--cyber-glow-color), inset 0 0 12px var(--cyber-glow-color);
         }
 
+        /* Square Cyber Avatar Style (ตัดมุมเฉียงสไตล์ไซเบอร์พังก์) */
+        .cyber-avatar-box {
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+        }
+
         /* Laser Sweep Shimmer Effect */
         .cyber-card::before {
             content: '';
@@ -228,7 +233,6 @@
             pointer-events: auto;
         }
 
-        /* 🔥 HOLOGRAPHIC DESKTOP SCANNER STYLING */
         @keyframes holoLaserV {
             0% { top: 0%; opacity: 0.8; background: #00ff88; box-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; }
             50% { opacity: 1; background: #00e5ff; box-shadow: 0 0 30px #00e5ff, 0 0 60px #00e5ff; }
@@ -289,7 +293,6 @@
             100% { transform: scale(1.75); opacity: 0; }
         }
 
-        /* Mobile Touch Scanner Glow */
         .mobile-scanner-glow {
             box-shadow: 0 0 25px rgba(0, 255, 136, 0.25), inset 0 0 15px rgba(0, 255, 136, 0.15);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -324,17 +327,14 @@
         <div id="fp-desktop-ui" class="hidden md:flex flex-col items-center justify-center max-w-lg w-full relative perspective-[1000px]">
             <div class="fp-hologram-card w-full p-9 font-mono text-center relative overflow-hidden">
                 
-                <!-- Laser Sweepers -->
                 <div class="holo-laser-v"></div>
                 <div class="holo-laser-h"></div>
                 
-                <!-- Holographic Corner Brackets -->
                 <div class="hud-bracket hud-tl" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
                 <div class="hud-bracket hud-tr" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
                 <div class="hud-bracket hud-bl" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
                 <div class="hud-bracket hud-br" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
 
-                <!-- Top Holographic Telemetry Bar -->
                 <div class="flex items-center justify-between text-[11px] text-cyber-cyan tracking-widest mb-4 border-b border-cyber-cyan/30 pb-2.5">
                     <span class="flex items-center gap-2">
                         <i class="fa-solid fa-satellite-dish text-cyber-green animate-pulse"></i>
@@ -348,23 +348,18 @@
                 </h2>
                 <p class="text-[11px] text-cyber-cyan mb-8 tracking-widest uppercase">&lt; 3D LASER MAPPING ACTIVE &gt;</p>
 
-                <!-- Interactive Holographic Fingerprint Portal -->
                 <div id="fp-dt-btn" class="w-36 h-36 mx-auto mb-8 rounded-full border-2 border-cyber-cyan bg-cyber-black/90 flex items-center justify-center cursor-pointer hover:shadow-[0_0_45px_rgba(0,229,255,0.6)] transition-all duration-300 relative group active:scale-95">
                     
                     <div class="pulse-wave" style="border-color: #00e5ff;"></div>
                     
-                    <!-- Fingerprint Hologram Icon -->
                     <i class="fa-solid fa-fingerprint text-7xl text-cyber-cyan group-hover:scale-110 group-hover:text-cyber-green transition-all duration-300 relative z-10 drop-shadow-[0_0_12px_#00e5ff]"></i>
 
-                    <!-- Holographic Grid Background Pattern -->
                     <div class="absolute inset-0 bg-[linear-gradient(to_right,#00e5ff20_1px,transparent_1px),linear-gradient(to_bottom,#00e5ff20_1px,transparent_1px)] bg-[size:12px_12px] rounded-full pointer-events-none opacity-60"></div>
 
-                    <!-- Dual Holographic Reticles -->
                     <div class="absolute -inset-4 rounded-full border border-dashed border-cyber-cyan/60 spin-clockwise pointer-events-none"></div>
                     <div class="absolute -inset-8 rounded-full border border-cyber-green/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 </div>
 
-                <!-- Live Status & Holographic Progress -->
                 <div id="dt-status-container" class="mb-5">
                     <p id="fp-dt-status" class="text-xs text-cyber-cyan tracking-wider mb-2.5 font-mono">
                         [ ขยับเมาส์เพื่อหมุนมิติโฮโลแกรม - คลิกสัญลักษณ์เพื่อสแกน ]
@@ -484,17 +479,30 @@
             </div>
         </div>
 
+        <!-- --- รูปโปรไฟล์ AVATAR ทรงสี่เหลี่ยมสไตล์ไซเบอร์พังก์ --- -->
         <section class="w-full flex flex-col items-center text-center mb-6 cyber-stagger" style="animation-delay: 0.1s;">
-            <div class="relative mb-5 group cursor-pointer" id="avatar-container">
-                <canvas id="avatar-eq-canvas" class="absolute -inset-6 w-[160px] h-[160px] pointer-events-none z-0"></canvas>
-                <div class="absolute -inset-3 rounded-full border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
-                <div class="absolute -inset-1.5 rounded-full border border-cyber-cyan/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
+            <div class="relative mb-6 group cursor-pointer" id="avatar-container">
+                <!-- กราฟ Visualizer ทรงสี่เหลี่ยมรอบตัวรูปโปรไฟล์ -->
+                <canvas id="avatar-eq-canvas" class="absolute -inset-7 w-[210px] h-[210px] -left-6 -top-6 pointer-events-none z-0"></canvas>
                 
-                <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark dark:bg-cyber-dark bg-slate-100 border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
-                    <img id="profile-img" src="https://wallpapers-clan.com/wp-content/uploads/2024/08/marvel-miles-morales-dark-gif-desktop-wallpaper-preview.gif" alt="Cyberpunk Avatar" class="w-full h-full object-cover rounded-full filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
+                <!-- กรอบสี่เหลี่ยมเส้นประหมุนช้าๆ รอบรูปโปรไฟล์ -->
+                <div class="absolute -inset-3.5 rounded-xl border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
+                <div class="absolute -inset-2 rounded-lg border border-cyber-cyan/40 pointer-events-none"></div>
+                
+                <!-- กล่องรูป Avatar ทรงสี่เหลี่ยมตัดมุมเฉียง -->
+                <div class="relative w-38 h-38 cyber-avatar-box p-1 bg-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
+                    <div class="w-full h-full cyber-avatar-box bg-cyber-dark dark:bg-cyber-dark bg-slate-100 overflow-hidden relative">
+                        <img id="profile-img" src="https://i.pinimg.com/originals/1d/3d/bf/1d3dbf048330590da90564fc6404451a.gif" alt="Cyberpunk Avatar" class="w-full h-full object-cover filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
+                    </div>
                 </div>
 
-                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
+                <!-- มุม HUD เล็กๆ ประดับกรอบสี่เหลี่ยม -->
+                <div class="hud-bracket hud-tl" style="top: -6px; left: -6px;"></div>
+                <div class="hud-bracket hud-tr" style="top: -6px; right: -6px;"></div>
+                <div class="hud-bracket hud-bl" style="bottom: -6px; left: -6px;"></div>
+                <div class="hud-bracket hud-br" style="bottom: -6px; right: -6px;"></div>
+
+                <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2.5 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap z-10">
                     <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--cyber-theme-color);"></span>
                     <span>🧊: LVL_9</span>
                 </div>
@@ -724,7 +732,6 @@
             setTimeout(() => fpOverlay.classList.add('active'), 300);
 
             if (isDesktop) {
-                // --- HOLOGRAPHIC DESKTOP ENGINE ---
                 const fpDtBtn = document.getElementById('fp-dt-btn');
                 const triggerBtn = document.getElementById('dt-scan-trigger');
                 const dtStatus = document.getElementById('fp-dt-status');
@@ -732,7 +739,6 @@
                 const dtTelemetry = document.getElementById('dt-telemetry');
                 const holoCard = document.querySelector('.fp-hologram-card');
 
-                // Advanced 3D Gyroscope/Tilt Hologram Effect
                 holoCard.parentElement.addEventListener('mousemove', (e) => {
                     const rect = holoCard.getBoundingClientRect();
                     const x = e.clientX - rect.left - rect.width / 2;
@@ -774,7 +780,6 @@
                 triggerBtn.addEventListener('click', startHologramScan);
 
             } else {
-                // --- MOBILE ENGINE ---
                 const fpMbBtn = document.getElementById('fp-mb-btn');
                 const mbStatus = document.getElementById('fp-mb-status');
                 const mbRing = document.getElementById('mb-progress-ring');
@@ -1025,32 +1030,43 @@
             if (soundEnabled) playChime();
         });
 
-        // --- Avatar Visualizer ---
+        // --- Square Avatar Visualizer (ปรับเส้นกราฟรอบอวาตาให้เป็นทรงสี่เหลี่ยมรับกับกรอบรูป) ---
         const avCanvas = document.getElementById('avatar-eq-canvas');
         const avCtx = avCanvas.getContext('2d', { alpha: true });
-        avCanvas.width = 160; avCanvas.height = 160;
+        avCanvas.width = 210; avCanvas.height = 210;
 
         function drawAvatarEq() {
             avCtx.clearRect(0, 0, avCanvas.width, avCanvas.height);
-            const centerX = 80, centerY = 80, radius = 62;
-            const bars = 32;
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
+            const boxSize = 158;
+            const offset = (avCanvas.width - boxSize) / 2;
+            const barsPerSide = 12;
 
-            for (let i = 0; i < bars; i++) {
-                const angle = (i / bars) * Math.PI * 2;
-                const barHeight = bgmPlaying ? Math.random() * 12 + 2 : (Math.sin(Date.now() * 0.005 + i) * 3 + 4);
-                
-                const x1 = centerX + Math.cos(angle) * radius;
-                const y1 = centerY + Math.sin(angle) * radius;
-                const x2 = centerX + Math.cos(angle) * (radius + barHeight);
-                const y2 = centerY + Math.sin(angle) * (radius + barHeight);
+            avCtx.strokeStyle = themeColor;
+            avCtx.lineWidth = 2;
 
-                avCtx.beginPath();
-                avCtx.moveTo(x1, y1);
-                avCtx.lineTo(x2, y2);
-                avCtx.strokeStyle = themeColor;
-                avCtx.lineWidth = 2;
-                avCtx.stroke();
+            for (let side = 0; side < 4; side++) {
+                for (let i = 0; i < barsPerSide; i++) {
+                    const idx = side * barsPerSide + i;
+                    const barHeight = bgmPlaying ? Math.random() * 14 + 3 : (Math.sin(Date.now() * 0.005 + idx) * 3 + 4);
+                    const pos = offset + (i + 0.5) * (boxSize / barsPerSide);
+
+                    avCtx.beginPath();
+                    if (side === 0) { // บน
+                        avCtx.moveTo(pos, offset);
+                        avCtx.lineTo(pos, offset - barHeight);
+                    } else if (side === 1) { // ขวา
+                        avCtx.moveTo(offset + boxSize, pos);
+                        avCtx.lineTo(offset + boxSize + barHeight, pos);
+                    } else if (side === 2) { // ล่าง
+                        avCtx.moveTo(pos, offset + boxSize);
+                        avCtx.lineTo(pos, offset + boxSize + barHeight);
+                    } else { // ซ้าย
+                        avCtx.moveTo(offset, pos);
+                        avCtx.lineTo(offset - barHeight, pos);
+                    }
+                    avCtx.stroke();
+                }
             }
             requestAnimationFrame(drawAvatarEq);
         }
