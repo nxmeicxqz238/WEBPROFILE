@@ -897,6 +897,33 @@
         #nx-pop.on { transform: translate(-50%, 0); opacity: 1; }
         #nx-pop .ic { font-size: 28px; } #nx-pop small { display: block; font: 700 10px 'Share Tech Mono', monospace; letter-spacing: .16em; color: var(--cyber-theme-color); }
         #nx-pop b { display: block; font: 600 14px 'Prompt', sans-serif; } #nx-pop span { font-size: 12px; color: var(--sub-text); }
+        /* ===== FUN PACK ===== */
+        .nx-tr { position: fixed; z-index: 9980; pointer-events: none; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%;
+            background: var(--cyber-theme-color); box-shadow: 0 0 10px var(--cyber-theme-color); animation: nxTr .65s ease-out forwards; }
+        @keyframes nxTr { to { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+        #nx-matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9996; pointer-events: none; opacity: 0; transition: opacity .6s; }
+        #nx-matrix.on { opacity: 1; }
+        .nx-snow { position: fixed; top: -30px; z-index: 9979; pointer-events: none; left: var(--x); font-size: var(--s); opacity: .85;
+            animation: nxSnow var(--d) linear var(--dl) forwards; }
+        @keyframes nxSnow { to { transform: translate(var(--dr), calc(100vh + 60px)) rotate(var(--r)); } }
+        .nx-zzz { position: fixed; z-index: 9979; pointer-events: none; font: 700 18px 'Share Tech Mono', monospace; color: var(--cyber-theme-color);
+            text-shadow: 0 0 10px var(--cyber-theme-color); animation: nxZ 2.6s ease-out forwards; }
+        @keyframes nxZ { 0% { opacity: 0; transform: translate(0,0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(26px,-70px) scale(1.5) rotate(14deg); } }
+        .nx-sleep { filter: brightness(.65) saturate(.55); transition: filter .8s; }
+        .nx-charge-ring { position: fixed; z-index: 9979; pointer-events: none; border-radius: 50%; border: 3px solid var(--cyber-theme-color);
+            box-shadow: 0 0 20px var(--cyber-theme-color), inset 0 0 20px var(--cyber-glow-color); transform: translate(-50%, -50%) scale(1.8); opacity: 0;
+            animation: nxCharge var(--ch, .7s) ease-in forwards; }
+        @keyframes nxCharge { 0% { transform: translate(-50%,-50%) scale(1.9); opacity: 0; } 20% { opacity: .9; } 100% { transform: translate(-50%,-50%) scale(1); opacity: 1; border-width: 6px; } }
+        .nx-emo { position: fixed; z-index: 9998; pointer-events: none; left: var(--cx); top: var(--cy); font-size: var(--sz, 24px); transform: translate(-50%, -50%);
+            animation: nxEmo var(--dur, 1.6s) cubic-bezier(.2,.7,.3,1) forwards; }
+        @keyframes nxEmo { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.3); } 12% { opacity: 1; }
+            60% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.1) rotate(var(--rot)); opacity: 1; }
+            100% { transform: translate(calc(-50% + var(--dx) * 1.1), calc(-50% + var(--dy) + 160px)) scale(.8) rotate(var(--rot)); opacity: 0; } }
+        #avatar-container { -webkit-touch-callout: none; }
+        html.nx-calm .nx-tr, html.nx-calm .nx-snow, html.nx-calm .nx-zzz { display: none; }
+        /* ===== WEATHER: falling snow + ice ===== */
+        #nx-weather { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 55; pointer-events: none; transition: opacity .6s; }
+        body.locked #nx-weather { opacity: 0; }
         @media (prefers-reduced-motion: reduce) { #mg.on, .mg-panel.hit, .mg-t, .mg-fx { animation-duration: .01s !important; } }
     </style>
 </head>
@@ -2556,6 +2583,10 @@
                 ['tweaker', '⚙️', 'ช่างจูน', 'เปิดแผงตั้งค่า'],
                 ['night_owl', '🦉', 'นกฮูก', 'เข้าเว็บช่วงตี 0–5', 1],
                 ['nice_try', '🚫', 'ลองดีสินะ', 'พิมพ์ sudo ใน Terminal', 1],
+                ['matrix', '🟩', 'เข้าสู่เมทริกซ์', 'เรียกฝนตัวอักษร Matrix'],
+                ['sleepy', '😴', 'ปลุกเจ้าง่วง', 'ปล่อยหน้าเว็บทิ้งไว้จนอวาต้าหลับ แล้วปลุกมัน', 1],
+                ['charge', '💥', 'พลังสะสม', 'กดอวาต้าค้างไว้จนชาร์จเต็ม'],
+                ['blizzard', '🌨️', 'พายุหิมะ', 'เรียกพายุหิมะ (พิมพ์ snow storm ใน Terminal)'],
                 ['platinum', '🏆', 'ครบทุกอย่าง', 'ปลดล็อกความสำเร็จทั้งหมด', 1]
             ].map(a => ({ id: a[0], ic: a[1], name: a[2], desc: a[3], hidden: !!a[4] }));
 
@@ -2631,6 +2662,7 @@
             const mSet = makeModal('nx-set', 'SETTINGS', '⚙️');
             const ACC = ['GREEN', 'ICE', 'PINK', 'AMBER', 'VIOLET'], ACC_C = ['#00ff88', '#4da3ff', '#ff3d9a', '#ffa62b', '#b266ff'];
             const P = st.prefs;
+            window.NX.setPref = (k, v) => { P[k] = v; save(); };
             function applyPrefs() {
                 root.classList.toggle('nx-calm', !!P.calm);
                 root.classList.toggle('nx-native-cursor', !!P.cursor);
@@ -2644,6 +2676,8 @@
                 { l: 'โหมดมืด', s: 'ปิดเพื่อใช้โหมดสว่าง', get: () => root.classList.contains('dark'), set: () => $id('theme-btn').click() },
                 { l: 'โหมดประหยัด', s: 'ปิดเอฟเฟกต์หนักๆ ช่วยให้เครื่องช้าลื่นขึ้น', get: () => !!P.lite, set: () => { P.lite = !P.lite; if (!P.lite) root.classList.remove('lite'); applyPrefs(); save(); } },
                 { l: 'ลดการเคลื่อนไหว', s: 'หยุดอนิเมชั่นตกแต่งเกือบทั้งหมด', get: () => !!P.calm, set: () => { P.calm = !P.calm; applyPrefs(); save(); } },
+                { l: 'หิมะและน้ำแข็งตก', s: 'หิมะ + เกล็ดน้ำแข็งตกจากฟ้า ขยับหนีเมาส์ได้ (พายุ: snow storm)', get: () => P.snow !== false, set: () => { P.snow = (P.snow === false); save(); if (window.__weather) __weather.set(P.snow); } },
+                { l: 'เอฟเฟกต์ตามเมาส์', s: 'ประกายตามเคอร์เซอร์ (เดสก์ท็อป)', get: () => !!P.trail, set: () => { P.trail = !P.trail; save(); if (window.__trail) window.__trail(P.trail); } },
                 { l: 'ใช้เคอร์เซอร์ปกติ', s: 'ปิดเคอร์เซอร์ไซเบอร์บนเดสก์ท็อป', get: () => !!P.cursor, set: () => { P.cursor = !P.cursor; applyPrefs(); save(); } }
             ];
             function renderSet() {
@@ -2693,6 +2727,7 @@
                      ['theme [dark|light]', 'สลับโหมดสี'], ['accent', 'สลับสีธีม'], ['sound [on|off]', 'เปิด/ปิดเสียงเอฟเฟกต์'], ['music [play|stop]', 'เปิด/ปิดเพลง'],
                      ['ach', 'ดูความสำเร็จ'], ['settings', 'เปิดแผงตั้งค่า'], ['stats', 'สถิติของคุณ'], ['neofetch', 'ข้อมูลระบบ'], ['fx', 'ยิงเอฟเฟกต์'],
                      ['date', 'วันเวลา'], ['echo <text>', 'พิมพ์ข้อความ'], ['clear', 'ล้างหน้าจอ'], ['exit', 'ปิด Terminal']]
+                        .concat((window.NX.helpExtra || []))
                         .concat(st.ach.secret_game ? [['play', 'เปิดมินิเกม CUBE_BREAKER']] : [])
                         .forEach(c => print('  ' + c[0].padEnd(20) + c[1], 'tm-in'));
                 },
@@ -2747,6 +2782,7 @@
                     print('ACCESS GRANTED (just kidding)', 'tm-warn');
                 }
             };
+            window.NX.cmds = CMDS; window.NX.print = print;
             async function run(raw) {
                 const txt = raw.trim(); if (!txt) return;
                 print('$ ' + txt, 'tm-dim'); hist.push(txt); hi = hist.length;
@@ -2795,9 +2831,376 @@
             document.addEventListener('keydown', e => {
                 const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
                 kp = (k === KON[kp]) ? kp + 1 : (k === KON[0] ? 1 : 0);
-                if (kp === KON.length) { kp = 0; unlock('konami'); }
+                if (kp === KON.length) { kp = 0; unlock('konami'); if (window.__matrix) window.__matrix(); }
             });
             setTimeout(() => { const h = new Date().getHours(); if (h >= 0 && h < 5) unlock('night_owl'); }, 6000);
+        })();
+        // ===== FUN PACK: trail / matrix / snow / sleepy avatar / charge-up =====
+        (function () {
+            const root = document.documentElement, $id = id => document.getElementById(id);
+            const rnd = (a, b) => a + Math.random() * (b - a);
+            const calm = () => root.classList.contains('nx-calm') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const theme = () => getComputedStyle(root).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
+            const ach = id => { if (window.NX) NX.unlock(id); };
+            const toast = t => { try { showToast(t); } catch (e) {} };
+
+            // --- mouse sparkle trail ---
+            let trailOn = false, lastT = 0;
+            try { trailOn = !!(JSON.parse(localStorage.getItem('nx_hub_v1') || '{}').prefs || {}).trail; } catch (e) {}
+            window.__trail = v => { trailOn = !!v; };
+            document.addEventListener('pointermove', e => {
+                if (!trailOn || e.pointerType !== 'mouse' || calm() || root.classList.contains('lite')) return;
+                const now = performance.now(); if (now - lastT < 35) return; lastT = now;
+                const d = document.createElement('div'); d.className = 'nx-tr';
+                d.style.left = e.clientX + 'px'; d.style.top = e.clientY + 'px';
+                d.style.setProperty('--tx', rnd(-18, 18).toFixed(0) + 'px'); d.style.setProperty('--ty', rnd(6, 26).toFixed(0) + 'px');
+                document.body.appendChild(d); setTimeout(() => d.remove(), 700);
+            }, { passive: true });
+
+            // --- matrix rain ---
+            let mxActive = false;
+            window.__matrix = function (ms) {
+                if (mxActive || calm()) return false; mxActive = true; ms = ms || 8000;
+                const cv = document.createElement('canvas'); cv.id = 'nx-matrix'; document.body.appendChild(cv);
+                const ctx = cv.getContext('2d'), w = cv.width = innerWidth, h = cv.height = innerHeight;
+                const fs = w < 600 ? 14 : 16, cols = Math.floor(w / fs), drops = Array.from({ length: cols }, () => Math.floor(rnd(-40, 0)));
+                const chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄ0123456789ΞΣ', col = theme(); let last = 0, run = true;
+                requestAnimationFrame(() => cv.classList.add('on'));
+                (function frame(t) {
+                    if (!run) return; requestAnimationFrame(frame);
+                    if (t - last < 55) return; last = t;
+                    ctx.fillStyle = 'rgba(3,7,12,.14)'; ctx.fillRect(0, 0, w, h); ctx.font = fs + 'px monospace';
+                    for (let i = 0; i < cols; i++) {
+                        const ch = chars[Math.floor(Math.random() * chars.length)], y = drops[i] * fs;
+                        ctx.fillStyle = '#e8fff3'; ctx.fillText(ch, i * fs, y);
+                        ctx.fillStyle = col; ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, y - fs);
+                        if (y > h && Math.random() > 0.975) drops[i] = 0; drops[i]++;
+                    }
+                })(0);
+                ach('matrix'); toast('[SYS_LOG]: WAKE_UP, NEO...');
+                setTimeout(() => { cv.classList.remove('on'); setTimeout(() => { run = false; cv.remove(); mxActive = false; }, 700); }, ms);
+                return true;
+            };
+
+            // --- snow ---
+            window.__snow = function () {
+                if (calm()) return false; const em = ['❄️', '❅', '❆', '🧊'];
+                for (let i = 0; i < 44; i++) {
+                    const f = document.createElement('div'); f.className = 'nx-snow'; f.textContent = em[i % em.length];
+                    f.style.setProperty('--x', rnd(0, 100).toFixed(1) + 'vw'); f.style.setProperty('--s', rnd(12, 28).toFixed(0) + 'px');
+                    f.style.setProperty('--d', rnd(4, 8).toFixed(1) + 's'); f.style.setProperty('--dl', rnd(0, 3).toFixed(1) + 's');
+                    f.style.setProperty('--dr', rnd(-80, 80).toFixed(0) + 'px'); f.style.setProperty('--r', rnd(-360, 360).toFixed(0) + 'deg');
+                    document.body.appendChild(f); setTimeout(() => f.remove(), 11500);
+                } return true;
+            };
+
+            // --- extra terminal commands ---
+            function addCmds() {
+                if (!window.NX || !NX.cmds) return setTimeout(addCmds, 200);
+                const P = NX.print, C = NX.cmds;
+                C.matrix = () => P(window.__matrix() ? 'follow the white rabbit... 🐇' : 'ตอนนี้เปิดไม่ได้ (กำลังทำงานอยู่ หรือเปิดโหมดลดการเคลื่อนไหวไว้)', window.__matrix ? 'tm-ok' : 'tm-err');
+                C.snow = () => P(window.__snow() ? '❄️  let it snow...' : 'เปิดโหมดลดการเคลื่อนไหวอยู่', 'tm-hi');
+                C.flip = () => P('🪙 ' + (Math.random() < .5 ? 'HEADS (หัว)' : 'TAILS (ก้อย)'), 'tm-ok');
+                C.dice = a => { const n = Math.max(2, Math.min(100, parseInt(a[0], 10) || 6)); P('🎲 d' + n + ' → ' + (1 + Math.floor(Math.random() * n)), 'tm-ok'); };
+                C.cowsay = a => {
+                    const t = (a.join(' ') || 'moo').slice(0, 40), b = '-'.repeat(t.length + 2);
+                    [' ' + b, '< ' + t + ' >', ' ' + b, '        \\   ^__^', '         \\  (oo)\\_______', '            (__)\\       )\\/\\', '                ||----w |', '                ||     ||'].forEach(l => P(l, 'tm-hi'));
+                };
+                NX.helpExtra = [['matrix', 'ฝนตัวอักษรสไตล์ Matrix'], ['snow', 'หิมะตก'], ['flip', 'โยนเหรียญ'], ['dice [n]', 'ทอยลูกเต๋า'], ['cowsay <text>', 'วัวพูดได้']];
+            }
+            addCmds();
+
+            // --- sleepy avatar ---
+            const frame = $id('profile-img') && $id('profile-img').parentElement;
+            let asleep = false, idleT = 0, zzzT = 0;
+            function sleep() {
+                if (!frame || calm() || document.hidden || document.body.classList.contains('locked')) return arm();
+                asleep = true; frame.classList.add('nx-sleep');
+                const z = () => {
+                    if (!asleep) return; const r = frame.getBoundingClientRect(), s = document.createElement('div');
+                    s.className = 'nx-zzz'; s.textContent = ['z', 'Z', 'Zz'][Math.floor(Math.random() * 3)];
+                    s.style.left = (r.right - r.width * 0.2) + 'px'; s.style.top = (r.top + r.height * 0.15) + 'px';
+                    document.body.appendChild(s); setTimeout(() => s.remove(), 2700); zzzT = setTimeout(z, 1300);
+                }; z();
+            }
+            function arm() { clearTimeout(idleT); idleT = setTimeout(sleep, 45000); }
+            function wake() {
+                if (asleep) { asleep = false; clearTimeout(zzzT); frame.classList.remove('nx-sleep'); toast('[SYS_LOG]: ตื่นแล้วจ้า~ ☀️'); ach('sleepy'); }
+                arm();
+            }
+            ['pointerdown', 'pointermove', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(ev => window.addEventListener(ev, wake, { passive: true }));
+            arm();
+
+            // --- hold avatar to charge up ---
+            const av = $id('avatar-container');
+            if (av && frame) {
+                const HOLD = 800; let timer = 0, ring = null, sx = 0, sy = 0, fired = false;
+                const cancel = () => { clearTimeout(timer); if (ring) { ring.remove(); ring = null; } };
+                av.addEventListener('click', e => { if (fired) { e.stopImmediatePropagation(); e.preventDefault(); fired = false; } }, true);
+                av.addEventListener('contextmenu', e => { if (fired) e.preventDefault(); });
+                av.addEventListener('pointerdown', e => {
+                    if (e.button > 0 || calm()) return; fired = false; sx = e.clientX; sy = e.clientY;
+                    const r = frame.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+                    ring = document.createElement('div'); ring.className = 'nx-charge-ring';
+                    ring.style.cssText = 'left:' + cx + 'px;top:' + cy + 'px;width:' + r.width + 'px;height:' + r.height + 'px;--ch:' + HOLD + 'ms';
+                    timer = setTimeout(() => {
+                        fired = true; cancel(); ach('charge');
+                        if (navigator.vibrate) navigator.vibrate([40, 30, 90]);
+                        try { shockwave(cx, cy, '#ffffff'); createSparks(cx, cy, 50, 8); playChime(); } catch (e2) {}
+                        const em = ['💖', '🧊', '✨', '🌈', '⭐', '💙', '🔥'];
+                        for (let i = 0; i < 30; i++) {
+                            const el = document.createElement('span'); el.className = 'nx-emo'; el.textContent = em[i % em.length];
+                            const a = Math.random() * Math.PI * 2, d = rnd(80, Math.min(innerWidth, 520) * 0.5);
+                            el.style.setProperty('--cx', cx + 'px'); el.style.setProperty('--cy', cy + 'px');
+                            el.style.setProperty('--dx', (Math.cos(a) * d).toFixed(0) + 'px'); el.style.setProperty('--dy', (Math.sin(a) * d - 60).toFixed(0) + 'px');
+                            el.style.setProperty('--rot', rnd(-300, 300).toFixed(0) + 'deg'); el.style.setProperty('--sz', rnd(18, 34).toFixed(0) + 'px');
+                            el.style.setProperty('--dur', rnd(1.3, 2).toFixed(2) + 's'); document.body.appendChild(el); setTimeout(() => el.remove(), 2100);
+                        }
+                        toast('[SYS_LOG]: 💥 CHARGE_COMPLETE');
+                    }, HOLD);
+                    document.body.appendChild(ring);
+                });
+                av.addEventListener('pointermove', e => { if (timer && Math.hypot(e.clientX - sx, e.clientY - sy) > 14) cancel(); });
+                ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => av.addEventListener(ev, cancel));
+            }
+        })();
+        // ===== WEATHER v3: crystals, snow caps on cards, spindrift, glitter, whiteout =====
+        (function () {
+            const root = document.documentElement;
+            const rnd = (a, b) => a + Math.random() * (b - a);
+            const cv = document.createElement('canvas'); cv.id = 'nx-weather'; cv.setAttribute('aria-hidden', 'true'); document.body.appendChild(cv);
+            const ctx = cv.getContext('2d');
+            const CW = 4;
+            let W = 0, H = 0, dpr = 1, parts = [], on = true, running = false, last = 0;
+            let t = 0, wind = 0, pvx = 0, px = -999, py = -999, nextGust = 4, gAmp = 0, gStart = 0, gDur = 3, gust = 0, stormEnd = 0;
+            let slow = 0, scale = 1, calmWas = false, pileMax = 0;
+            let pile = new Float32Array(0), bump = new Float32Array(0), maxH = 24, pileGrad = null, fogGrad = null, gradDark = null, spriteDark = null, SP = null;
+            const drift = [], glints = [], capMap = new WeakMap(); let caps = [], cardEls = null;
+            try { on = (JSON.parse(localStorage.getItem('nx_hub_v1') || '{}').prefs || {}).snow !== false; } catch (e) {}
+            const isDark = () => root.classList.contains('dark');
+            const calm = () => root.classList.contains('nx-calm') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // ---------- sprites ----------
+            function sprite(size, stops) {
+                const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
+                const gr = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+                stops.forEach(s => gr.addColorStop(s[0], s[1])); g.fillStyle = gr; g.fillRect(0, 0, size, size); return c;
+            }
+            // six-fold dendritic crystal; each variant has its own branch layout
+            const VAR = [[[.4, .34], [.68, .22]], [[.3, .26], [.55, .32], [.8, .18]], [[.5, .4], [.78, .26]], [[.25, .2], [.5, .24], [.72, .3]], [[.45, .3], [.62, .16], [.85, .2]]];
+            function crystal(size, rgb, v) {
+                const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
+                g.translate(size / 2, size / 2); g.lineCap = 'round'; g.strokeStyle = 'rgba(' + rgb + ',.96)'; g.lineWidth = size / 24;
+                g.shadowColor = 'rgba(' + rgb + ',.85)'; g.shadowBlur = size / 12; const L = size * 0.4;
+                for (let k = 0; k < 6; k++) {
+                    g.save(); g.rotate(k * Math.PI / 3); g.beginPath(); g.moveTo(0, 0); g.lineTo(L, 0);
+                    VAR[v].forEach(b => { const x = L * b[0], bl = L * b[1]; g.moveTo(x, 0); g.lineTo(x + bl * 0.5, bl * 0.87); g.moveTo(x, 0); g.lineTo(x + bl * 0.5, -bl * 0.87); });
+                    g.stroke(); g.restore();
+                }
+                g.shadowBlur = 0; g.fillStyle = 'rgba(' + rgb + ',.9)'; g.beginPath(); g.arc(0, 0, size / 28, 0, 6.3); g.fill(); return c;
+            }
+            function buildSprites() {
+                const d = isDark(); if (SP && spriteDark === d) return; spriteDark = d;
+                const c = d ? '255,255,255' : '100,160,225';
+                SP = {
+                    crisp: sprite(32, [[0, 'rgba(' + c + ',1)'], [0.3, 'rgba(' + c + ',.9)'], [0.65, 'rgba(' + c + ',.28)'], [1, 'rgba(' + c + ',0)']]),
+                    soft: sprite(64, [[0, 'rgba(' + c + ',.5)'], [0.5, 'rgba(' + c + ',.22)'], [1, 'rgba(' + c + ',0)']]),
+                    cr: VAR.map((_, i) => crystal(72, c, i))
+                };
+            }
+
+            // ---------- particles ----------
+            const target = () => Math.round(Math.max(45, Math.min(150, W / 9)) * scale * (root.classList.contains('lite') ? 0.5 : 1));
+            function make(temp, fromTop) {
+                const z = Math.pow(Math.random(), 1.6), ice = z > 0.45 && Math.random() < 0.09;
+                const p = { z, ice, temp: !!temp, ph: rnd(0, 6.28), f1: rnd(.5, 1.4), f2: rnd(1.6, 3.2), tw: rnd(0, 6.28), cr: -1,
+                    x: rnd(-20, W + 20), y: fromTop ? rnd(-H, -6) : rnd(-10, H) };
+                p.r = 0.9 + z * 3.3; p.vy = 22 + z * 95 + rnd(-5, 5); p.amp = 5 + z * 16; p.k = 0.35 + z * 0.9; p.blur = z > 0.86; p.a = 0.4 + z * 0.55;
+                if (!ice && !p.blur && z > 0.6 && Math.random() < 0.6) { p.cr = Math.floor(rnd(0, VAR.length)); p.flip = rnd(0, 6.28); p.vf = rnd(.5, 1.5); p.rot = rnd(0, 6.28); p.vr = rnd(-.8, .8); p.vy *= 0.8; }
+                if (ice) { p.r = rnd(4, 7.5); p.vy = rnd(70, 120); p.flip = rnd(0, 6.28); p.vf = rnd(1, 2.4); p.rot = rnd(-.6, .6); p.k = 0.5; p.amp = rnd(10, 20); }
+                return p;
+            }
+            function fill() {
+                const n = target(); let base = parts.filter(p => !p.temp);
+                while (base.length < n) { const q = make(false, false); base.push(q); parts.push(q); }
+                if (base.length > n) { let k = base.length - n; parts = parts.filter(p => p.temp || k-- <= 0); }
+            }
+            function resize() {
+                dpr = Math.min(devicePixelRatio || 1, 1.5); W = innerWidth; H = innerHeight;
+                cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const cols = Math.ceil(W / CW) + 2; pile = new Float32Array(cols); bump = new Float32Array(cols);
+                for (let i = 0; i < cols; i++) bump[i] = Math.sin(i * 0.55) * 0.5 + Math.sin(i * 1.7 + 1) * 0.3;
+                maxH = Math.max(14, Math.min(36, H * 0.045)); pileGrad = fogGrad = null; fill();
+            }
+            addEventListener('resize', resize);
+            addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { pvx = e.clientX - px; px = e.clientX; py = e.clientY; } }, { passive: true });
+            addEventListener('pointerleave', () => { px = py = -999; });
+
+            // ---------- ground pile ----------
+            const hAt = x => pile[Math.max(0, Math.min(pile.length - 1, (x / CW) | 0))] || 0;
+            const W5 = [0.2, 0.6, 1, 0.6, 0.2];
+            function addTo(arr, x0, x, a, cap) { const i = ((x - x0) / CW) | 0; for (let k = -2; k <= 2; k++) { const j = i + k; if (j >= 0 && j < arr.length) arr[j] = Math.min(cap, arr[j] + a * W5[k + 2] * 0.5); } }
+            function relax(arr, dec, dt) {
+                for (let i = 0; i < arr.length - 1; i++) { const d = arr[i] - arr[i + 1]; if (d > 1.6) { arr[i] -= 0.25; arr[i + 1] += 0.25; } else if (d < -1.6) { arr[i] += 0.25; arr[i + 1] -= 0.25; } }
+                const m = dec * dt; let mx = 0; for (let i = 0; i < arr.length; i++) { if (arr[i] > 0) arr[i] = Math.max(0, arr[i] - m); if (arr[i] > mx) mx = arr[i]; } return mx;
+            }
+            function gradients(dark) {
+                if (pileGrad && gradDark === dark) return; gradDark = dark;
+                pileGrad = ctx.createLinearGradient(0, H - maxH - 4, 0, H);
+                pileGrad.addColorStop(0, dark ? 'rgba(255,255,255,.96)' : 'rgba(246,251,255,.98)'); pileGrad.addColorStop(1, dark ? 'rgba(178,218,250,.96)' : 'rgba(196,222,248,.98)');
+                fogGrad = ctx.createLinearGradient(0, H - 120, 0, H);
+                fogGrad.addColorStop(0, dark ? 'rgba(200,225,255,0)' : 'rgba(130,180,235,0)'); fogGrad.addColorStop(1, dark ? 'rgba(200,225,255,.10)' : 'rgba(130,180,235,.14)');
+            }
+            const yAt = (arr, i) => { const h = arr[i]; return h - (h > 1.5 ? bump[i % bump.length] * Math.min(1.4, h / 8) : 0); };
+            function drawPile(dark) {
+                ctx.fillStyle = fogGrad; ctx.fillRect(0, H - 120, W, 120);
+                if (pileMax < 0.6) return;
+                ctx.beginPath(); ctx.moveTo(0, H + 2);
+                for (let i = 0; i < pile.length; i++) ctx.lineTo(i * CW, H - yAt(pile, i));
+                ctx.lineTo(W + CW, H + 2); ctx.closePath(); ctx.fillStyle = pileGrad; ctx.fill();
+                ctx.lineWidth = 1.2; ctx.strokeStyle = dark ? 'rgba(255,255,255,.6)' : 'rgba(120,175,228,.7)'; ctx.beginPath();
+                for (let i = 0; i < pile.length; i++) { const y = H - yAt(pile, i); i ? ctx.lineTo(i * CW, y) : ctx.moveTo(0, y); }
+                ctx.stroke();
+            }
+
+            // ---------- snow caps on link cards ----------
+            function refreshCaps() {
+                if (!cardEls) cardEls = [...document.querySelectorAll('.social-link')];
+                caps = [];
+                for (const el of cardEls) {
+                    const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > H || r.width < 60) continue;
+                    const cols = Math.ceil(r.width / CW) + 1; let c = capMap.get(el);
+                    if (!c) { c = { h: new Float32Array(cols) }; capMap.set(el, c); }
+                    else if (c.h.length !== cols) { const nh = new Float32Array(cols); nh.set(c.h.subarray(0, Math.min(cols, c.h.length))); c.h = nh; }
+                    c.x = r.left; c.y = r.top; c.w = r.width; caps.push(c);
+                }
+            }
+            const CAPMAX = 8, INSET = 14;
+            function drawCaps(dark) {
+                ctx.fillStyle = dark ? 'rgba(244,250,255,.97)' : 'rgba(240,248,255,.98)'; ctx.strokeStyle = dark ? 'rgba(255,255,255,.55)' : 'rgba(120,175,228,.7)'; ctx.lineWidth = 1;
+                for (const c of caps) {
+                    let mx = 0; for (let i = 0; i < c.h.length; i++) if (c.h[i] > mx) mx = c.h[i]; if (mx < 0.5) continue;
+                    ctx.beginPath(); ctx.moveTo(c.x + INSET - 4, c.y + 1.5); const tops = [];
+                    for (let i = 0; i < c.h.length; i++) {
+                        const x = c.x + i * CW, tap = Math.max(0, Math.min(1, (x - c.x - INSET) / 16, (c.x + c.w - INSET - x) / 16));
+                        const y = c.y - c.h[i] * tap - (c.h[i] > 1.5 ? bump[i % bump.length] * 0.6 : 0); tops.push([x, y]);
+                    }
+                    tops.forEach(q => ctx.lineTo(q[0], q[1])); ctx.lineTo(c.x + c.w - INSET + 4, c.y + 1.5); ctx.closePath(); ctx.fill();
+                    ctx.beginPath(); tops.forEach((q, i) => i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])); ctx.stroke();
+                }
+            }
+
+            // ---------- ice shard ----------
+            function drawIce(p, dark) {
+                ctx.globalAlpha = 1; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(Math.cos(p.flip), 1);
+                const r = p.r; ctx.beginPath(); ctx.moveTo(0, -r * 1.7); ctx.lineTo(r * 0.7, -r * 0.2); ctx.lineTo(r * 0.45, r * 1.2); ctx.lineTo(0, r * 1.7); ctx.lineTo(-r * 0.5, r * 0.9); ctx.lineTo(-r * 0.7, -r * 0.3); ctx.closePath();
+                const g = ctx.createLinearGradient(-r, -r, r, r);
+                g.addColorStop(0, dark ? 'rgba(220,248,255,.8)' : 'rgba(150,205,245,.7)'); g.addColorStop(0.5, dark ? 'rgba(120,205,245,.38)' : 'rgba(70,150,225,.35)'); g.addColorStop(1, dark ? 'rgba(200,240,255,.7)' : 'rgba(120,185,238,.6)');
+                ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = dark ? 'rgba(255,255,255,.85)' : 'rgba(60,130,205,.8)'; ctx.stroke();
+                if (Math.sin(t * 2.6 + p.ph) > 0.96) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(-r * 1.1, 0); ctx.lineTo(r * 1.1, 0); ctx.moveTo(0, -r * 1.1); ctx.lineTo(0, r * 1.1); ctx.stroke(); }
+                ctx.restore();
+            }
+
+            // ---------- main loop ----------
+            function frame(ts) {
+                if (!running) return; requestAnimationFrame(frame);
+                if (document.hidden) { last = ts; return; }
+                const dt = Math.min(0.05, (ts - (last || ts)) / 1000); last = ts;
+                const c = calm();
+                if (c !== calmWas) { calmWas = c; if (c) ctx.clearRect(0, 0, W, H); else fill(); }
+                if (c) return;
+                if (dt > 0.034) { if (++slow > 40 && scale > 0.35) { scale *= 0.65; slow = 0; fill(); } } else slow = Math.max(0, slow - 1);
+                t += dt; const dark = isDark(); buildSprites(); gradients(dark); refreshCaps();
+
+                if (t > nextGust) { gAmp = rnd(35, 85) * (Math.random() < 0.5 ? -1 : 1); gStart = t; gDur = rnd(2.5, 4.5); nextGust = t + rnd(7, 14); }
+                const gp = (t - gStart) / gDur; gust = gp >= 0 && gp <= 1 ? gAmp * Math.sin(Math.PI * gp) : 0;
+                const rem = stormEnd - t, env = rem > 0 ? Math.max(0, Math.min(1, rem / 2, (9 - rem) / 1.5 + 0.2)) : 0, storm = 120 * env;
+                wind = Math.sin(t * 0.25) * 12 + Math.sin(t * 0.61) * 5 + gust + storm + pvx * 0.5; pvx *= 0.92;
+
+                ctx.clearRect(0, 0, W, H);
+                if (env > 0.01) { ctx.fillStyle = dark ? 'rgba(215,232,250,' + (0.1 * env) + ')' : 'rgba(225,238,252,' + (0.22 * env) + ')'; ctx.fillRect(0, 0, W, H); }   // whiteout
+
+                for (let i = parts.length - 1; i >= 0; i--) {
+                    const p = parts[i], sp = p.temp ? 1.5 : 1, y0 = p.y;
+                    p.y += p.vy * sp * (1 + 0.12 * Math.sin(t * p.f2 * 0.8 + p.ph)) * dt;
+                    const vx = wind * p.k + Math.sin(t * p.f1 + p.ph) * p.amp + Math.sin(t * p.f2 + p.ph * 1.7) * p.amp * 0.4; p.x += vx * dt;
+                    if (p.ice || p.cr >= 0) p.flip += p.vf * dt; if (p.cr >= 0) p.rot += p.vr * dt;
+                    const dx = p.x - px, dy = p.y - py, d2 = dx * dx + dy * dy;
+                    if (d2 < 10000 && d2 > 1) { const d = Math.sqrt(d2), f = (100 - d) / 100 * 200 * dt; p.x += dx / d * f; p.y += dy / d * f * 0.3; }
+                    let landed = false;
+                    if (p.z > 0.45 && !p.ice) {
+                        if (p.y >= H - hAt(p.x) - 1) { addTo(pile, 0, p.x, p.r * 2.2, maxH); landed = true; }
+                        else for (const cp of caps) {
+                            if (p.x < cp.x + INSET || p.x > cp.x + cp.w - INSET) continue;
+                            const ci = ((p.x - cp.x) / CW) | 0, top = cp.y - cp.h[ci];
+                            if (y0 < top + 1 && p.y >= top) { addTo(cp.h, cp.x, p.x, p.r * 1.5, CAPMAX); landed = true; break; }
+                        }
+                    }
+                    if (landed || p.y > H + 14 || p.x < -40 || p.x > W + 40) {
+                        if (p.temp) { parts.splice(i, 1); continue; }
+                        p.y = rnd(-30, -6); p.x = rnd(-20, W + 20); continue;
+                    }
+                    if (p.y < -12) continue;
+                    if (p.ice) { drawIce(p, dark); continue; }
+                    const tw = p.z > 0.3 ? 1 + Math.sin(t * 3 + p.tw) * 0.1 : 1;
+                    if (p.cr >= 0) {
+                        const s = p.r * 7.2; ctx.globalAlpha = Math.min(1, p.a * tw); ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+                        ctx.scale(0.3 + 0.7 * Math.abs(Math.cos(p.flip)), 1); ctx.drawImage(SP.cr[p.cr], -s / 2, -s / 2, s, s); ctx.restore();
+                    } else if (p.blur) { const s = p.r * 5; ctx.globalAlpha = Math.min(1, p.a * 0.55 * tw); ctx.drawImage(SP.soft, p.x - s / 2, p.y - s / 2, s, s); }
+                    else if (p.temp && p.z > 0.5) {                                   // motion streak in storms
+                        const s = p.r * 3.2, ang = Math.atan2(p.vy * sp, vx); ctx.globalAlpha = Math.min(1, p.a * tw);
+                        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(ang - Math.PI / 2 + Math.PI / 2); ctx.drawImage(SP.crisp, -s * 1.2, -s / 2, s * 2.4, s); ctx.restore();
+                    } else { const s = p.r * 3.2; ctx.globalAlpha = Math.min(1, p.a * tw); ctx.drawImage(SP.crisp, p.x - s / 2, p.y - s / 2, s, s); }
+                }
+                ctx.globalAlpha = 1;
+
+                // pile maintenance + spindrift blown off the pile in gusts
+                pileMax = relax(pile, 0.05, dt); for (const cp of caps) relax(cp.h, 0.09, dt);
+                if (Math.abs(gust) > 35 && pileMax > 2 && drift.length < 70) {
+                    const n = Math.ceil(dt * 45);
+                    for (let k = 0; k < n; k++) { const i = (Math.random() * pile.length) | 0; if (pile[i] > 1.5) { drift.push({ x: i * CW, y: H - pile[i] - 1, vx: Math.sign(gust) * rnd(70, 150), vy: rnd(-45, -8), l: rnd(.8, 1.5) }); pile[i] -= 0.25; } }
+                }
+                for (let i = drift.length - 1; i >= 0; i--) {
+                    const d = drift[i]; d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 70 * dt; d.l -= dt;
+                    if (d.l <= 0 || d.y > H) { drift.splice(i, 1); continue; }
+                    ctx.globalAlpha = Math.min(1, d.l) * 0.8; ctx.drawImage(SP.crisp, d.x - 3, d.y - 3, 6, 6);
+                }
+                ctx.globalAlpha = 1;
+                drawPile(dark); drawCaps(dark);
+
+                // glitter on fresh snow (dark mode)
+                if (dark && pileMax > 5 && glints.length < 6 && Math.random() < 0.1) { const i = (Math.random() * pile.length) | 0; if (pile[i] > 3) glints.push({ x: i * CW, y: H - pile[i] - 1, a: 0 }); }
+                ctx.lineWidth = 1; for (let i = glints.length - 1; i >= 0; i--) {
+                    const g = glints[i]; g.a += dt; const k = 1 - g.a / 0.35; if (k <= 0) { glints.splice(i, 1); continue; }
+                    const L = 2 + 5 * k; ctx.strokeStyle = 'rgba(255,255,255,' + k + ')'; ctx.beginPath();
+                    ctx.moveTo(g.x - L, g.y); ctx.lineTo(g.x + L, g.y); ctx.moveTo(g.x, g.y - L); ctx.lineTo(g.x, g.y + L); ctx.stroke();
+                }
+            }
+            function start() { if (running || !on) return; running = true; cv.style.display = ''; last = 0; fill(); requestAnimationFrame(frame); }
+            function resetAll() { pile.fill(0); (cardEls || []).forEach(el => { const c = capMap.get(el); if (c) c.h.fill(0); }); drift.length = glints.length = 0; }
+            function stop() { running = false; ctx.clearRect(0, 0, W, H); cv.style.display = 'none'; parts = []; resetAll(); }
+            function set(v) { on = !!v; on ? start() : stop(); }
+            function storm() {
+                if (!on) set(true);
+                stormEnd = t + 9; const n = W < 600 ? 110 : 210;
+                for (let i = 0; i < n; i++) parts.push(make(true, true));
+                try { if (window.NX) NX.unlock('blizzard'); showToast('[SYS_LOG]: 🌨️ BLIZZARD_INCOMING'); } catch (e) {}
+            }
+            window.__weather = { set, storm, isOn: () => on, clearPile: resetAll };
+            resize(); if (on) start(); else cv.style.display = 'none';
+
+            (function hook() {
+                if (!window.NX || !NX.cmds || !NX.helpExtra) return setTimeout(hook, 250);
+                NX.cmds.snow = a => {
+                    const m = (a[0] || '').toLowerCase();
+                    if (m === 'storm') { storm(); return NX.print('🌨️  พายุหิมะมาแล้ว!', 'tm-hi'); }
+                    if (m === 'clear') { resetAll(); return NX.print('กวาดหิมะที่กองอยู่ออกแล้ว 🧹', 'tm-ok'); }
+                    const want = m === 'on' ? true : m === 'off' ? false : !on; set(want);
+                    if (NX.setPref) NX.setPref('snow', want);
+                    NX.print('snow → ' + (want ? 'on ❄️' : 'off') + (want ? "   (ลอง 'snow storm' / 'snow clear')" : ''), 'tm-ok');
+                };
+                NX.helpExtra = NX.helpExtra.map(h => h[0].indexOf('snow') === 0 ? ['snow [on|off|storm|clear]', 'หิมะตก · storm = พายุ · clear = กวาดกอง'] : h);
+            })();
         })();
     </script>
 </body>
