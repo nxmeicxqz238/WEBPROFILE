@@ -725,6 +725,96 @@
             #aurora, #beams, #shapes svg, .av-radar, .ecg-live { animation: none !important; }
             #shapes { display:none; }
         }
+        /* ===== AVATAR 5-CLICK OVERCLOCK EFFECT ===== */
+        @keyframes avOverclock {
+            0%   { transform: rotateY(0) scale(1);       filter: brightness(1) hue-rotate(0); }
+            25%  { transform: rotateY(360deg) scale(1.28); filter: brightness(2.2) hue-rotate(90deg); }
+            60%  { transform: rotateY(900deg) scale(1.12); filter: brightness(1.6) hue-rotate(220deg); }
+            100% { transform: rotateY(1080deg) scale(1);  filter: brightness(1) hue-rotate(360deg); }
+        }
+        .av-overclock { animation: avOverclock 1.3s cubic-bezier(.3,.7,.2,1) both; box-shadow: 0 0 60px var(--cyber-theme-color), 0 0 120px #00e5ff !important; }
+        .av-flash-ring { position: fixed; z-index: 9998; pointer-events: none; width: 20px; height: 20px; border-radius: 50%;
+            border: 3px solid var(--cyber-theme-color); transform: translate(-50%, -50%) scale(1); opacity: .9;
+            animation: avFlashRing .9s ease-out forwards; }
+        @keyframes avFlashRing { to { transform: translate(-50%, -50%) scale(26); opacity: 0; border-width: 1px; } }
+        @media (prefers-reduced-motion: reduce) { .av-overclock { animation: none !important; } .av-flash-ring { display: none; } }
+        /* ===== OVERCLOCK EXTRAS ===== */
+        #ov-flash { position: fixed; inset: 0; z-index: 9997; pointer-events: none; background: radial-gradient(circle at var(--ox,50%) var(--oy,35%), #fff 0%, var(--cyber-theme-color) 25%, transparent 65%); opacity: 0; animation: ovFlash .7s ease-out forwards; mix-blend-mode: screen; }
+        @keyframes ovFlash { 0% { opacity: .95; } 100% { opacity: 0; } }
+        #ov-banner { position: fixed; left: 50%; top: 18%; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%) scale(.4); opacity: 0;
+            font: 700 clamp(28px, 9vw, 64px)/1 'Share Tech Mono', monospace; letter-spacing: .18em; color: #fff; white-space: nowrap;
+            text-shadow: 3px 0 #ff0055, -3px 0 #00e5ff, 0 0 24px var(--cyber-theme-color);
+            animation: ovBanner 1.9s cubic-bezier(.2,1.4,.3,1) forwards; }
+        @keyframes ovBanner {
+            0%   { opacity: 0; transform: translate(-50%, -50%) scale(.4); filter: blur(8px); }
+            12%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); filter: blur(0); }
+            18%  { transform: translate(-48%, -50%) scale(1); text-shadow: -6px 0 #ff0055, 6px 0 #00e5ff, 0 0 24px var(--cyber-theme-color); }
+            24%  { transform: translate(-52%, -50%) scale(1); }
+            30%  { transform: translate(-50%, -50%) scale(1); text-shadow: 3px 0 #ff0055, -3px 0 #00e5ff, 0 0 24px var(--cyber-theme-color); }
+            80%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -60%) scale(1.3); filter: blur(6px); }
+        }
+        .ov-cube { position: fixed; z-index: 9998; pointer-events: none; left: var(--cx); top: var(--cy); font-size: var(--sz, 22px);
+            transform: translate(-50%, -50%); animation: ovCube var(--dur, 1.6s) cubic-bezier(.15,.8,.3,1) forwards; will-change: transform, opacity; }
+        @keyframes ovCube {
+            0%   { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(0); }
+            10%  { opacity: 1; }
+            100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2) rotate(var(--rot)); }
+        }
+        #ov-bolts { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9998; pointer-events: none; }
+        #ov-bolts polyline { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+            filter: drop-shadow(0 0 6px var(--cyber-theme-color)) drop-shadow(0 0 14px #00e5ff);
+            stroke-dasharray: 1; stroke-dashoffset: 1; animation: ovBolt .55s ease-out forwards; }
+        @keyframes ovBolt { 0% { stroke-dashoffset: 1; opacity: 1; } 55% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+        .social-link.ov-wave { animation: ovWave .8s cubic-bezier(.3,1.6,.5,1) var(--wd, 0s) both; }
+        @keyframes ovWave {
+            0%   { transform: translateX(0) scale(1); }
+            30%  { transform: translateX(14px) scale(1.04); filter: brightness(1.8) hue-rotate(40deg); }
+            60%  { transform: translateX(-8px) scale(1.01); }
+            100% { transform: translateX(0) scale(1); filter: none; }
+        }
+        .av-overclock-aura { position: absolute; inset: -20px; border-radius: 50%; pointer-events: none; z-index: 0;
+            background: conic-gradient(from 0deg, var(--cyber-theme-color), #00e5ff, #ff0055, var(--cyber-theme-color));
+            filter: blur(14px); opacity: 0; animation: ovAura 1.8s ease-out forwards; }
+        @keyframes ovAura { 0% { opacity: 0; transform: scale(.6) rotate(0); } 25% { opacity: .85; } 100% { opacity: 0; transform: scale(1.9) rotate(540deg); } }
+        @media (prefers-reduced-motion: reduce) { #ov-flash, #ov-banner, .ov-cube, #ov-bolts, .av-overclock-aura { display: none !important; } .social-link.ov-wave { animation: none !important; } }
+        /* ===== SECRET MINIGAME: CUBE_BREAKER ===== */
+        #mg { position: fixed; inset: 0; z-index: 9990; display: none; align-items: center; justify-content: center; padding: 12px;
+            background: rgba(3,7,12,.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); touch-action: none; user-select: none; -webkit-user-select: none; }
+        #mg.on { display: flex; animation: mgIn .35s ease-out both; }
+        @keyframes mgIn { from { opacity: 0; transform: scale(1.08); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+        .mg-panel { width: min(520px, 100%); height: min(640px, 100%); display: flex; flex-direction: column; gap: 8px; padding: 12px;
+            background: var(--card-bg); border: 1px solid var(--cyber-theme-color); color: var(--card-text); font-family: 'Share Tech Mono', monospace;
+            box-shadow: 0 0 30px var(--cyber-glow-color), inset 0 0 20px var(--cyber-glow-color);
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+        .mg-panel.hit { animation: mgShake .3s linear; }
+        @keyframes mgShake { 0%,100% { transform: none; } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+        .mg-top { display: flex; justify-content: space-between; align-items: center; color: var(--cyber-theme-color); font-size: 13px; letter-spacing: .12em; }
+        .mg-x { width: 30px; height: 30px; border: 1px solid var(--cyber-theme-color); color: var(--cyber-theme-color); background: transparent; font-size: 14px; }
+        .mg-x:hover { background: var(--cyber-theme-color); color: #000; }
+        .mg-hud { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--sub-text); }
+        .mg-hud b { color: var(--cyber-theme-color); font-size: 18px; }
+        .mg-bar { height: 6px; background: rgba(127,127,127,.25); overflow: hidden; }
+        .mg-bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--cyber-theme-color), #00e5ff); box-shadow: 0 0 10px var(--cyber-theme-color); transform-origin: left; }
+        .mg-arena { position: relative; flex: 1; overflow: hidden; border: 1px dashed var(--cyber-glow-color);
+            background: repeating-linear-gradient(0deg, transparent 0 23px, var(--cyber-glow-color) 23px 24px), repeating-linear-gradient(90deg, transparent 0 23px, var(--cyber-glow-color) 23px 24px); background-blend-mode: soft-light; }
+        .mg-t { position: absolute; width: var(--sz); height: var(--sz); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: calc(var(--sz) * .55); line-height: 1; padding: 0; border: 2px solid var(--c); background: rgba(3,7,12,.7); color: #fff;
+            box-shadow: 0 0 14px var(--c), inset 0 0 10px var(--c);
+            animation: mgPop .18s cubic-bezier(.2,2,.4,1) both, mgLife var(--life) linear .18s forwards; }
+        .mg-t.bad { --c: #ff0055; } .mg-t.good { --c: var(--cyber-theme-color); } .mg-t.gold { --c: #ffb300; }
+        @keyframes mgPop { from { transform: scale(0); } to { transform: scale(1); } }
+        @keyframes mgLife { 0% { transform: scale(1); opacity: 1; } 75% { opacity: 1; } 100% { transform: scale(.55); opacity: .15; } }
+        .mg-fx { position: absolute; pointer-events: none; font-size: 16px; font-weight: 700; color: var(--c, #fff); text-shadow: 0 0 8px var(--c, #fff); animation: mgFx .7s ease-out forwards; }
+        @keyframes mgFx { to { transform: translateY(-46px) scale(1.3); opacity: 0; } }
+        .mg-screen { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+            text-align: center; padding: 20px; background: rgba(3,7,12,.82); }
+        html:not(.dark) .mg-screen { background: rgba(238,242,246,.88); }
+        .mg-screen h2 { font-size: 24px; letter-spacing: .14em; color: var(--cyber-theme-color); text-shadow: 0 0 14px var(--cyber-theme-color); }
+        .mg-screen p { font-family: 'Prompt', sans-serif; font-size: 14px; line-height: 1.7; color: var(--sub-text); }
+        .mg-btn { padding: 10px 26px; border: 1px solid var(--cyber-theme-color); background: transparent; color: var(--cyber-theme-color); font: 700 14px 'Share Tech Mono', monospace; letter-spacing: .15em; }
+        .mg-btn:hover { background: var(--cyber-theme-color); color: #000; box-shadow: 0 0 18px var(--cyber-theme-color); }
+        @media (prefers-reduced-motion: reduce) { #mg.on, .mg-panel.hit, .mg-t, .mg-fx { animation-duration: .01s !important; } }
     </style>
 </head>
 <body class="locked bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
@@ -2106,6 +2196,248 @@
                 st.setProperty('--dy', ((Math.random() - 0.5) * 90).toFixed(0) + 'px');
                 box.appendChild(svg);
             }
+        })();
+        // ===== AVATAR EFFECT: 5 clicks on the avatar =====
+        (function () {
+            const box = document.getElementById('avatar-container');
+            const frame = document.getElementById('profile-img').parentElement;
+            let clicks = [], busy = false;
+
+            function overclock() {
+                if (busy) return; busy = true;
+                const r = frame.getBoundingClientRect();
+                const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+
+                frame.classList.remove('av-overclock'); void frame.offsetWidth;
+                frame.classList.add('av-overclock');
+
+                // expanding rings from the avatar
+                [0, 150, 300].forEach(d => setTimeout(() => {
+                    const ring = document.createElement('div');
+                    ring.className = 'av-flash-ring';
+                    ring.style.left = cx + 'px'; ring.style.top = cy + 'px';
+                    document.body.appendChild(ring);
+                    setTimeout(() => ring.remove(), 950);
+                }, d));
+
+                // sparks + canvas shockwaves
+                [0, 200, 400].forEach((d, i) => setTimeout(() => {
+                    createSparks(cx, cy, 45, 9);
+                    shockwave(cx, cy, ['#00e5ff', '#ff0055', '#ffffff'][i]);
+                }, d));
+
+                // sound + haptics
+                playBeep(220, 0.12, 'sawtooth');
+                setTimeout(() => playBeep(440, 0.12, 'square'), 90);
+                setTimeout(() => playBeep(880, 0.15, 'square'), 180);
+                setTimeout(() => playChime(), 320);
+                if (navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 140]);
+
+                if (window.__ovExtra) window.__ovExtra(cx, cy);
+                showToast('[SYS_LOG]: ⚡ AVATAR_OVERCLOCK_ENGAGED');
+                setTimeout(() => { frame.classList.remove('av-overclock'); busy = false; }, 1400);
+            }
+
+            box.addEventListener('click', () => {
+                const now = performance.now();
+                clicks = clicks.filter(t => now - t < 2000); clicks.push(now);
+                if (clicks.length >= 5) { clicks = []; overclock(); }
+            });
+        })();
+        // ===== OVERCLOCK EXTRAS (JS) =====
+        (function () {
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const rnd = (a, b) => a + Math.random() * (b - a);
+            const add = (el, ms) => { document.body.appendChild(el); setTimeout(() => el.remove(), ms); return el; };
+
+            window.__ovExtra = function (cx, cy) {
+                // 1) full-screen flash centred on the avatar
+                const fl = document.createElement('div'); fl.id = 'ov-flash';
+                fl.style.setProperty('--ox', cx + 'px'); fl.style.setProperty('--oy', cy + 'px');
+                add(fl, 750);
+
+                // 2) glitchy banner
+                const bn = document.createElement('div'); bn.id = 'ov-banner'; bn.textContent = '⚡ OVERCLOCK ⚡';
+                add(bn, 2000);
+
+                // 3) rotating aura behind the avatar
+                const frame = document.getElementById('profile-img').parentElement;
+                const au = document.createElement('div'); au.className = 'av-overclock-aura';
+                frame.parentElement.insertBefore(au, frame);
+                setTimeout(() => au.remove(), 1900);
+
+                // 4) lightning bolts radiating out
+                const NS = 'http://www.w3.org/2000/svg';
+                const svg = document.createElementNS(NS, 'svg'); svg.id = 'ov-bolts';
+                svg.setAttribute('viewBox', '0 0 ' + innerWidth + ' ' + innerHeight);
+                const bolts = innerWidth < 768 ? 7 : 11;
+                for (let b = 0; b < bolts; b++) {
+                    const ang = (b / bolts) * Math.PI * 2 + rnd(-.2, .2);
+                    const len = rnd(.25, .55) * Math.min(innerWidth, innerHeight) * 1.4;
+                    const pts = []; const steps = 7;
+                    for (let k = 0; k <= steps; k++) {
+                        const d = 40 + (len * k) / steps, j = k ? rnd(-18, 18) : 0;
+                        pts.push((cx + Math.cos(ang) * d + Math.cos(ang + 1.57) * j).toFixed(1) + ',' + (cy + Math.sin(ang) * d + Math.sin(ang + 1.57) * j).toFixed(1));
+                    }
+                    const pl = document.createElementNS(NS, 'polyline');
+                    pl.setAttribute('points', pts.join(' ')); pl.setAttribute('pathLength', '1');
+                    pl.style.animationDelay = (b * 0.03).toFixed(2) + 's';
+                    svg.appendChild(pl);
+                }
+                add(svg, 800);
+
+                // 5) ice-cube / sparkle confetti
+                const icons = ['🧊', '❄️', '✨', '⚡', '💠'];
+                const n = innerWidth < 768 ? 22 : 36;
+                for (let c = 0; c < n; c++) {
+                    const el = document.createElement('span'); el.className = 'ov-cube';
+                    el.textContent = icons[c % icons.length];
+                    const a = Math.random() * Math.PI * 2, dist = rnd(110, Math.min(innerWidth, 700) * .55);
+                    el.style.setProperty('--cx', cx + 'px'); el.style.setProperty('--cy', cy + 'px');
+                    el.style.setProperty('--dx', (Math.cos(a) * dist).toFixed(0) + 'px');
+                    el.style.setProperty('--dy', (Math.sin(a) * dist + rnd(0, 120)).toFixed(0) + 'px');
+                    el.style.setProperty('--rot', rnd(-540, 540).toFixed(0) + 'deg');
+                    el.style.setProperty('--sz', rnd(16, 32).toFixed(0) + 'px');
+                    el.style.setProperty('--dur', rnd(1.2, 2).toFixed(2) + 's');
+                    add(el, 2100);
+                }
+
+                // 6) ripple wave down the link cards
+                document.querySelectorAll('.social-link').forEach((card, i) => {
+                    card.style.setProperty('--wd', (0.25 + i * 0.07).toFixed(2) + 's');
+                    card.classList.remove('ov-wave'); void card.offsetWidth; card.classList.add('ov-wave');
+                    setTimeout(() => card.classList.remove('ov-wave'), 1600 + i * 70);
+                });
+            };
+        })();
+        // ===== SECRET: 20 avatar clicks -> CUBE_BREAKER minigame =====
+        (function () {
+            const avatar = document.getElementById('avatar-container');
+            const DURATION = 30000, LIVES = 3;
+            let total = 0, isOpen = false, running = false;
+            let score = 0, lives = LIVES, combo = 0, endAt = 0, startAt = 0, spawnT = 0, tickT = 0;
+            const rnd = (a, b) => a + Math.random() * (b - a);
+
+            const ov = document.createElement('div');
+            ov.id = 'mg'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'CUBE_BREAKER secret minigame');
+            ov.innerHTML =
+                '<div class="mg-panel">' +
+                '<div class="mg-top"><span>🧊 CUBE_BREAKER.exe</span><button class="mg-x" aria-label="close">✕</button></div>' +
+                '<div class="mg-hud"><div>SCORE <b id="mg-s">0</b></div><div>COMBO <b id="mg-c">x1</b></div><div id="mg-l" aria-label="lives"></div></div>' +
+                '<div class="mg-bar"><i id="mg-t"></i></div>' +
+                '<div class="mg-arena" id="mg-arena"><div class="mg-screen" id="mg-screen"></div></div>' +
+                '</div>';
+            document.body.appendChild(ov);
+            const $ = id => ov.querySelector('#' + id);
+            const arena = $('mg-arena'), screen = $('mg-screen'), panel = ov.querySelector('.mg-panel');
+            const elS = $('mg-s'), elC = $('mg-c'), elL = $('mg-l'), elT = $('mg-t');
+
+            const getBest = () => { try { return +localStorage.getItem('nx_cb_best') || 0; } catch (e) { return 0; } };
+            const setBest = v => { try { localStorage.setItem('nx_cb_best', String(v)); } catch (e) {} };
+            const beep = (f, d, t) => { try { playBeep(f, d, t); } catch (e) {} };
+
+            function hud() {
+                elS.textContent = score;
+                elC.textContent = 'x' + (1 + Math.floor(combo / 5));
+                elL.textContent = '❤'.repeat(Math.max(0, lives)) + '🖤'.repeat(Math.max(0, LIVES - lives));
+            }
+            function clearTargets() { arena.querySelectorAll('.mg-t, .mg-fx').forEach(n => n.remove()); }
+            function showScreen(title, html, btn) {
+                screen.innerHTML = '<h2>' + title + '</h2><p>' + html + '</p><button class="mg-btn">' + btn + '</button>';
+                screen.style.display = 'flex';
+                screen.querySelector('.mg-btn').addEventListener('click', start);
+            }
+            function fx(x, y, text, color) {
+                const f = document.createElement('span'); f.className = 'mg-fx'; f.textContent = text;
+                f.style.left = x + 'px'; f.style.top = y + 'px'; f.style.setProperty('--c', color);
+                arena.appendChild(f); setTimeout(() => f.remove(), 750);
+            }
+
+            function spawn() {
+                if (!running) return;
+                const el = (performance.now() - startAt) / 1000;
+                const r = Math.random();
+                const type = r < 0.2 + Math.min(0.15, el * 0.005) ? 'bad' : r > 0.94 ? 'gold' : 'good';
+                const sz = innerWidth < 480 ? 54 : 64;
+                const life = Math.max(650, 1600 - el * 30) * (type === 'gold' ? 0.7 : 1);
+                const w = arena.clientWidth - sz, h = arena.clientHeight - sz;
+                const t = document.createElement('button');
+                t.className = 'mg-t ' + type; t.textContent = type === 'bad' ? '💀' : type === 'gold' ? '💎' : '🧊';
+                t.style.setProperty('--sz', sz + 'px'); t.style.setProperty('--life', life + 'ms');
+                t.style.left = rnd(0, Math.max(0, w)).toFixed(0) + 'px'; t.style.top = rnd(0, Math.max(0, h)).toFixed(0) + 'px';
+                let done = false;
+                const kill = () => { done = true; t.remove(); };
+                t.addEventListener('pointerdown', e => {
+                    e.preventDefault(); e.stopPropagation();
+                    if (done || !running) return;
+                    const x = t.offsetLeft + sz / 2, y = t.offsetTop;
+                    kill();
+                    if (type === 'bad') {
+                        lives--; combo = 0; fx(x, y, '-1 ❤', '#ff0055'); beep(140, 0.15, 'sawtooth');
+                        panel.classList.remove('hit'); void panel.offsetWidth; panel.classList.add('hit');
+                        if (navigator.vibrate) navigator.vibrate(80);
+                        hud(); if (lives <= 0) end();
+                    } else {
+                        combo++;
+                        const pts = (type === 'gold' ? 30 : 10) * (1 + Math.floor(combo / 5));
+                        score += pts; fx(x, y, '+' + pts, type === 'gold' ? '#ffb300' : 'var(--cyber-theme-color)');
+                        beep(500 + Math.min(combo, 20) * 40, 0.05, 'square');
+                        hud();
+                    }
+                });
+                arena.appendChild(t);
+                setTimeout(() => { if (!done) { kill(); if (type !== 'bad') combo = 0; hud(); } }, life + 180);
+                spawnT = setTimeout(spawn, Math.max(260, 760 - el * 15));
+            }
+            function tick() {
+                if (!running) return;
+                const left = endAt - performance.now();
+                elT.style.transform = 'scaleX(' + Math.max(0, left / DURATION).toFixed(3) + ')';
+                if (left <= 0) return end();
+                tickT = requestAnimationFrame(tick);
+            }
+            function start() {
+                clearTargets(); score = 0; lives = LIVES; combo = 0; hud();
+                screen.style.display = 'none';
+                running = true; startAt = performance.now(); endAt = startAt + DURATION;
+                spawn(); tick();
+            }
+            function end() {
+                running = false; clearTimeout(spawnT); cancelAnimationFrame(tickT); clearTargets();
+                const best = getBest(), isNew = score > best; if (isNew) setBest(score);
+                const rank = score >= 600 ? 'S' : score >= 400 ? 'A' : score >= 200 ? 'B' : 'C';
+                try { playChime(); } catch (e) {}
+                showScreen(lives <= 0 ? 'SYSTEM_FAILURE' : 'TIME_UP',
+                    'คะแนน <b style="color:var(--cyber-theme-color)">' + score + '</b> · แรงค์ <b>' + rank + '</b><br>' +
+                    (isNew ? '🏆 สถิติใหม่!' : 'สถิติสูงสุด ' + best), 'PLAY_AGAIN');
+            }
+            function open() {
+                if (isOpen) return; isOpen = true;
+                document.body.style.overflow = 'hidden';
+                ov.classList.add('on'); clearTargets(); score = 0; lives = LIVES; combo = 0; hud(); elT.style.transform = 'scaleX(1)';
+                showScreen('CUBE_BREAKER', 'แตะ 🧊 ให้ไว · 💎 ได้แต้มเยอะ<br>ห้ามแตะ 💀 (มี ' + LIVES + ' ชีวิต) · เวลา 30 วินาที<br>ยิ่งต่อคอมโบ ยิ่งได้คูณ' +
+                    (getBest() ? '<br>สถิติสูงสุด ' + getBest() : ''), 'START');
+            }
+            function close() {
+                running = false; clearTimeout(spawnT); cancelAnimationFrame(tickT);
+                ov.classList.remove('on'); document.body.style.overflow = ''; isOpen = false; clearTargets();
+            }
+            ov.querySelector('.mg-x').addEventListener('click', close);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) close(); });
+
+            avatar.addEventListener('click', () => {
+                if (isOpen) return;
+                total++;
+                if (total === 15) showToast('[SYS_LOG]: มีบางอย่างกำลังตื่น...');
+                if (total >= 20) {
+                    total = 0;
+                    const r = avatar.getBoundingClientRect();
+                    try { createSparks(r.left + r.width / 2, r.top + r.height / 2, 70, 9); shockwave(r.left + r.width / 2, r.top + r.height / 2, '#ffb300'); } catch (e) {}
+                    try { playChime(); } catch (e) {}
+                    showToast('[SYS_LOG]: 🎮 SECRET_UNLOCKED // CUBE_BREAKER');
+                    setTimeout(open, 700);
+                }
+            });
         })();
     </script>
 </body>
