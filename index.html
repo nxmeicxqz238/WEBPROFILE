@@ -50,6 +50,8 @@
         }
 
         html:not(.dark) {
+            --cyber-theme-color: #00a859;
+            --cyber-glow-color: rgba(0, 168, 89, 0.3);
             --bg-base: #eef2f6;
             --text-base: #0f172a;
             --card-bg: rgba(255, 255, 255, 0.85);
@@ -65,7 +67,7 @@
         /* Custom Cyber Cursor (Desktop Only) with GPU Acceleration */
         @media (min-width: 768px) {
             body { cursor: none; }
-            a, button, input, label { cursor: none !important; }
+            a, button, input { cursor: none !important; }
         }
 
         #cyber-cursor {
@@ -75,7 +77,7 @@
             border: 1px solid var(--cyber-theme-color);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 999999;
+            z-index: 9999;
             will-change: transform;
             transform: translate3d(-50%, -50%, 0);
             transition: width 0.1s, height 0.1s, background-color 0.1s;
@@ -89,7 +91,7 @@
             background: var(--cyber-theme-color);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 1000000;
+            z-index: 10000;
             will-change: transform;
             transform: translate3d(-50%, -50%, 0);
             box-shadow: 0 0 8px var(--cyber-theme-color);
@@ -104,10 +106,8 @@
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 4px;
             opacity: 0.6;
-            transition: opacity 0.3s ease;
         }
         html:not(.dark) .scanlines { opacity: 0.15; }
-        .scanlines.hidden-fx { opacity: 0 !important; }
 
         /* Glassmorphic Sci-Fi Card Container */
         .cyber-card {
@@ -127,20 +127,6 @@
             box-shadow: 0 0 22px var(--cyber-glow-color), inset 0 0 12px var(--cyber-glow-color);
         }
 
-        /* Avatar Shape Variants */
-        .avatar-shape-cyber {
-            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
-            border-radius: 0;
-        }
-        .avatar-shape-square {
-            clip-path: none;
-            border-radius: 8px;
-        }
-        .avatar-shape-circle {
-            clip-path: none;
-            border-radius: 9999px;
-        }
-
         /* Laser Sweep Shimmer Effect */
         .cyber-card::before {
             content: '';
@@ -153,7 +139,7 @@
         }
         .cyber-card:hover::before { left: 150%; }
 
-        /* HUD Corner Brackets */
+        /* HUD Corner Brackets for Links */
         .hud-bracket {
             position: absolute;
             width: 8px; height: 8px;
@@ -242,6 +228,7 @@
             pointer-events: auto;
         }
 
+        /* 🔥 HOLOGRAPHIC DESKTOP SCANNER STYLING */
         @keyframes holoLaserV {
             0% { top: 0%; opacity: 0.8; background: #00ff88; box-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; }
             50% { opacity: 1; background: #00e5ff; box-shadow: 0 0 30px #00e5ff, 0 0 60px #00e5ff; }
@@ -302,6 +289,7 @@
             100% { transform: scale(1.75); opacity: 0; }
         }
 
+        /* Mobile Touch Scanner Glow */
         .mobile-scanner-glow {
             box-shadow: 0 0 25px rgba(0, 255, 136, 0.25), inset 0 0 15px rgba(0, 255, 136, 0.15);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -325,163 +313,28 @@
             pointer-events: none;
             animation: rippleWave 0.8s linear infinite;
         }
-
-        /* --- SYSTEM CONFIG MODAL --- */
-        #config-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(3, 7, 12, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 99990;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-        #config-modal.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .config-panel {
-            transform: scale(0.95) translateY(10px);
-            transition: transform 0.25s cubic-bezier(0.1, 0.8, 0.3, 1);
-        }
-        #config-modal.open .config-panel {
-            transform: scale(1) translateY(0);
-        }
-
-        /* Custom Toggle Switch */
-        .cyber-toggle {
-            appearance: none;
-            width: 38px;
-            height: 20px;
-            background: rgba(148, 163, 184, 0.2);
-            border: 1px solid var(--cyber-glow-color);
-            border-radius: 9999px;
-            position: relative;
-            transition: all 0.25s ease;
-        }
-        .cyber-toggle::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
-            background: #94a3b8;
-            border-radius: 50%;
-            transition: all 0.25s ease;
-        }
-        .cyber-toggle:checked {
-            background: var(--cyber-glow-color);
-            border-color: var(--cyber-theme-color);
-        }
-        .cyber-toggle:checked::after {
-            transform: translateX(18px);
-            background: var(--cyber-theme-color);
-            box-shadow: 0 0 8px var(--cyber-theme-color);
-        }
     </style>
 </head>
 <body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
 
-    <!-- --- SYSTEM CONFIG MODAL (แผงตั้งค่าลูกเล่น) --- -->
-    <div id="config-modal">
-        <div class="config-panel cyber-card w-full max-w-sm p-5 font-mono text-xs relative">
-            <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
-            <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
-
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between border-b border-cyber-green/30 pb-3 mb-4">
-                <div class="flex items-center gap-2 text-cyber-green font-bold tracking-wider">
-                    <i class="fa-solid fa-sliders animate-pulse"></i>
-                    <span>[SYS_FX_CONFIG]</span>
-                </div>
-                <button id="close-config-btn" class="text-[var(--sub-text)] hover:text-cyber-magenta transition-colors px-2 py-1">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <!-- 1. Theme Accent Color -->
-            <div class="mb-4">
-                <div class="text-[11px] text-[var(--sub-text)] mb-2 uppercase tracking-wider">&gt; SYSTEM ACCENT COLOR:</div>
-                <div class="flex items-center justify-between gap-2 bg-cyber-black/40 p-2 rounded border border-cyber-green/20">
-                    <button class="color-swatch w-7 h-7 rounded-full border-2 border-white/80 shadow-[0_0_10px_#00ff88] transition-transform hover:scale-110" data-color="#00ff88" data-glow="rgba(0, 255, 136, 0.4)" style="background: #00ff88;" title="Cyber Green"></button>
-                    <button class="color-swatch w-7 h-7 rounded-full border-2 border-transparent transition-transform hover:scale-110" data-color="#00e5ff" data-glow="rgba(0, 229, 255, 0.4)" style="background: #00e5ff;" title="Neon Cyan"></button>
-                    <button class="color-swatch w-7 h-7 rounded-full border-2 border-transparent transition-transform hover:scale-110" data-color="#ff0055" data-glow="rgba(255, 0, 85, 0.4)" style="background: #ff0055;" title="Crimson Glitch"></button>
-                    <button class="color-swatch w-7 h-7 rounded-full border-2 border-transparent transition-transform hover:scale-110" data-color="#ffaa00" data-glow="rgba(255, 170, 0, 0.4)" style="background: #ffaa00;" title="Cyber Amber"></button>
-                    <button class="color-swatch w-7 h-7 rounded-full border-2 border-transparent transition-transform hover:scale-110" data-color="#b829ea" data-glow="rgba(184, 41, 234, 0.4)" style="background: #b829ea;" title="Electric Purple"></button>
-                </div>
-            </div>
-
-            <!-- 2. Avatar Shape Selector -->
-            <div class="mb-4">
-                <div class="text-[11px] text-[var(--sub-text)] mb-2 uppercase tracking-wider">&gt; AVATAR FRAME SHAPE:</div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button class="shape-btn py-1.5 px-2 border border-cyber-green bg-cyber-green/20 text-cyber-green rounded text-[10px] font-bold transition-all" data-shape="cyber">CYBER CUT</button>
-                    <button class="shape-btn py-1.5 px-2 border border-cyber-green/30 text-[var(--sub-text)] rounded text-[10px] transition-all" data-shape="square">SQUARE</button>
-                    <button class="shape-btn py-1.5 px-2 border border-cyber-green/30 text-[var(--sub-text)] rounded text-[10px] transition-all" data-shape="circle">CIRCLE</button>
-                </div>
-            </div>
-
-            <!-- 3. Effect Toggles -->
-            <div class="space-y-2.5 mb-5">
-                <div class="text-[11px] text-[var(--sub-text)] uppercase tracking-wider">&gt; VISUAL & AUDIO MODULES:</div>
-                
-                <label class="flex items-center justify-between bg-cyber-black/30 px-3 py-2 rounded border border-cyber-green/15">
-                    <span class="text-[var(--card-text)]">Matrix Digital Rain</span>
-                    <input type="checkbox" id="cfg-matrix" class="cyber-toggle" checked>
-                </label>
-
-                <label class="flex items-center justify-between bg-cyber-black/30 px-3 py-2 rounded border border-cyber-green/15">
-                    <span class="text-[var(--card-text)]">CRT Retro Scanlines</span>
-                    <input type="checkbox" id="cfg-scanlines" class="cyber-toggle" checked>
-                </label>
-
-                <label class="flex items-center justify-between bg-cyber-black/30 px-3 py-2 rounded border border-cyber-green/15">
-                    <span class="text-[var(--card-text)]">Cursor Sparks & 3D Tilt</span>
-                    <input type="checkbox" id="cfg-sparks" class="cyber-toggle" checked>
-                </label>
-
-                <label class="flex items-center justify-between bg-cyber-black/30 px-3 py-2 rounded border border-cyber-green/15">
-                    <span class="text-[var(--card-text)]">Avatar Audio Visualizer</span>
-                    <input type="checkbox" id="cfg-visualizer" class="cyber-toggle" checked>
-                </label>
-
-                <label class="flex items-center justify-between bg-cyber-black/30 px-3 py-2 rounded border border-cyber-green/15">
-                    <span class="text-[var(--card-text)]">Startup Biometric Scan</span>
-                    <input type="checkbox" id="cfg-biometric" class="cyber-toggle" checked>
-                </label>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="grid grid-cols-2 gap-2">
-                <button id="test-scan-btn" class="py-2 bg-cyber-cyan/10 hover:bg-cyber-cyan hover:text-black border border-cyber-cyan text-cyber-cyan text-[10px] font-bold tracking-wider uppercase transition-all">
-                    <i class="fa-solid fa-fingerprint mr-1"></i> TEST SCAN
-                </button>
-                <button id="reset-cfg-btn" class="py-2 bg-rose-500/10 hover:bg-rose-500 hover:text-white border border-rose-500/60 text-rose-400 text-[10px] font-bold tracking-wider uppercase transition-all">
-                    <i class="fa-solid fa-rotate-left mr-1"></i> RESET DEFAULT
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- --- ADAPTIVE BIOMETRIC FINGERPRINT SCANNER OVERLAY --- -->
     <div id="fingerprint-overlay">
+        
         <!-- 💻 HOLOGRAPHIC COMPUTER / DESKTOP UI -->
         <div id="fp-desktop-ui" class="hidden md:flex flex-col items-center justify-center max-w-lg w-full relative perspective-[1000px]">
             <div class="fp-hologram-card w-full p-9 font-mono text-center relative overflow-hidden">
+                
+                <!-- Laser Sweepers -->
                 <div class="holo-laser-v"></div>
                 <div class="holo-laser-h"></div>
+                
+                <!-- Holographic Corner Brackets -->
                 <div class="hud-bracket hud-tl" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
                 <div class="hud-bracket hud-tr" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
                 <div class="hud-bracket hud-bl" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
                 <div class="hud-bracket hud-br" style="width: 20px; height: 20px; border-color: #00e5ff;"></div>
 
+                <!-- Top Holographic Telemetry Bar -->
                 <div class="flex items-center justify-between text-[11px] text-cyber-cyan tracking-widest mb-4 border-b border-cyber-cyan/30 pb-2.5">
                     <span class="flex items-center gap-2">
                         <i class="fa-solid fa-satellite-dish text-cyber-green animate-pulse"></i>
@@ -495,14 +348,23 @@
                 </h2>
                 <p class="text-[11px] text-cyber-cyan mb-8 tracking-widest uppercase">&lt; 3D LASER MAPPING ACTIVE &gt;</p>
 
+                <!-- Interactive Holographic Fingerprint Portal -->
                 <div id="fp-dt-btn" class="w-36 h-36 mx-auto mb-8 rounded-full border-2 border-cyber-cyan bg-cyber-black/90 flex items-center justify-center cursor-pointer hover:shadow-[0_0_45px_rgba(0,229,255,0.6)] transition-all duration-300 relative group active:scale-95">
+                    
                     <div class="pulse-wave" style="border-color: #00e5ff;"></div>
+                    
+                    <!-- Fingerprint Hologram Icon -->
                     <i class="fa-solid fa-fingerprint text-7xl text-cyber-cyan group-hover:scale-110 group-hover:text-cyber-green transition-all duration-300 relative z-10 drop-shadow-[0_0_12px_#00e5ff]"></i>
+
+                    <!-- Holographic Grid Background Pattern -->
                     <div class="absolute inset-0 bg-[linear-gradient(to_right,#00e5ff20_1px,transparent_1px),linear-gradient(to_bottom,#00e5ff20_1px,transparent_1px)] bg-[size:12px_12px] rounded-full pointer-events-none opacity-60"></div>
+
+                    <!-- Dual Holographic Reticles -->
                     <div class="absolute -inset-4 rounded-full border border-dashed border-cyber-cyan/60 spin-clockwise pointer-events-none"></div>
                     <div class="absolute -inset-8 rounded-full border border-cyber-green/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 </div>
 
+                <!-- Live Status & Holographic Progress -->
                 <div id="dt-status-container" class="mb-5">
                     <p id="fp-dt-status" class="text-xs text-cyber-cyan tracking-wider mb-2.5 font-mono">
                         [ ขยับเมาส์เพื่อหมุนมิติโฮโลแกรม - คลิกสัญลักษณ์เพื่อสแกน ]
@@ -520,6 +382,7 @@
 
         <!-- 📱 MOBILE PHONE UI -->
         <div id="fp-mobile-ui" class="flex md:hidden flex-col items-center justify-between h-full w-full pb-14 pt-10 font-mono text-center">
+            
             <div class="mt-6">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-dark/80 border border-cyber-green/30 mb-2">
                     <span class="w-2 h-2 rounded-full bg-cyber-green animate-ping"></span>
@@ -534,10 +397,13 @@
                 <div class="absolute -inset-14 rounded-full border border-cyber-cyan/20 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 
                 <div id="fp-mb-btn" class="w-32 h-32 rounded-full border-2 border-cyber-green bg-cyber-dark/95 flex items-center justify-center relative active:scale-95 transition-all mobile-scanner-glow touch-none select-none overflow-hidden cursor-pointer">
+                    
                     <div class="holo-laser-v"></div>
                     <div class="pulse-wave"></div>
                     <div id="ripple-container"></div>
+
                     <i id="fp-icon" class="fa-solid fa-fingerprint text-6xl text-cyber-green transition-all duration-300 relative z-10"></i>
+
                     <svg class="absolute inset-[-6px] w-[134px] h-[134px] -rotate-90 pointer-events-none z-20">
                         <circle cx="67" cy="67" r="60" stroke="currentColor" stroke-width="3" fill="transparent" class="text-cyber-green/15" />
                         <circle id="mb-progress-ring" cx="67" cy="67" r="60" stroke="currentColor" stroke-width="4.5" fill="transparent" stroke-dasharray="376.99" stroke-dashoffset="376.99" class="text-cyber-cyan transition-all duration-75 drop-shadow-[0_0_8px_#00e5ff]" />
@@ -552,6 +418,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div id="cyber-cursor" class="hidden md:block"></div>
@@ -559,7 +426,7 @@
 
     <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-40 transition-opacity"></canvas>
     <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-30"></canvas>
-    <div id="scanlines-layer" class="scanlines"></div>
+    <div class="scanlines"></div>
 
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full blur-[150px] opacity-20" style="background: var(--cyber-theme-color);"></div>
@@ -581,17 +448,14 @@
                 </div>
             </div>
             
-            <div class="flex items-center gap-1.5">
-                <button id="config-btn" title="System FX Settings" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
-                    <i class="fa-solid fa-gear text-xs"></i>
-                </button>
+            <div class="flex items-center gap-2">
                 <button id="theme-btn" title="Toggle Dark/Light Mode" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
                     <i id="theme-icon" class="fa-solid fa-moon text-xs"></i>
                 </button>
                 <button id="sound-btn" title="Toggle UI Sound FX" class="cyber-card p-2 text-cyber-green hover:text-cyber-cyan active:scale-95 transition-all">
                     <i id="sound-icon" class="fa-solid fa-volume-high text-xs"></i>
                 </button>
-                <button id="share-btn" class="cyber-card px-2.5 py-2 text-xs font-mono text-cyber-green hover:text-cyber-cyan flex items-center gap-1 active:scale-95 transition-all">
+                <button id="share-btn" class="cyber-card px-3 py-2 text-xs font-mono text-cyber-green hover:text-cyber-cyan flex items-center gap-1.5 active:scale-95 transition-all">
                     <i class="fa-solid fa-share-nodes text-xs"></i>
                     <span>[SHARE]</span>
                 </button>
@@ -620,26 +484,17 @@
             </div>
         </div>
 
-        <!-- --- AVATAR SECTION --- -->
         <section class="w-full flex flex-col items-center text-center mb-6 cyber-stagger" style="animation-delay: 0.1s;">
-            <div class="relative mb-6 group cursor-pointer" id="avatar-container">
-                <canvas id="avatar-eq-canvas" class="absolute -inset-7 w-[210px] h-[210px] -left-6 -top-6 pointer-events-none z-0"></canvas>
+            <div class="relative mb-5 group cursor-pointer" id="avatar-container">
+                <canvas id="avatar-eq-canvas" class="absolute -inset-6 w-[160px] h-[160px] pointer-events-none z-0"></canvas>
+                <div class="absolute -inset-3 rounded-full border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
+                <div class="absolute -inset-1.5 rounded-full border border-cyber-cyan/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 
-                <div id="avatar-ring-outer" class="absolute -inset-3.5 rounded-xl border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none transition-all duration-300"></div>
-                <div id="avatar-ring-inner" class="absolute -inset-2 rounded-lg border border-cyber-cyan/40 pointer-events-none transition-all duration-300"></div>
-                
-                <div id="avatar-outer-box" class="relative w-38 h-38 avatar-shape-cyber p-1 bg-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)] transition-all duration-300">
-                    <div id="avatar-inner-box" class="w-full h-full avatar-shape-cyber bg-cyber-dark dark:bg-cyber-dark bg-slate-100 overflow-hidden relative transition-all duration-300">
-                        <img id="profile-img" src="https://i.pinimg.com/originals/1d/3d/bf/1d3dbf048330590da90564fc6404451a.gif" alt="Cyberpunk Avatar" class="w-full h-full object-cover filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
-                    </div>
+                <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark dark:bg-cyber-dark bg-slate-100 border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
+                    <img id="profile-img" src="https://i.pinimg.com/originals/1d/3d/bf/1d3dbf048330590da90564fc6404451a.gif" alt="Cyberpunk Avatar" class="w-full h-full object-cover rounded-full filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
                 </div>
 
-                <div class="hud-bracket hud-tl" style="top: -6px; left: -6px;"></div>
-                <div class="hud-bracket hud-tr" style="top: -6px; right: -6px;"></div>
-                <div class="hud-bracket hud-bl" style="bottom: -6px; left: -6px;"></div>
-                <div class="hud-bracket hud-br" style="bottom: -6px; right: -6px;"></div>
-
-                <div class="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2.5 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap z-10">
+                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
                     <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--cyber-theme-color);"></span>
                     <span>🧊: LVL_9</span>
                 </div>
@@ -651,16 +506,8 @@
             <p class="font-mono text-xs text-cyber-cyan tracking-widest uppercase mb-3">&lt; ALL LINK SOCIAL MEDIA &gt;</p>
             
             <div class="cyber-card p-3 w-full text-xs font-mono text-[var(--card-text)] leading-relaxed text-left border-l-2 border-l-cyber-green relative">
-                <div class="mb-1.5">
-                    <span class="text-cyber-green font-bold">&gt; TERMINAL:</span> 
-                    <span id="typing-text"></span><span class="animate-pulse text-cyber-green">_</span>
-                </div>
-                <!-- Telemetry Status Bar (ลูกเล่นสถานะระบบจำลอง) -->
-                <div class="pt-1.5 border-t border-cyber-green/20 flex items-center justify-between text-[10px] text-[var(--sub-text)]">
-                    <span>CPU: <strong id="sys-cpu" class="text-cyber-green">24%</strong></span>
-                    <span>MEM: <strong id="sys-mem" class="text-cyber-cyan">4.2GB</strong></span>
-                    <span>SEC: <strong class="text-cyber-green">ENCRYPTED</strong></span>
-                </div>
+                <span class="text-cyber-green font-bold">&gt; TERMINAL:</span> 
+                <span id="typing-text"></span><span class="animate-pulse text-cyber-green">_</span>
             </div>
         </section>
 
@@ -801,7 +648,7 @@
                 </div>
             </a>
 
-            <a href="https://ngl.link/nxmeicxqz_1" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
+            <a href="ngl.link/nxmeicxqz_1" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
@@ -826,112 +673,13 @@
 
     </div>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[99995] bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-4 py-2.5 text-xs font-mono text-cyber-green shadow-[0_0_20px_var(--cyber-glow-color)] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 rounded">
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-4 py-2.5 text-xs font-mono text-cyber-green shadow-[0_0_20px_var(--cyber-glow-color)] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2 rounded">
         <i class="fa-solid fa-terminal text-cyber-cyan animate-pulse"></i>
         <span id="toast-text">[SYS_LOG]: URL_COPIED_TO_CLIPBOAR</span>
     </div>
 
     <!-- JavaScript Engine -->
     <script>
-        // --- DEFAULT SYSTEM FX CONFIG ---
-        const defaultConfig = {
-            accentColor: '#00ff88',
-            accentGlow: 'rgba(0, 255, 136, 0.4)',
-            avatarShape: 'cyber', // 'cyber' | 'square' | 'circle'
-            matrix: true,
-            scanlines: true,
-            sparks: true,
-            visualizer: true,
-            biometric: true
-        };
-
-        let sysConfig = { ...defaultConfig };
-        try {
-            const savedCfg = JSON.parse(localStorage.getItem('nxme_sys_config'));
-            if (savedCfg) sysConfig = { ...defaultConfig, ...savedCfg };
-        } catch (e) {}
-
-        function saveConfig() {
-            localStorage.setItem('nxme_sys_config', JSON.stringify(sysConfig));
-        }
-
-        // --- APPLY CONFIG TO UI ---
-        function applySystemConfig() {
-            // 1. Accent Color
-            document.documentElement.style.setProperty('--cyber-theme-color', sysConfig.accentColor);
-            document.documentElement.style.setProperty('--cyber-glow-color', sysConfig.accentGlow);
-            document.querySelectorAll('.color-swatch').forEach(btn => {
-                if (btn.dataset.color === sysConfig.accentColor) {
-                    btn.classList.add('border-white/90', 'scale-110');
-                    btn.classList.remove('border-transparent');
-                } else {
-                    btn.classList.remove('border-white/90', 'scale-110');
-                    btn.classList.add('border-transparent');
-                }
-            });
-
-            // 2. Avatar Shape
-            const outerBox = document.getElementById('avatar-outer-box');
-            const innerBox = document.getElementById('avatar-inner-box');
-            const ringOuter = document.getElementById('avatar-ring-outer');
-            const ringInner = document.getElementById('avatar-ring-inner');
-
-            outerBox.classList.remove('avatar-shape-cyber', 'avatar-shape-square', 'avatar-shape-circle');
-            innerBox.classList.remove('avatar-shape-cyber', 'avatar-shape-square', 'avatar-shape-circle');
-
-            if (sysConfig.avatarShape === 'circle') {
-                outerBox.classList.add('avatar-shape-circle');
-                innerBox.classList.add('avatar-shape-circle');
-                ringOuter.classList.remove('rounded-xl');
-                ringOuter.classList.add('rounded-full');
-                ringInner.classList.remove('rounded-lg');
-                ringInner.classList.add('rounded-full');
-            } else if (sysConfig.avatarShape === 'square') {
-                outerBox.classList.add('avatar-shape-square');
-                innerBox.classList.add('avatar-shape-square');
-                ringOuter.classList.remove('rounded-full');
-                ringOuter.classList.add('rounded-xl');
-                ringInner.classList.remove('rounded-full');
-                ringInner.classList.add('rounded-lg');
-            } else {
-                outerBox.classList.add('avatar-shape-cyber');
-                innerBox.classList.add('avatar-shape-cyber');
-                ringOuter.classList.remove('rounded-full');
-                ringOuter.classList.add('rounded-xl');
-                ringInner.classList.remove('rounded-full');
-                ringInner.classList.add('rounded-lg');
-            }
-
-            document.querySelectorAll('.shape-btn').forEach(btn => {
-                if (btn.dataset.shape === sysConfig.avatarShape) {
-                    btn.className = 'shape-btn py-1.5 px-2 border border-cyber-green bg-cyber-green/20 text-cyber-green rounded text-[10px] font-bold transition-all';
-                } else {
-                    btn.className = 'shape-btn py-1.5 px-2 border border-cyber-green/30 text-[var(--sub-text)] rounded text-[10px] transition-all';
-                }
-            });
-
-            // 3. Toggles
-            const matrixCanvas = document.getElementById('matrix-canvas');
-            matrixCanvas.style.display = sysConfig.matrix ? 'block' : 'none';
-            document.getElementById('cfg-matrix').checked = sysConfig.matrix;
-
-            const scanlinesLayer = document.getElementById('scanlines-layer');
-            if (sysConfig.scanlines) {
-                scanlinesLayer.classList.remove('hidden-fx');
-            } else {
-                scanlinesLayer.classList.add('hidden-fx');
-            }
-            document.getElementById('cfg-scanlines').checked = sysConfig.scanlines;
-
-            document.getElementById('cfg-sparks').checked = sysConfig.sparks;
-
-            const avCanvas = document.getElementById('avatar-eq-canvas');
-            avCanvas.style.display = sysConfig.visualizer ? 'block' : 'none';
-            document.getElementById('cfg-visualizer').checked = sysConfig.visualizer;
-
-            document.getElementById('cfg-biometric').checked = sysConfig.biometric;
-        }
-
         // --- Web Audio Synthesizer ---
         let soundEnabled = true;
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -968,133 +716,15 @@
             setTimeout(() => playBeep(783.99, 0.12, 'triangle'), 120);
         }
 
-        // --- CONFIG MODAL CONTROLS ---
-        const configModal = document.getElementById('config-modal');
-        const configBtn = document.getElementById('config-btn');
-        const closeConfigBtn = document.getElementById('close-config-btn');
-
-        configBtn.addEventListener('click', () => {
-            playBeep(1100, 0.06, 'sine');
-            configModal.classList.add('open');
-        });
-
-        closeConfigBtn.addEventListener('click', () => {
-            playBeep(700, 0.05, 'sine');
-            configModal.classList.remove('open');
-        });
-
-        configModal.addEventListener('click', (e) => {
-            if (e.target === configModal) {
-                configModal.classList.remove('open');
-            }
-        });
-
-        // Color Swatches
-        document.querySelectorAll('.color-swatch').forEach(btn => {
-            btn.addEventListener('click', () => {
-                sysConfig.accentColor = btn.dataset.color;
-                sysConfig.accentGlow = btn.dataset.glow;
-                saveConfig();
-                applySystemConfig();
-                playChime();
-                showToast(`[SYS_LOG]: ACCENT_COLOR_${btn.title.toUpperCase()}`);
-            });
-        });
-
-        // Avatar Shapes
-        document.querySelectorAll('.shape-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                sysConfig.avatarShape = btn.dataset.shape;
-                saveConfig();
-                applySystemConfig();
-                playBeep(950, 0.05, 'triangle');
-                showToast(`[SYS_LOG]: AVATAR_FRAME_${btn.dataset.shape.toUpperCase()}`);
-            });
-        });
-
-        // Toggles
-        document.getElementById('cfg-matrix').addEventListener('change', (e) => {
-            sysConfig.matrix = e.target.checked;
-            saveConfig();
-            applySystemConfig();
-            playBeep(850, 0.04);
-        });
-
-        document.getElementById('cfg-scanlines').addEventListener('change', (e) => {
-            sysConfig.scanlines = e.target.checked;
-            saveConfig();
-            applySystemConfig();
-            playBeep(850, 0.04);
-        });
-
-        document.getElementById('cfg-sparks').addEventListener('change', (e) => {
-            sysConfig.sparks = e.target.checked;
-            saveConfig();
-            applySystemConfig();
-            playBeep(850, 0.04);
-        });
-
-        document.getElementById('cfg-visualizer').addEventListener('change', (e) => {
-            sysConfig.visualizer = e.target.checked;
-            saveConfig();
-            applySystemConfig();
-            playBeep(850, 0.04);
-        });
-
-        document.getElementById('cfg-biometric').addEventListener('change', (e) => {
-            sysConfig.biometric = e.target.checked;
-            saveConfig();
-            applySystemConfig();
-            playBeep(850, 0.04);
-        });
-
-        // Reset Button
-        document.getElementById('reset-cfg-btn').addEventListener('click', () => {
-            sysConfig = { ...defaultConfig };
-            saveConfig();
-            applySystemConfig();
-            playChime();
-            showToast('[SYS_LOG]: SYSTEM_CONFIG_RESTORED');
-        });
-
-        // Test Biometric Scan Button
-        document.getElementById('test-scan-btn').addEventListener('click', () => {
-            configModal.classList.remove('open');
-            const fpOverlay = document.getElementById('fingerprint-overlay');
-            const dtBar = document.getElementById('dt-progress-bar');
-            const dtStatus = document.getElementById('fp-dt-status');
-            const mbRing = document.getElementById('mb-progress-ring');
-            const mbStatus = document.getElementById('fp-mb-status');
-            const fpIcon = document.getElementById('fp-icon');
-
-            if (dtBar) dtBar.style.width = '0%';
-            if (dtStatus) {
-                dtStatus.textContent = "[ ขยับเมาส์เพื่อหมุนมิติโฮโลแกรม - คลิกสัญลักษณ์เพื่อสแกน ]";
-                dtStatus.className = "text-xs text-cyber-cyan tracking-wider mb-2.5 font-mono";
-            }
-            if (mbRing) mbRing.style.strokeDashoffset = 376.99;
-            if (mbStatus) {
-                mbStatus.textContent = "[ แตะค้างไว้ที่เซนเซอร์เพื่อยืนยันตัวตน ]";
-                mbStatus.className = "text-xs text-[var(--sub-text)] mt-1.5 tracking-wide";
-            }
-            if (fpIcon) fpIcon.className = "fa-solid fa-fingerprint text-6xl text-cyber-green transition-all duration-300 relative z-10";
-
-            fpOverlay.classList.add('active');
-            playBeep(600, 0.08, 'sawtooth');
-        });
-
         // --- ADAPTIVE BIOMETRIC SCANNER SYSTEM ---
         window.addEventListener('DOMContentLoaded', () => {
-            applySystemConfig();
-
             const fpOverlay = document.getElementById('fingerprint-overlay');
             const isDesktop = window.innerWidth >= 768;
 
-            if (sysConfig.biometric) {
-                setTimeout(() => fpOverlay.classList.add('active'), 300);
-            }
+            setTimeout(() => fpOverlay.classList.add('active'), 300);
 
             if (isDesktop) {
+                // --- HOLOGRAPHIC DESKTOP ENGINE ---
                 const fpDtBtn = document.getElementById('fp-dt-btn');
                 const triggerBtn = document.getElementById('dt-scan-trigger');
                 const dtStatus = document.getElementById('fp-dt-status');
@@ -1102,6 +732,7 @@
                 const dtTelemetry = document.getElementById('dt-telemetry');
                 const holoCard = document.querySelector('.fp-hologram-card');
 
+                // Advanced 3D Gyroscope/Tilt Hologram Effect
                 holoCard.parentElement.addEventListener('mousemove', (e) => {
                     const rect = holoCard.getBoundingClientRect();
                     const x = e.clientX - rect.left - rect.width / 2;
@@ -1113,7 +744,6 @@
                 });
 
                 function startHologramScan() {
-                    if (fpOverlay.classList.contains('scanning')) return;
                     initAudio();
                     fpOverlay.classList.add('scanning');
                     dtStatus.textContent = "[ INITIALIZING 3D HOLOGRAPHIC LASER MAPPING... ]";
@@ -1144,6 +774,7 @@
                 triggerBtn.addEventListener('click', startHologramScan);
 
             } else {
+                // --- MOBILE ENGINE ---
                 const fpMbBtn = document.getElementById('fp-mb-btn');
                 const mbStatus = document.getElementById('fp-mb-status');
                 const mbRing = document.getElementById('mb-progress-ring');
@@ -1257,7 +888,7 @@
             mouseY = e.clientY;
             cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
             
-            if (sysConfig.sparks && Math.random() > 0.6) {
+            if (Math.random() > 0.6) {
                 createSparks(mouseX, mouseY, 1);
             }
         }, { passive: true });
@@ -1270,11 +901,11 @@
         }
         requestAnimationFrame(animateCursor);
 
-        document.querySelectorAll('a, button, input, label').forEach(el => {
+        document.querySelectorAll('a, button, input').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 cursorRing.style.width = '35px';
                 cursorRing.style.height = '35px';
-                cursorRing.style.backgroundColor = sysConfig.accentGlow;
+                cursorRing.style.backgroundColor = 'rgba(0, 255, 136, 0.15)';
             });
             el.addEventListener('mouseleave', () => {
                 cursorRing.style.width = '20px';
@@ -1296,7 +927,6 @@
         window.addEventListener('resize', resizeParticleCanvas);
 
         function createSparks(x, y, count = 8) {
-            if (!sysConfig.sparks) return;
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
             for (let i = 0; i < count; i++) {
                 particles.push({
@@ -1395,85 +1025,44 @@
             if (soundEnabled) playChime();
         });
 
-        // --- Adaptive Avatar Visualizer (ปรับตามรูปทรง Square / Circle) ---
+        // --- Avatar Visualizer ---
         const avCanvas = document.getElementById('avatar-eq-canvas');
         const avCtx = avCanvas.getContext('2d', { alpha: true });
-        avCanvas.width = 210; avCanvas.height = 210;
+        avCanvas.width = 160; avCanvas.height = 160;
 
         function drawAvatarEq() {
             avCtx.clearRect(0, 0, avCanvas.width, avCanvas.height);
-            if (!sysConfig.visualizer) {
-                requestAnimationFrame(drawAvatarEq);
-                return;
-            }
-
+            const centerX = 80, centerY = 80, radius = 62;
+            const bars = 32;
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
-            avCtx.strokeStyle = themeColor;
-            avCtx.lineWidth = 2;
 
-            if (sysConfig.avatarShape === 'circle') {
-                const centerX = 105, centerY = 105, radius = 80;
-                const bars = 36;
-                for (let i = 0; i < bars; i++) {
-                    const angle = (i / bars) * Math.PI * 2;
-                    const barHeight = bgmPlaying ? Math.random() * 14 + 3 : (Math.sin(Date.now() * 0.005 + i) * 3 + 4);
-                    const x1 = centerX + Math.cos(angle) * radius;
-                    const y1 = centerY + Math.sin(angle) * radius;
-                    const x2 = centerX + Math.cos(angle) * (radius + barHeight);
-                    const y2 = centerY + Math.sin(angle) * (radius + barHeight);
-                    avCtx.beginPath();
-                    avCtx.moveTo(x1, y1);
-                    avCtx.lineTo(x2, y2);
-                    avCtx.stroke();
-                }
-            } else {
-                const boxSize = 158;
-                const offset = (avCanvas.width - boxSize) / 2;
-                const barsPerSide = 12;
+            for (let i = 0; i < bars; i++) {
+                const angle = (i / bars) * Math.PI * 2;
+                const barHeight = bgmPlaying ? Math.random() * 12 + 2 : (Math.sin(Date.now() * 0.005 + i) * 3 + 4);
+                
+                const x1 = centerX + Math.cos(angle) * radius;
+                const y1 = centerY + Math.sin(angle) * radius;
+                const x2 = centerX + Math.cos(angle) * (radius + barHeight);
+                const y2 = centerY + Math.sin(angle) * (radius + barHeight);
 
-                for (let side = 0; side < 4; side++) {
-                    for (let i = 0; i < barsPerSide; i++) {
-                        const idx = side * barsPerSide + i;
-                        const barHeight = bgmPlaying ? Math.random() * 14 + 3 : (Math.sin(Date.now() * 0.005 + idx) * 3 + 4);
-                        const pos = offset + (i + 0.5) * (boxSize / barsPerSide);
-
-                        avCtx.beginPath();
-                        if (side === 0) {
-                            avCtx.moveTo(pos, offset);
-                            avCtx.lineTo(pos, offset - barHeight);
-                        } else if (side === 1) {
-                            avCtx.moveTo(offset + boxSize, pos);
-                            avCtx.lineTo(offset + boxSize + barHeight, pos);
-                        } else if (side === 2) {
-                            avCtx.moveTo(pos, offset + boxSize);
-                            avCtx.lineTo(pos, offset + boxSize + barHeight);
-                        } else {
-                            avCtx.moveTo(offset, pos);
-                            avCtx.lineTo(offset - barHeight, pos);
-                        }
-                        avCtx.stroke();
-                    }
-                }
+                avCtx.beginPath();
+                avCtx.moveTo(x1, y1);
+                avCtx.lineTo(x2, y2);
+                avCtx.strokeStyle = themeColor;
+                avCtx.lineWidth = 2;
+                avCtx.stroke();
             }
             requestAnimationFrame(drawAvatarEq);
         }
         requestAnimationFrame(drawAvatarEq);
 
-        // --- Clock, Ping & Telemetry Simulation ---
+        // --- Clock & Ping ---
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
             document.getElementById('cyber-clock').textContent = `${h}:${m}:${s} LOCAL`;
-
-            // Randomize Telemetry Stats slightly
-            const ping = Math.floor(Math.random() * 14) + 8;
-            const cpu = Math.floor(Math.random() * 25) + 12;
-            const mem = (3.8 + Math.random() * 0.9).toFixed(1);
-            document.getElementById('ping-counter').textContent = `PING: ${ping}ms`;
-            document.getElementById('sys-cpu').textContent = `${cpu}%`;
-            document.getElementById('sys-mem').textContent = `${mem}GB`;
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -1494,10 +1083,6 @@
         let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
 
         function drawMatrix() {
-            if (!sysConfig.matrix) {
-                requestAnimationFrame(drawMatrix);
-                return;
-            }
             const isDark = html.classList.contains('dark');
             ctx.fillStyle = isDark ? 'rgba(3, 7, 12, 0.12)' : 'rgba(238, 242, 246, 0.18)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1541,7 +1126,6 @@
             card.addEventListener('click', () => playBeep(1400, 0.06, 'triangle'));
 
             card.addEventListener('mousemove', (e) => {
-                if (!sysConfig.sparks) return;
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
