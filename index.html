@@ -313,9 +313,84 @@
             pointer-events: none;
             animation: rippleWave 0.8s linear infinite;
         }
+    
+        /* ===== FX UPGRADE ===== */
+        /* entrance: blur-in, plays only after unlock; backwards fill so tilt transforms still work */
+        .cyber-stagger { opacity: 1; transform: none; animation: cyberIn .8s cubic-bezier(.16,1,.3,1) backwards; }
+        @keyframes cyberIn { from { opacity: 0; transform: translateY(26px) scale(.96); filter: blur(10px); } }
+        body.locked .cyber-stagger { animation-play-state: paused; }
+
+        /* glass + spotlight */
+        .cyber-card { background-image: linear-gradient(160deg, rgba(255,255,255,.06), transparent 45%); }
+        .cyber-card::after { content:''; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .3s;
+            background: radial-gradient(260px circle at var(--mx,50%) var(--my,50%), var(--cyber-glow-color), transparent 70%); }
+        .social-link:hover::after { opacity: 1; }
+        @keyframes iconPop { 40% { transform: scale(1.28) rotate(-10deg); } }
+        .social-link:hover div.rounded i { animation: iconPop .5s ease; }
+        .card-ripple { position:absolute; width:12px; height:12px; margin:-6px; border-radius:50%; pointer-events:none;
+            background: radial-gradient(circle, var(--cyber-theme-color), transparent 70%); animation: cardRipple .7s ease-out forwards; }
+        @keyframes cardRipple { to { transform: scale(40); opacity: 0; } }
+
+        /* avatar */
+        .avatar-aura { position:absolute; inset:-14px; border-radius:50%; pointer-events:none; filter:blur(10px); opacity:.55;
+            background: conic-gradient(from 0deg, transparent, var(--cyber-theme-color), #00e5ff, transparent 60%);
+            animation: spinCW 5s linear infinite, breathe 3.2s ease-in-out infinite; }
+        @keyframes breathe { 50% { opacity:.9; scale:1.08; } }
+        .avatar-scan { position:absolute; inset:4px; border-radius:50%; overflow:hidden; pointer-events:none; z-index:2; }
+        .avatar-scan::after { content:''; position:absolute; left:0; right:0; height:35%;
+            background: linear-gradient(to bottom, transparent, var(--cyber-glow-color), transparent); animation: avScan 3.5s ease-in-out infinite; }
+        @keyframes avScan { from { top:-40%; } to { top:105%; } }
+        #avatar-container { animation: floaty 6s ease-in-out infinite; }
+        @keyframes floaty { 50% { transform: translateY(-6px); } }
+
+        /* name: neon power-on + auto glitch */
+        #profile-name { text-shadow: 0 0 12px var(--cyber-glow-color), 0 0 32px var(--cyber-glow-color); }
+        @keyframes neonOn { 0%,10%,14%,24%,30% { opacity:.2; } 12%,26%,34%,100% { opacity:1; } }
+        body.booted #profile-name { animation: neonOn 1.4s .5s backwards; }
+        .glitch-text.glitching::before { left:-2px; text-shadow:2px 0 #ff0055; clip:rect(10px,9999px,50px,0); animation:glitch-1 .2s infinite linear alternate-reverse; }
+        .glitch-text.glitching::after { left:2px; text-shadow:-2px 0 #00e5ff; clip:rect(40px,9999px,80px,0); animation:glitch-2 .2s infinite linear alternate-reverse; }
+
+        /* ambience: drifting orbs, film grain, vignette, CRT roll bar */
+        .orb { animation: orbDrift 18s ease-in-out infinite alternate; translate: calc(var(--px,0) * 40px) calc(var(--py,0) * 40px); }
+        @keyframes orbDrift { to { transform: translate(60px,40px) scale(1.25); } }
+        .grain { position:fixed; top:-50%; left:-50%; width:200%; height:200%; pointer-events:none; z-index:41; opacity:.07;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            animation: grain .6s steps(6) infinite; }
+        @keyframes grain { 20% { transform:translate(-5%,3%); } 40% { transform:translate(4%,-6%); } 60% { transform:translate(-3%,5%); } 80% { transform:translate(6%,2%); } }
+        body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:39; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55)); }
+        html:not(.dark) body::before { background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.12)); }
+        .scanlines::after { content:''; position:absolute; left:0; right:0; height:18vh; background:linear-gradient(to bottom, transparent, rgba(255,255,255,.035), transparent); animation: crtRoll 7s linear infinite; }
+        @keyframes crtRoll { from { top:-20vh; } to { top:100vh; } }
+
+        /* scanner overlay */
+        #fingerprint-overlay { background: radial-gradient(circle at 50% 40%, rgba(0,40,30,.92), rgba(3,7,12,.98) 70%);
+            transform: scale(1.12); filter: blur(14px);
+            transition: opacity .6s cubic-bezier(.1,.8,.3,1), transform .9s cubic-bezier(.16,1,.3,1), filter .9s ease; }
+        #fingerprint-overlay.active { transform: none; filter: none; }
+        #fingerprint-overlay::before { content:''; position:absolute; inset:0; pointer-events:none;
+            background-image: linear-gradient(rgba(0,255,136,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,.06) 1px, transparent 1px);
+            background-size: 44px 44px; animation: gridMove 6s linear infinite;
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 70%); mask-image: radial-gradient(circle at 50% 50%, #000, transparent 70%); }
+        @keyframes gridMove { to { background-position: 44px 44px; } }
+        .holo-laser-v::before, .holo-laser-v::after { content:''; position:absolute; left:0; right:0; height:34px; pointer-events:none; }
+        .holo-laser-v::before { bottom:3px; background:linear-gradient(to top, rgba(0,255,136,.16), transparent); }
+        .holo-laser-v::after { top:3px; background:linear-gradient(to bottom, rgba(0,229,255,.12), transparent); }
+        .fp-fill { clip-path: inset(calc(100% - var(--fp, 0%)) 0 0 0); filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 18px var(--cyber-theme-color)); }
+        .boot-flash { position:fixed; inset:0; z-index:100000; pointer-events:none; background: radial-gradient(circle at 50% 38%, rgba(0,255,136,.5), transparent 60%); animation: bootFlash .8s ease-out forwards; }
+        @keyframes bootFlash { to { opacity: 0; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .grain, .orb, .avatar-aura, .avatar-scan::after, .scanlines::after, #avatar-container, #fingerprint-overlay::before { animation: none !important; }
+        }
+    
+        /* ===== SYS MONITOR ===== */
+        .sys-track { flex: 1; height: 6px; border-radius: 3px; background: rgba(0,229,255,.12); overflow: hidden; }
+        .sys-fill { height: 100%; width: 0; border-radius: 3px; background: linear-gradient(90deg, var(--cyber-theme-color), #00e5ff); box-shadow: 0 0 8px var(--cyber-glow-color); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+        .sys-fill.warn { background: linear-gradient(90deg, #ffb300, #ff6b00); }
+        .sys-fill.crit { background: linear-gradient(90deg, #ff6b00, #ff0055); }
     </style>
 </head>
-<body class="bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
+<body class="locked bg-[var(--bg-base)] text-[var(--text-base)] font-sans min-h-screen relative selection:bg-cyber-green selection:text-black overflow-x-hidden transition-colors duration-300">
 
     <!-- --- ADAPTIVE BIOMETRIC FINGERPRINT SCANNER OVERLAY --- -->
     <div id="fingerprint-overlay">
@@ -355,6 +430,7 @@
                     
                     <!-- Fingerprint Hologram Icon -->
                     <i class="fa-solid fa-fingerprint text-7xl text-cyber-cyan group-hover:scale-110 group-hover:text-cyber-green transition-all duration-300 relative z-10 drop-shadow-[0_0_12px_#00e5ff]"></i>
+                    <i class="fp-fill fa-solid fa-fingerprint text-7xl text-white absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:scale-110 transition-transform duration-300 pointer-events-none z-[11] leading-none"></i>
 
                     <!-- Holographic Grid Background Pattern -->
                     <div class="absolute inset-0 bg-[linear-gradient(to_right,#00e5ff20_1px,transparent_1px),linear-gradient(to_bottom,#00e5ff20_1px,transparent_1px)] bg-[size:12px_12px] rounded-full pointer-events-none opacity-60"></div>
@@ -403,6 +479,7 @@
                     <div id="ripple-container"></div>
 
                     <i id="fp-icon" class="fa-solid fa-fingerprint text-6xl text-cyber-green transition-all duration-300 relative z-10"></i>
+                    <i class="fp-fill fa-solid fa-fingerprint text-6xl text-white absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-110 pointer-events-none z-[11] leading-none"></i>
 
                     <svg class="absolute inset-[-6px] w-[134px] h-[134px] -rotate-90 pointer-events-none z-20">
                         <circle cx="67" cy="67" r="60" stroke="currentColor" stroke-width="3" fill="transparent" class="text-cyber-green/15" />
@@ -427,10 +504,12 @@
     <canvas id="matrix-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-40 transition-opacity"></canvas>
     <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-30"></canvas>
     <div class="scanlines"></div>
+    <div class="grain"></div>
 
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full blur-[150px] opacity-20" style="background: var(--cyber-theme-color);"></div>
-        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-cyber-cyan/20 rounded-full blur-[150px]"></div>
+        <div class="orb absolute -top-40 -left-40 w-96 h-96 rounded-full blur-[150px] opacity-20" style="background: var(--cyber-theme-color);"></div>
+        <div class="orb absolute -bottom-40 -right-40 w-96 h-96 bg-cyber-cyan/20 rounded-full blur-[150px]" style="animation-delay:-7s"></div>
+        <div class="orb absolute top-1/3 -right-32 w-72 h-72 rounded-full blur-[130px] opacity-[.13]" style="background:#ff0055;animation-delay:-12s"></div>
     </div>
 
     <div class="relative z-10 max-w-md mx-auto px-4 py-6 flex flex-col items-center min-h-screen justify-between">
@@ -462,6 +541,25 @@
             </div>
         </header>
 
+        <div id="sys-monitor" class="w-full mb-5 cyber-card p-2.5 font-mono text-[10px] cyber-stagger" style="animation-delay: 0.07s;">
+            <div class="flex items-center justify-between mb-2 tracking-widest">
+                <span class="flex items-center gap-1.5 text-cyber-cyan"><i class="fa-solid fa-microchip"></i> SYS_MONITOR</span>
+                <span id="sys-info" class="text-[var(--sub-text)]">-- CORES</span>
+            </div>
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 text-cyber-green">CPU</span>
+                    <div class="sys-track"><div id="sys-cpu-bar" class="sys-fill"></div></div>
+                    <span id="sys-cpu-val" class="w-14 text-right text-[var(--card-text)]">--</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-8 text-cyber-green">MEM</span>
+                    <div class="sys-track"><div id="sys-mem-bar" class="sys-fill"></div></div>
+                    <span id="sys-mem-val" class="w-14 text-right text-[var(--card-text)]">--</span>
+                </div>
+            </div>
+        </div>
+
         <div class="w-full mb-5 cyber-card p-2.5 flex items-center justify-between font-mono text-xs cyber-stagger" style="animation-delay: 0.08s;">
             <audio id="bgm-audio" src="http://youtube.com/watch?v=NaE40w3riSQ" loop preload="auto"></audio>
             <div class="flex items-center gap-2.5">
@@ -490,8 +588,10 @@
                 <div class="absolute -inset-3 rounded-full border border-dashed border-cyber-green/50 spin-clockwise pointer-events-none"></div>
                 <div class="absolute -inset-1.5 rounded-full border border-cyber-cyan/40 spin-counter pointer-events-none" style="border-top-color: transparent; border-bottom-color: transparent;"></div>
                 
+                <div class="avatar-aura"></div>
                 <div class="relative w-28 h-28 rounded-full p-1 bg-cyber-dark dark:bg-cyber-dark bg-slate-100 border-2 border-cyber-green shadow-[0_0_25px_var(--cyber-glow-color)]">
                     <img id="profile-img" src="https://i.pinimg.com/originals/1d/3d/bf/1d3dbf048330590da90564fc6404451a.gif" alt="Cyberpunk Avatar" class="w-full h-full object-cover rounded-full filter contrast-110 brightness-100 group-hover:scale-105 transition duration-300">
+                    <div class="avatar-scan"></div>
                 </div>
 
                 <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-cyber-dark dark:bg-cyber-dark bg-slate-900 border border-cyber-green px-2 py-0.5 rounded text-[9px] font-mono text-cyber-green flex items-center gap-1 shadow-lg whitespace-nowrap">
@@ -648,7 +748,7 @@
                 </div>
             </a>
 
-            <a href="ngl.link/nxmeicxqz_1" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
+            <a href="https://ngl.link/nxmeicxqz_1" target="_blank" class="social-link cyber-card glow-ngl block w-full p-3.5 group cyber-stagger" style="animation-delay: 0.45s;">
                 <div class="hud-bracket hud-tl"></div><div class="hud-bracket hud-tr"></div>
                 <div class="hud-bracket hud-bl"></div><div class="hud-bracket hud-br"></div>
                 <div class="flex items-center justify-between pointer-events-none">
@@ -753,7 +853,7 @@
                     let progress = 0;
                     const interval = setInterval(() => {
                         progress += 10;
-                        dtBar.style.width = `${progress}%`;
+                        dtBar.style.width = `${progress}%`; fpDtBtn.style.setProperty('--fp', progress + '%');
                         dtTelemetry.textContent = `HOLO_KEY: 0x${Math.floor(Math.random()*16777215).toString(16).toUpperCase()}`;
                         playBeep(600 + progress * 9, 0.02, 'sine');
 
@@ -764,7 +864,7 @@
                             dtStatus.className = "text-xs text-cyber-green font-bold tracking-wider mb-2.5 font-mono";
 
                             setTimeout(() => {
-                                fpOverlay.classList.remove('active', 'scanning');
+                                fpOverlay.classList.remove('active', 'scanning'); onUnlock();
                             }, 700);
                         }
                     }, 120);
@@ -809,20 +909,20 @@
                     holdTimer = setInterval(() => {
                         holdProgress += 3.5;
                         const offset = circumference - (holdProgress / 100) * circumference;
-                        mbRing.style.strokeDashoffset = offset;
+                        mbRing.style.strokeDashoffset = offset; fpMbBtn.style.setProperty('--fp', Math.min(holdProgress, 100) + '%');
                         triggerHaptic();
                         playBeep(550 + holdProgress * 12, 0.025, 'sawtooth');
 
                         if (holdProgress >= 100) {
                             clearInterval(holdTimer);
-                            if (navigator.vibrate) navigator.vibrate([60, 120, 60]);
+                            if (navigator.vibrate) navigator.vibrate([60, 120, 60]); fpMbBtn.style.setProperty('--fp', '0%');
                             playChime();
                             mbStatus.textContent = "✔ ยืนยันตัวตนสำเร็จ! ปลดล็อกระบบ...";
                             mbStatus.className = "text-xs text-cyber-green font-bold mt-1.5 font-mono";
-                            fpIcon.className = "fa-solid fa-shield-check text-6xl text-cyber-green transition-all duration-300 relative z-10 scale-125";
+                            fpIcon.className = "fa-solid fa-circle-check text-6xl text-cyber-green transition-all duration-300 relative z-10 scale-125";
 
                             setTimeout(() => {
-                                fpOverlay.classList.remove('active', 'scanning');
+                                fpOverlay.classList.remove('active', 'scanning'); onUnlock();
                             }, 700);
                         }
                     }, 25);
@@ -832,7 +932,7 @@
                     if (holdProgress < 100) {
                         clearInterval(holdTimer);
                         fpOverlay.classList.remove('scanning');
-                        mbRing.style.strokeDashoffset = circumference;
+                        mbRing.style.strokeDashoffset = circumference; fpMbBtn.style.setProperty('--fp', '0%');
                         fpIcon.className = "fa-solid fa-fingerprint text-6xl text-cyber-green transition-all duration-300 relative z-10";
                         mbStatus.textContent = "✖ ยกเลิกการสแกน - กรุณากดแตะค้างไว้อีกครั้ง";
                         mbStatus.className = "text-xs text-rose-400 mt-1.5 font-mono";
@@ -914,58 +1014,60 @@
             });
         });
 
-        // --- Particle System ---
+        // --- Particle System (physics + comet trail + shockwave) ---
         const particleCanvas = document.getElementById('particle-canvas');
         const pCtx = particleCanvas.getContext('2d', { alpha: true });
-        let particles = [];
+        let particles = [], rings = [], trail = [];
+        let curTheme = '#00ff88';
+        setInterval(() => { curTheme = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88'; }, 400);
 
-        function resizeParticleCanvas() {
-            particleCanvas.width = window.innerWidth;
-            particleCanvas.height = window.innerHeight;
-        }
+        function resizeParticleCanvas() { particleCanvas.width = window.innerWidth; particleCanvas.height = window.innerHeight; }
         resizeParticleCanvas();
         window.addEventListener('resize', resizeParticleCanvas);
 
-        function createSparks(x, y, count = 8) {
-            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
+        function createSparks(x, y, count = 8, speed = 4) {
+            if (particles.length > 400) return;
+            const cols = [curTheme, '#00e5ff', '#ffffff'];
             for (let i = 0; i < count; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4,
-                    size: Math.random() * 2 + 1,
-                    alpha: 1,
-                    color: themeColor
-                });
+                const a = Math.random() * Math.PI * 2, sp = (0.3 + Math.random()) * speed;
+                particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.6, size: Math.random() * 2 + 0.8, life: 1, decay: 0.012 + Math.random() * 0.02, color: cols[(Math.random() * 3) | 0] });
             }
         }
+        function shockwave(x, y, color) { rings.push({ x, y, r: 6, a: 0.8, color: color || curTheme }); }
 
         function drawParticles() {
             pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            pCtx.globalCompositeOperation = 'lighter';
+            pCtx.lineCap = 'round';
+            for (let i = trail.length - 1; i >= 0; i--) { trail[i].life -= 0.07; if (trail[i].life <= 0) trail.splice(i, 1); }
+            for (let i = 1; i < trail.length; i++) {
+                const a = trail[i - 1], b = trail[i];
+                pCtx.globalAlpha = b.life * 0.8; pCtx.strokeStyle = curTheme; pCtx.lineWidth = b.life * 4;
+                pCtx.beginPath(); pCtx.moveTo(a.x, a.y); pCtx.lineTo(b.x, b.y); pCtx.stroke();
+            }
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.04;
-
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                    continue;
-                }
-
-                pCtx.save();
-                pCtx.globalAlpha = p.alpha;
+                p.vx *= 0.98; p.vy = p.vy * 0.98 + 0.06; p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+                if (p.life <= 0) { particles.splice(i, 1); continue; }
+                const r = p.size * (0.4 + p.life);
                 pCtx.fillStyle = p.color;
-                pCtx.fillRect(p.x, p.y, p.size, p.size);
-                pCtx.restore();
+                pCtx.globalAlpha = p.life * 0.18; pCtx.beginPath(); pCtx.arc(p.x, p.y, r * 3.2, 0, 6.283); pCtx.fill();
+                pCtx.globalAlpha = p.life; pCtx.beginPath(); pCtx.arc(p.x, p.y, r, 0, 6.283); pCtx.fill();
             }
+            for (let i = rings.length - 1; i >= 0; i--) {
+                const g = rings[i];
+                g.r += 5; g.a *= 0.93;
+                if (g.a < 0.02) { rings.splice(i, 1); continue; }
+                pCtx.globalAlpha = g.a; pCtx.strokeStyle = g.color; pCtx.lineWidth = 2;
+                pCtx.beginPath(); pCtx.arc(g.x, g.y, g.r, 0, 6.283); pCtx.stroke();
+            }
+            pCtx.globalAlpha = 1; pCtx.globalCompositeOperation = 'source-over';
             requestAnimationFrame(drawParticles);
         }
         requestAnimationFrame(drawParticles);
 
-        window.addEventListener('click', (e) => {
-            createSparks(e.clientX, e.clientY, 12);
-        });
+        document.addEventListener('mousemove', (e) => { trail.push({ x: e.clientX, y: e.clientY, life: 1 }); if (trail.length > 26) trail.shift(); }, { passive: true });
+        window.addEventListener('click', (e) => { createSparks(e.clientX, e.clientY, 16, 5); shockwave(e.clientX, e.clientY); });
 
         // --- Synth BGM ---
         let bgmPlaying = false;
@@ -1025,33 +1127,27 @@
             if (soundEnabled) playChime();
         });
 
-        // --- Avatar Visualizer ---
+        // --- Avatar Visualizer (smooth, HiDPI) ---
         const avCanvas = document.getElementById('avatar-eq-canvas');
         const avCtx = avCanvas.getContext('2d', { alpha: true });
-        avCanvas.width = 160; avCanvas.height = 160;
+        avCanvas.width = 320; avCanvas.height = 320; avCtx.scale(2, 2);
+        const AV_BARS = 48, avVals = new Array(AV_BARS).fill(3);
 
         function drawAvatarEq() {
-            avCtx.clearRect(0, 0, avCanvas.width, avCanvas.height);
-            const centerX = 80, centerY = 80, radius = 62;
-            const bars = 32;
+            const t = Date.now() * 0.001;
+            avCtx.clearRect(0, 0, 160, 160);
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
-
-            for (let i = 0; i < bars; i++) {
-                const angle = (i / bars) * Math.PI * 2;
-                const barHeight = bgmPlaying ? Math.random() * 12 + 2 : (Math.sin(Date.now() * 0.005 + i) * 3 + 4);
-                
-                const x1 = centerX + Math.cos(angle) * radius;
-                const y1 = centerY + Math.sin(angle) * radius;
-                const x2 = centerX + Math.cos(angle) * (radius + barHeight);
-                const y2 = centerY + Math.sin(angle) * (radius + barHeight);
-
-                avCtx.beginPath();
-                avCtx.moveTo(x1, y1);
-                avCtx.lineTo(x2, y2);
-                avCtx.strokeStyle = themeColor;
-                avCtx.lineWidth = 2;
-                avCtx.stroke();
+            avCtx.lineCap = 'round'; avCtx.lineWidth = 2.2;
+            for (let i = 0; i < AV_BARS; i++) {
+                const ang = (i / AV_BARS) * Math.PI * 2 + t * 0.25;
+                const target = bgmPlaying ? 3 + Math.random() * 14 : 5 + Math.sin(t * 2.4 + i * 0.5) * 2.5 + Math.sin(t * 1.3 - i * 0.9) * 2.5;
+                avVals[i] += (target - avVals[i]) * (bgmPlaying ? 0.35 : 0.12);
+                const c = Math.cos(ang), sn = Math.sin(ang), r = 62;
+                avCtx.strokeStyle = i % 4 === 0 ? '#00e5ff' : themeColor;
+                avCtx.globalAlpha = 0.45 + Math.min(avVals[i] / 16, 0.55);
+                avCtx.beginPath(); avCtx.moveTo(80 + c * r, 80 + sn * r); avCtx.lineTo(80 + c * (r + avVals[i]), 80 + sn * (r + avVals[i])); avCtx.stroke();
             }
+            avCtx.globalAlpha = 1;
             requestAnimationFrame(drawAvatarEq);
         }
         requestAnimationFrame(drawAvatarEq);
@@ -1080,30 +1176,44 @@
 
         const chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF';
         const fontSize = 14;
-        let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
+        let rain = [];
+        function initRain() {
+            const n = Math.ceil(canvas.width / fontSize);
+            rain = Array.from({ length: n }, (_, i) => rain[i] || { y: Math.random() * -50, v: 0.3 + Math.random() * 0.8, a: 0.35 + Math.random() * 0.65, row: -1, prev: null });
+        }
+        initRain();
+        window.addEventListener('resize', initRain);
 
         function drawMatrix() {
             const isDark = html.classList.contains('dark');
-            ctx.fillStyle = isDark ? 'rgba(3, 7, 12, 0.12)' : 'rgba(238, 242, 246, 0.18)';
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = isDark ? 'rgba(3, 7, 12, 0.09)' : 'rgba(238, 242, 246, 0.16)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--cyber-theme-color').trim() || '#00ff88';
             ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                ctx.fillStyle = Math.random() > 0.85 ? '#00e5ff' : themeColor;
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+            for (let i = 0; i < rain.length; i++) {
+                const d = rain[i];
+                d.y += d.v;
+                const row = Math.floor(d.y);
+                if (row === d.row) continue;
+                d.row = row;
+                if (row < 0) continue;
+                const x = i * fontSize;
+                ctx.globalAlpha = d.a;
+                if (d.prev) {
+                    ctx.fillStyle = Math.random() > 0.85 ? '#00e5ff' : themeColor;
+                    ctx.fillText(d.prev, x, (row - 1) * fontSize);
                 }
-                drops[i]++;
+                d.prev = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillStyle = isDark ? '#e8fff4' : '#ffffff';
+                ctx.fillText(d.prev, x, row * fontSize);
+                if (row * fontSize > canvas.height && Math.random() > 0.975) {
+                    d.y = Math.random() * -20; d.v = 0.3 + Math.random() * 0.8; d.row = -1; d.prev = null;
+                }
             }
             requestAnimationFrame(drawMatrix);
         }
         requestAnimationFrame(drawMatrix);
-
         // --- Typing Bio Animation ---
         const bioText = " Welcome to link social media";
         const typingContainer = document.getElementById('typing-text');
@@ -1117,26 +1227,25 @@
                 setTimeout(typeBio, 30);
             }
         }
-        setTimeout(typeBio, 500);
+        window.startTyping = () => setTimeout(typeBio, 500);
 
-        // --- 3D Tilt Effect ---
-        const cards = document.querySelectorAll('.social-link');
-        cards.forEach(card => {
+        // --- Cards: tilt + spotlight + ripple ---
+        document.querySelectorAll('.social-link').forEach(card => {
             card.addEventListener('mouseenter', () => playBeep(900, 0.03, 'sine'));
-            card.addEventListener('click', () => playBeep(1400, 0.06, 'triangle'));
-
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -4;
-                const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 4;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
-            }, { passive: true });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            card.addEventListener('click', (e) => {
+                playBeep(1400, 0.06, 'triangle');
+                const r = card.getBoundingClientRect(), rp = document.createElement('span');
+                rp.className = 'card-ripple';
+                rp.style.left = (e.clientX - r.left) + 'px'; rp.style.top = (e.clientY - r.top) + 'px';
+                card.appendChild(rp); setTimeout(() => rp.remove(), 700);
             });
+            card.addEventListener('mousemove', (e) => {
+                const r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+                card.style.setProperty('--mx', x + 'px'); card.style.setProperty('--my', y + 'px');
+                const rx = ((y - r.height / 2) / (r.height / 2)) * -7, ry = ((x - r.width / 2) / (r.width / 2)) * 7;
+                card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px) scale(1.015)`;
+            }, { passive: true });
+            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
         });
 
         // --- Share System ---
@@ -1181,6 +1290,77 @@
             setTimeout(() => playBeep(600, 0.08, 'square'), 40);
             showToast('[SYS_LOG]: กดทำไมไม่มีอะไรให้ส่องซะหน่อย');
         });
+    
+        // ===== FX UPGRADE: boot sequence & ambience =====
+        function onUnlock() {
+            document.body.classList.remove('locked');
+            document.body.classList.add('booted');
+            const flash = document.createElement('div');
+            flash.className = 'boot-flash';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 900);
+            setTimeout(() => {
+                const x = innerWidth / 2, y = innerHeight * 0.38;
+                createSparks(x, y, 90, 9); shockwave(x, y);
+                setTimeout(() => shockwave(x, y, '#00e5ff'), 160);
+            }, 150);
+            if (window.startTyping) window.startTyping();
+        }
+        (function () {
+            const nm = document.getElementById('profile-name');
+            setInterval(() => {
+                if (document.body.classList.contains('locked')) return;
+                nm.classList.add('glitching');
+                setTimeout(() => nm.classList.remove('glitching'), 260);
+            }, 5200);
+            const orbBox = document.querySelector('.orb').parentElement;
+            let tx = 0, ty = 0, cx = 0, cy = 0;
+            document.addEventListener('mousemove', e => { tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5; }, { passive: true });
+            (function par() {
+                cx += (tx - cx) * 0.05; cy += (ty - cy) * 0.05;
+                if (Math.abs(tx - cx) > 0.0005 || Math.abs(ty - cy) > 0.0005) {
+                    orbBox.style.setProperty('--px', cx.toFixed(3)); orbBox.style.setProperty('--py', cy.toFixed(3));
+                }
+                requestAnimationFrame(par);
+            })();
+            const ping = document.getElementById('ping-counter');
+            setInterval(() => { ping.textContent = 'PING: ' + (8 + Math.floor(Math.random() * 14)) + 'ms'; }, 1500);
+        })();
+    
+        // ===== SYS MONITOR =====
+        (function () {
+            const $ = id => document.getElementById(id);
+            const cpuBar = $('sys-cpu-bar'), cpuVal = $('sys-cpu-val'), memBar = $('sys-mem-bar'), memVal = $('sys-mem-val');
+            const ram = navigator.deviceMemory ? ` | RAM ${navigator.deviceMemory >= 8 ? '8+' : navigator.deviceMemory}GB` : '';
+            $('sys-info').textContent = `${navigator.hardwareConcurrency || '?'} CORES${ram}`;
+            const level = (el, p) => { el.style.width = p + '%'; el.classList.toggle('warn', p >= 60 && p < 85); el.classList.toggle('crit', p >= 85); };
+            let best = Infinity, cpu = 0, n = 0, sink = 0;
+            function tick() {
+                if (document.hidden) return;
+                // CPU estimate: time a fixed workload; slower than the machine's best = CPU contention
+                const t = performance.now();
+                let x = 0;
+                for (let i = 0; i < 300000; i++) x += Math.sqrt(i) * Math.sin(i);
+                sink += x;
+                const d = Math.max(performance.now() - t, 0.01);
+                if (++n > 2) {
+                    best = Math.min(best * 1.003, d);
+                    const raw = Math.max(0, 1 - best / d - 0.05);
+                    cpu += (Math.min(raw, 1) * 100 - cpu) * 0.35;
+                    level(cpuBar, Math.round(cpu));
+                    cpuVal.textContent = '~' + Math.round(cpu) + '%';
+                }
+                const m = performance.memory;
+                if (m) {
+                    const used = m.usedJSHeapSize / 1048576, tot = m.totalJSHeapSize / 1048576;
+                    level(memBar, Math.round(used / tot * 100));
+                    memVal.textContent = used.toFixed(0) + ' MB';
+                } else {
+                    memVal.textContent = 'N/A';
+                }
+            }
+            setInterval(tick, 700); tick();
+        })();
     </script>
 </body>
 </html>
