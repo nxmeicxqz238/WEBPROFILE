@@ -825,6 +825,78 @@
         /* tablets & desktops: roomier panel */
         @media (min-width: 900px) and (min-height: 760px) { .mg-panel { width: 640px; height: 760px; } }
         @media (min-width: 1600px) and (min-height: 980px) { .mg-panel { width: 760px; height: 880px; } }
+        /* ===== HUB: dock / achievements / settings / terminal ===== */
+        html.nx-native-cursor body, html.nx-native-cursor a, html.nx-native-cursor button, html.nx-native-cursor input { cursor: auto !important; }
+        html.nx-native-cursor a, html.nx-native-cursor button { cursor: pointer !important; }
+        html.nx-native-cursor #cyber-cursor, html.nx-native-cursor #cyber-cursor-dot { display: none !important; }
+        html.nx-calm *, html.nx-calm *::before, html.nx-calm *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; scroll-behavior: auto !important; }
+        html.nx-calm .mg-t { animation: mgLife var(--life) linear forwards !important; }
+
+        #nx-dock { position: fixed; z-index: 60; right: max(10px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom));
+            display: flex; flex-direction: column; gap: 8px; transition: opacity .3s, transform .3s; }
+        body.locked #nx-dock { opacity: 0; pointer-events: none; transform: translateX(20px); }
+        .nx-d { position: relative; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 15px;
+            color: var(--cyber-theme-color); background: var(--card-bg); border: 1px solid var(--cyber-glow-color); border-radius: 50%;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform .15s, box-shadow .2s, border-color .2s; }
+        .nx-d:hover, .nx-d:focus-visible { transform: scale(1.12); border-color: var(--cyber-theme-color); box-shadow: 0 0 16px var(--cyber-glow-color); outline: none; }
+        .nx-d em { position: absolute; top: -6px; left: -8px; padding: 0 5px; font: 700 9px/15px 'Share Tech Mono', monospace; font-style: normal;
+            color: #000; background: var(--cyber-theme-color); border-radius: 8px; }
+        @media (max-width: 480px) { .nx-d { width: 38px; height: 38px; font-size: 14px; opacity: .85; } }
+
+        .nx-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh; box-sizing: border-box; z-index: 9985; display: none; align-items: center; justify-content: center;
+            padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+            background: rgba(3,7,12,.8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .nx-modal.on { display: flex; animation: mgIn .3s ease-out both; }
+        .nx-win { width: min(100%, 560px); max-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; color: var(--card-text);
+            background: var(--card-bg); border: 1px solid var(--cyber-theme-color); font-family: 'Prompt', sans-serif;
+            box-shadow: 0 0 30px var(--cyber-glow-color), inset 0 0 20px var(--cyber-glow-color);
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+        .nx-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: clamp(10px, 2.6vw, 16px) clamp(12px, 3vw, 18px);
+            border-bottom: 1px solid var(--cyber-glow-color); font: 700 clamp(12px, 3.4vw, 14px) 'Share Tech Mono', monospace; letter-spacing: .12em; color: var(--cyber-theme-color); }
+        .nx-x { width: 36px; height: 36px; flex: none; border: 1px solid var(--cyber-theme-color); color: var(--cyber-theme-color); background: transparent; }
+        .nx-x:hover { background: var(--cyber-theme-color); color: #000; }
+        .nx-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: clamp(10px, 2.6vw, 16px) clamp(12px, 3vw, 18px); }
+        .nx-foot { padding: 10px clamp(12px, 3vw, 18px); border-top: 1px solid var(--cyber-glow-color); font-size: 12px; color: var(--sub-text); }
+
+        .nx-prog { height: 6px; margin: 4px 0 14px; background: rgba(127,127,127,.25); overflow: hidden; }
+        .nx-prog i { display: block; height: 100%; background: linear-gradient(90deg, var(--cyber-theme-color), #00e5ff); box-shadow: 0 0 10px var(--cyber-theme-color); transition: width .5s; }
+        .nx-ach { display: flex; gap: 12px; align-items: center; padding: 10px 12px; margin-bottom: 8px; border: 1px solid var(--cyber-glow-color); background: rgba(127,127,127,.06); }
+        .nx-ach.on { border-color: var(--cyber-theme-color); box-shadow: inset 0 0 14px var(--cyber-glow-color); }
+        .nx-ach .ic { flex: none; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 22px; border-radius: 50%; border: 1px solid var(--cyber-glow-color); }
+        .nx-ach:not(.on) .ic { filter: grayscale(1); opacity: .45; }
+        .nx-ach b { display: block; font-size: 14px; line-height: 1.3; }
+        .nx-ach small { display: block; font-size: 12px; line-height: 1.4; color: var(--sub-text); }
+        .nx-ach:not(.on) b { color: var(--sub-text); }
+
+        .nx-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 8px 0; border-bottom: 1px dashed var(--cyber-glow-color); }
+        .nx-row b { display: block; font-size: 14px; font-weight: 500; }
+        .nx-row small { display: block; font-size: 12px; color: var(--sub-text); line-height: 1.4; }
+        .nx-sw { position: relative; flex: none; width: 50px; height: 28px; border: 1px solid var(--cyber-theme-color); background: transparent; border-radius: 14px; transition: background .2s; }
+        .nx-sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--sub-text); transition: transform .2s, background .2s; }
+        .nx-sw[aria-checked="true"] { background: var(--cyber-glow-color); }
+        .nx-sw[aria-checked="true"]::after { transform: translateX(22px); background: var(--cyber-theme-color); box-shadow: 0 0 10px var(--cyber-theme-color); }
+        .nx-pill { flex: none; min-height: 36px; padding: 6px 14px; border: 1px solid var(--cyber-theme-color); background: transparent; color: var(--cyber-theme-color); font: 700 12px 'Share Tech Mono', monospace; letter-spacing: .08em; }
+        .nx-pill:hover { background: var(--cyber-theme-color); color: #000; }
+        .nx-pill.danger { border-color: #ff0055; color: #ff0055; } .nx-pill.danger:hover { background: #ff0055; color: #fff; }
+        .nx-dot { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 50%; background: var(--cyber-theme-color); box-shadow: 0 0 8px var(--cyber-theme-color); }
+
+        #nx-term .nx-win { width: min(100%, 720px); height: min(100%, 520px); background: rgba(3,7,12,.96); color: #d6ffe9; font-family: 'Share Tech Mono', 'Space Mono', monospace; }
+        #nx-term .nx-body { padding: 10px 14px; font-size: clamp(12px, 3.3vw, 14px); line-height: 1.55; }
+        #nx-term .nx-body div { white-space: pre-wrap; word-break: break-word; }
+        .tm-in { color: #d6ffe9; } .tm-ok { color: var(--cyber-theme-color); } .tm-err { color: #ff5577; } .tm-dim { color: #7b93a0; } .tm-hi { color: #00e5ff; } .tm-warn { color: #ffb300; }
+        .tm-line { display: flex; gap: 8px; padding: 8px 14px; border-top: 1px solid var(--cyber-glow-color); font-size: clamp(12px, 3.3vw, 14px); }
+        .tm-line span { color: var(--cyber-theme-color); white-space: nowrap; }
+        .tm-line input { flex: 1; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: #fff; font: inherit; caret-color: var(--cyber-theme-color); }
+        @media (pointer: coarse) { .tm-line input { font-size: 16px; } }
+        @media (max-height: 520px) { #nx-term .nx-win { height: 100%; } }
+
+        #nx-pop { position: fixed; z-index: 9995; left: 50%; top: max(12px, env(safe-area-inset-top)); width: min(92vw, 380px); pointer-events: none;
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px; box-sizing: border-box; color: var(--card-text); background: var(--card-bg);
+            border: 1px solid var(--cyber-theme-color); box-shadow: 0 0 24px var(--cyber-glow-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transform: translate(-50%, -140%); opacity: 0; transition: transform .45s cubic-bezier(.2,1.3,.4,1), opacity .3s; }
+        #nx-pop.on { transform: translate(-50%, 0); opacity: 1; }
+        #nx-pop .ic { font-size: 28px; } #nx-pop small { display: block; font: 700 10px 'Share Tech Mono', monospace; letter-spacing: .16em; color: var(--cyber-theme-color); }
+        #nx-pop b { display: block; font: 600 14px 'Prompt', sans-serif; } #nx-pop span { font-size: 12px; color: var(--sub-text); }
         @media (prefers-reduced-motion: reduce) { #mg.on, .mg-panel.hit, .mg-t, .mg-fx { animation-duration: .01s !important; } }
     </style>
 </head>
@@ -2245,6 +2317,7 @@
                 if (navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 140]);
 
                 if (window.__ovExtra) window.__ovExtra(cx, cy);
+                if (window.NX) NX.unlock('overclock');
                 showToast('[SYS_LOG]: ⚡ AVATAR_OVERCLOCK_ENGAGED');
                 setTimeout(() => { frame.classList.remove('av-overclock'); busy = false; }, 1400);
             }
@@ -2326,7 +2399,7 @@
             const avatar = document.getElementById('avatar-container');
             const DURATION = 30000, LIVES = 3;
             let total = 0, isOpen = false, running = false;
-            let score = 0, lives = LIVES, combo = 0, endAt = 0, startAt = 0, spawnT = 0, tickT = 0;
+            let maxCombo = 0, score = 0, lives = LIVES, combo = 0, endAt = 0, startAt = 0, spawnT = 0, tickT = 0;
             const rnd = (a, b) => a + Math.random() * (b - a);
 
             const ov = document.createElement('div');
@@ -2389,7 +2462,7 @@
                         if (navigator.vibrate) navigator.vibrate(80);
                         hud(); if (lives <= 0) end();
                     } else {
-                        combo++;
+                        combo++; if (combo > maxCombo) maxCombo = combo;
                         const pts = (type === 'gold' ? 30 : 10) * (1 + Math.floor(combo / 5));
                         score += pts; fx(x, y, '+' + pts, type === 'gold' ? '#ffb300' : 'var(--cyber-theme-color)');
                         beep(500 + Math.min(combo, 20) * 40, 0.05, 'square');
@@ -2408,7 +2481,7 @@
                 tickT = requestAnimationFrame(tick);
             }
             function start() {
-                clearTargets(); score = 0; lives = LIVES; combo = 0; hud();
+                clearTargets(); score = 0; lives = LIVES; combo = 0; maxCombo = 0; hud();
                 screen.style.display = 'none';
                 running = true; startAt = performance.now(); endAt = startAt + DURATION;
                 spawn(); tick();
@@ -2417,6 +2490,7 @@
                 running = false; clearTimeout(spawnT); cancelAnimationFrame(tickT); clearTargets();
                 const best = getBest(), isNew = score > best; if (isNew) setBest(score);
                 const rank = score >= 600 ? 'S' : score >= 400 ? 'A' : score >= 200 ? 'B' : 'C';
+                if (window.NX) NX.gameEnd(score, rank, maxCombo);
                 try { playChime(); } catch (e) {}
                 showScreen(lives <= 0 ? 'SYSTEM_FAILURE' : 'TIME_UP',
                     'คะแนน <b style="color:var(--cyber-theme-color)">' + score + '</b> · แรงค์ <b>' + rank + '</b><br>' +
@@ -2424,6 +2498,7 @@
             }
             function open() {
                 if (isOpen) return; isOpen = true;
+                if (window.NX) NX.unlock('secret_game');
                 document.body.style.overflow = 'hidden';
                 ov.classList.add('on'); clearTargets(); score = 0; lives = LIVES; combo = 0; hud(); elT.style.transform = 'scaleX(1)';
                 showScreen('CUBE_BREAKER', 'แตะ 🧊 ให้ไว · 💎 ได้แต้มเยอะ<br>ห้ามแตะ 💀 (มี ' + LIVES + ' ชีวิต) · เวลา 30 วินาที<br>ยิ่งต่อคอมโบ ยิ่งได้คูณ' +
@@ -2434,6 +2509,7 @@
                 ov.classList.remove('on'); document.body.style.overflow = ''; isOpen = false; clearTargets();
             }
             ov.querySelector('.mg-x').addEventListener('click', close);
+            window.__mgOpen = open;
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && isOpen) close(); });
 
             avatar.addEventListener('click', () => {
@@ -2449,6 +2525,279 @@
                     setTimeout(open, 700);
                 }
             });
+        })();
+        // ===== HUB: achievements + settings + terminal =====
+        (function () {
+            const root = document.documentElement;
+            const $id = id => document.getElementById(id);
+            const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+            const KEY = 'nx_hub_v1';
+            let st = { ach: {}, n: { taps: 0, cmds: 0, games: 0, accent: 0 }, links: [], prefs: {} };
+            try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (o) { st = Object.assign(st, o); st.n = Object.assign({ taps: 0, cmds: 0, games: 0, accent: 0 }, o.n); } } catch (e) {}
+            const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+            const chime = () => { try { playChime(); } catch (e) {} };
+
+            // ---------- achievements ----------
+            const ACH = [
+                ['first_tap', '👆', 'แตะทักทาย', 'แตะรูปอวาต้าครั้งแรก'],
+                ['overclock', '⚡', 'โอเวอร์คล็อก', 'กดอวาต้า 5 ครั้งรัวๆ'],
+                ['secret_game', '🎮', 'ผู้ค้นพบ', 'ปลดล็อกมินิเกมลับ', 1],
+                ['first_game', '🧊', 'นักล่าก้อนน้ำแข็ง', 'เล่นมินิเกมจนจบ 1 รอบ'],
+                ['rank_s', '👑', 'ระดับตำนาน', 'ได้แรงค์ S ในมินิเกม', 1],
+                ['combo20', '🔥', 'คอมโบไฟลุก', 'ทำคอมโบ 20 ในมินิเกม'],
+                ['rainbow', '🌈', 'สายรุ้ง', 'เปิด Rainbow Mode'],
+                ['konami', '🕹️', 'ตำนานสามสิบแต้ม', 'ใส่ Konami code', 1],
+                ['theme', '🌓', 'สองโหมด', 'สลับโหมดมืด/สว่าง'],
+                ['palette', '🎨', 'นักสะสมสี', 'เปลี่ยนสีธีม 3 ครั้ง'],
+                ['dj', '🎧', 'ดีเจ', 'เปิดเพลงพื้นหลัง'],
+                ['explorer', '🧭', 'นักสำรวจ', 'เปิดลิงก์ที่ต่างกัน 3 ลิงก์'],
+                ['hacker', '💻', 'แฮกเกอร์', 'เปิด Terminal (กดปุ่ม ` หรือปุ่มมุมขวาล่าง)'],
+                ['cmd10', '⌨️', 'นิ้วไว', 'พิมพ์คำสั่งใน Terminal 10 ครั้ง'],
+                ['tweaker', '⚙️', 'ช่างจูน', 'เปิดแผงตั้งค่า'],
+                ['night_owl', '🦉', 'นกฮูก', 'เข้าเว็บช่วงตี 0–5', 1],
+                ['nice_try', '🚫', 'ลองดีสินะ', 'พิมพ์ sudo ใน Terminal', 1],
+                ['platinum', '🏆', 'ครบทุกอย่าง', 'ปลดล็อกความสำเร็จทั้งหมด', 1]
+            ].map(a => ({ id: a[0], ic: a[1], name: a[2], desc: a[3], hidden: !!a[4] }));
+
+            const popEl = mk('div'); popEl.id = 'nx-pop'; popEl.setAttribute('role', 'status');
+            popEl.innerHTML = '<div class="ic"></div><div><small>ACHIEVEMENT UNLOCKED</small><b></b><span></span></div>';
+            document.body.appendChild(popEl);
+            let popQ = [], popBusy = false;
+            function nextPop() {
+                if (popBusy || !popQ.length) return;
+                popBusy = true; const a = popQ.shift();
+                popEl.querySelector('.ic').textContent = a.ic; popEl.querySelector('b').textContent = a.name; popEl.querySelector('span').textContent = a.desc;
+                popEl.classList.add('on'); chime();
+                try { createSparks(innerWidth / 2, 50, 26, 6); } catch (e) {}
+                setTimeout(() => { popEl.classList.remove('on'); setTimeout(() => { popBusy = false; nextPop(); }, 500); }, 3200);
+            }
+            const total = ACH.length, count = () => ACH.filter(a => st.ach[a.id]).length;
+            const cntEl = mk('em');
+            function refreshCount() { cntEl.textContent = count() + '/' + total; }
+            function unlock(id) {
+                const a = ACH.find(x => x.id === id);
+                if (!a || st.ach[id]) return;
+                st.ach[id] = Date.now(); save(); refreshCount();
+                popQ.push(a); nextPop();
+                if (id !== 'platinum' && ACH.every(x => x.id === 'platinum' || st.ach[x.id])) setTimeout(() => unlock('platinum'), 1200);
+            }
+            const bump = (k, v) => { st.n[k] = (st.n[k] || 0) + (v || 1); save(); return st.n[k]; };
+            window.NX = {
+                unlock, has: id => !!st.ach[id],
+                gameEnd(score, rank, maxCombo) {
+                    bump('games'); unlock('first_game');
+                    if (rank === 'S') unlock('rank_s');
+                    if (maxCombo >= 20) unlock('combo20');
+                }
+            };
+
+            // ---------- modal helper ----------
+            const modals = {};
+            function makeModal(id, title, icon) {
+                const el = mk('div', 'nx-modal'); el.id = id; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', title);
+                const win = mk('div', 'nx-win'), head = mk('div', 'nx-head'), body = mk('div', 'nx-body');
+                const t = mk('span', '', icon + ' ' + title), x = mk('button', 'nx-x', '✕'); x.setAttribute('aria-label', 'close');
+                head.append(t, x); win.append(head, body); el.appendChild(win); document.body.appendChild(el);
+                const m = { el, win, body, onOpen: null, open() { closeAll(); el.classList.add('on'); document.body.style.overflow = 'hidden'; if (m.onOpen) m.onOpen(); },
+                    close() { el.classList.remove('on'); if (!document.querySelector('.nx-modal.on') && !(window.__mgOpen && document.getElementById('mg').classList.contains('on'))) document.body.style.overflow = ''; } };
+                x.addEventListener('click', m.close);
+                el.addEventListener('pointerdown', e => { if (e.target === el) m.close(); });
+                modals[id] = m; return m;
+            }
+            function closeAll() { Object.values(modals).forEach(m => m.el.classList.remove('on')); }
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') Object.values(modals).forEach(m => { if (m.el.classList.contains('on')) m.close(); });
+            });
+
+            // ---------- achievements modal ----------
+            const mAch = makeModal('nx-ach', 'ACHIEVEMENTS', '🏆');
+            const achFoot = mk('div', 'nx-foot'); mAch.win.appendChild(achFoot);
+            mAch.onOpen = () => {
+                const n = count(); mAch.body.innerHTML = '';
+                const pr = mk('div', 'nx-prog'); pr.innerHTML = '<i style="width:' + Math.round(n / total * 100) + '%"></i>'; mAch.body.appendChild(pr);
+                ACH.slice().sort((a, b) => (!!st.ach[b.id]) - (!!st.ach[a.id])).forEach(a => {
+                    const on = !!st.ach[a.id], hide = a.hidden && !on;
+                    const row = mk('div', 'nx-ach' + (on ? ' on' : ''));
+                    row.innerHTML = '<div class="ic"></div><div><b></b><small></small></div>';
+                    row.querySelector('.ic').textContent = hide ? '❔' : a.ic;
+                    row.querySelector('b').textContent = hide ? '???' : a.name;
+                    row.querySelector('small').textContent = hide ? 'ความสำเร็จลับ — ลองสำรวจดู' : a.desc + (on ? ' · ' + new Date(st.ach[a.id]).toLocaleDateString('th-TH') : '');
+                    mAch.body.appendChild(row);
+                });
+                achFoot.textContent = 'ปลดล็อกแล้ว ' + n + ' / ' + total;
+            };
+
+            // ---------- settings modal ----------
+            const mSet = makeModal('nx-set', 'SETTINGS', '⚙️');
+            const ACC = ['GREEN', 'ICE', 'PINK', 'AMBER', 'VIOLET'], ACC_C = ['#00ff88', '#4da3ff', '#ff3d9a', '#ffa62b', '#b266ff'];
+            const P = st.prefs;
+            function applyPrefs() {
+                root.classList.toggle('nx-calm', !!P.calm);
+                root.classList.toggle('nx-native-cursor', !!P.cursor);
+                if (P.lite) root.classList.add('lite');
+            }
+            applyPrefs();
+            const accIdx = () => Math.max(0, Math.min(4, parseInt(localStorage.getItem('cyber_accent') || '0', 10) || 0));
+            const rowsDef = [
+                { l: 'เสียงเอฟเฟกต์', s: 'เสียงปุ่ม เสียงมินิเกม และแจ้งเตือน', get: () => soundEnabled, set: () => $id('sound-btn').click() },
+                { l: 'เพลงพื้นหลัง', s: 'ซินธ์ ambient ที่ขยับ EQ รอบอวาต้า', get: () => bgmPlaying, set: () => $id('bgm-play-btn').click() },
+                { l: 'โหมดมืด', s: 'ปิดเพื่อใช้โหมดสว่าง', get: () => root.classList.contains('dark'), set: () => $id('theme-btn').click() },
+                { l: 'โหมดประหยัด', s: 'ปิดเอฟเฟกต์หนักๆ ช่วยให้เครื่องช้าลื่นขึ้น', get: () => !!P.lite, set: () => { P.lite = !P.lite; if (!P.lite) root.classList.remove('lite'); applyPrefs(); save(); } },
+                { l: 'ลดการเคลื่อนไหว', s: 'หยุดอนิเมชั่นตกแต่งเกือบทั้งหมด', get: () => !!P.calm, set: () => { P.calm = !P.calm; applyPrefs(); save(); } },
+                { l: 'ใช้เคอร์เซอร์ปกติ', s: 'ปิดเคอร์เซอร์ไซเบอร์บนเดสก์ท็อป', get: () => !!P.cursor, set: () => { P.cursor = !P.cursor; applyPrefs(); save(); } }
+            ];
+            function renderSet() {
+                mSet.body.innerHTML = '';
+                rowsDef.forEach(r => {
+                    const row = mk('div', 'nx-row'), tx = mk('div'); tx.innerHTML = '<b></b><small></small>';
+                    tx.querySelector('b').textContent = r.l; tx.querySelector('small').textContent = r.s;
+                    const sw = mk('button', 'nx-sw'); sw.setAttribute('role', 'switch'); sw.setAttribute('aria-label', r.l); sw.setAttribute('aria-checked', String(!!r.get()));
+                    sw.addEventListener('click', () => { r.set(); [60, 420].forEach(d => setTimeout(() => sw.setAttribute('aria-checked', String(!!r.get())), d)); });
+                    row.append(tx, sw); mSet.body.appendChild(row);
+                });
+                const ar = mk('div', 'nx-row'), at = mk('div'); at.innerHTML = '<b>สีธีม</b><small></small>';
+                const ab = mk('button', 'nx-pill');
+                const paintA = () => { const i = accIdx(); ab.innerHTML = '<span class="nx-dot" style="background:' + ACC_C[i] + ';box-shadow:0 0 8px ' + ACC_C[i] + '"></span>' + ACC[i]; at.querySelector('small').textContent = 'แตะเพื่อสลับสี (ลัด: กดปุ่ม C)'; };
+                paintA(); ab.addEventListener('click', () => { $id('accent-btn').click(); setTimeout(paintA, 50); });
+                ar.append(at, ab); mSet.body.appendChild(ar);
+                const rr = mk('div', 'nx-row'), rt = mk('div'); rt.innerHTML = '<b>รีเซ็ตความคืบหน้า</b><small>ลบความสำเร็จและสถิติทั้งหมด</small>';
+                const rb = mk('button', 'nx-pill danger', 'RESET'); let armed = 0;
+                rb.addEventListener('click', () => {
+                    if (!armed) { armed = 1; rb.textContent = 'แน่ใจนะ?'; setTimeout(() => { armed = 0; rb.textContent = 'RESET'; }, 3000); return; }
+                    st.ach = {}; st.n = { taps: 0, cmds: 0, games: 0, accent: 0 }; st.links = []; save(); refreshCount();
+                    try { localStorage.removeItem('nx_cb_best'); } catch (e) {} armed = 0; rb.textContent = 'DONE ✓';
+                });
+                rr.append(rt, rb); mSet.body.appendChild(rr);
+            }
+            mSet.onOpen = () => { renderSet(); unlock('tweaker'); };
+
+            // ---------- terminal ----------
+            const mTerm = makeModal('nx-term', 'nx@ice:~', '>_');
+            const out = mTerm.body;
+            const line = mk('div', 'tm-line'), prompt = mk('span', '', '$'), inp = mk('input');
+            inp.type = 'text'; inp.autocomplete = 'off'; inp.autocapitalize = 'off'; inp.spellcheck = false; inp.setAttribute('enterkeyhint', 'send'); inp.setAttribute('aria-label', 'terminal input');
+            line.append(prompt, inp); mTerm.win.appendChild(line);
+            mTerm.win.addEventListener('click', () => { if (!getSelection().toString()) inp.focus(); });
+            let hist = [], hi = 0, booted = false;
+            function print(text, cls) { const d = mk('div', cls || 'tm-in', text); out.appendChild(d); out.scrollTop = out.scrollHeight; return d; }
+            const links = () => [...document.querySelectorAll('a.social-link')].map(a => ({ href: a.href, label: a.href.replace(/^https?:[/][/](www[.])?/, '').split('?')[0].replace(/[/]$/, '') }));
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            mTerm.onOpen = () => {
+                unlock('hacker');
+                if (!booted) { booted = true; print('NXMEICXQZ_OS v1.0  —  secure shell', 'tm-ok'); print('พิมพ์ help เพื่อดูคำสั่ง · Tab เติมคำอัตโนมัติ · ↑↓ ย้อนประวัติ · Esc ปิด', 'tm-dim'); }
+                setTimeout(() => inp.focus(), 60);
+            };
+            const CMDS = {
+                help() {
+                    [['help', 'แสดงคำสั่งทั้งหมด'], ['about', 'เกี่ยวกับหน้านี้'], ['links', 'รายการลิงก์โซเชียล'], ['open <n>', 'เปิดลิงก์ตามเลข'],
+                     ['theme [dark|light]', 'สลับโหมดสี'], ['accent', 'สลับสีธีม'], ['sound [on|off]', 'เปิด/ปิดเสียงเอฟเฟกต์'], ['music [play|stop]', 'เปิด/ปิดเพลง'],
+                     ['ach', 'ดูความสำเร็จ'], ['settings', 'เปิดแผงตั้งค่า'], ['stats', 'สถิติของคุณ'], ['neofetch', 'ข้อมูลระบบ'], ['fx', 'ยิงเอฟเฟกต์'],
+                     ['date', 'วันเวลา'], ['echo <text>', 'พิมพ์ข้อความ'], ['clear', 'ล้างหน้าจอ'], ['exit', 'ปิด Terminal']]
+                        .concat(st.ach.secret_game ? [['play', 'เปิดมินิเกม CUBE_BREAKER']] : [])
+                        .forEach(c => print('  ' + c[0].padEnd(20) + c[1], 'tm-in'));
+                },
+                about() { print('NXMEICXQZ — รวมลิงก์โซเชียลทั้งหมดในที่เดียว', 'tm-ok'); print('มีลูกเล่นลับซ่อนอยู่ ลองกดอวาต้าดูสิ 😏', 'tm-dim'); },
+                whoami() { print('guest@ice  (level 9 🧊)', 'tm-ok'); },
+                links() { links().forEach((l, i) => print('  [' + (i + 1) + '] ' + l.label, 'tm-hi')); print("ใช้ 'open <เลข>' เพื่อเปิด", 'tm-dim'); },
+                open(a) {
+                    const L = links(), n = parseInt(a[0], 10);
+                    if (!n || n < 1 || n > L.length) return print('ใช้: open <1-' + L.length + '>', 'tm-err');
+                    print('opening ' + L[n - 1].label + ' ...', 'tm-ok'); trackLink(L[n - 1].href); window.open(L[n - 1].href, '_blank', 'noopener');
+                },
+                theme(a) {
+                    const dark = root.classList.contains('dark'), want = a[0] === 'dark' ? true : a[0] === 'light' ? false : !dark;
+                    if (want !== dark) $id('theme-btn').click(); print('theme → ' + (want ? 'dark' : 'light'), 'tm-ok');
+                },
+                accent() { $id('accent-btn').click(); setTimeout(() => print('accent → ' + ACC[accIdx()], 'tm-ok'), 40); },
+                sound(a) {
+                    const want = a[0] === 'on' ? true : a[0] === 'off' ? false : !soundEnabled;
+                    if (want !== soundEnabled) $id('sound-btn').click(); print('sound → ' + (want ? 'on' : 'off'), 'tm-ok');
+                },
+                music(a) {
+                    const want = a[0] === 'play' ? true : a[0] === 'stop' ? false : !bgmPlaying;
+                    if (want !== bgmPlaying) $id('bgm-play-btn').click(); print('music → ' + (want ? 'playing' : 'stopped'), 'tm-ok');
+                },
+                ach() { mAch.open(); },
+                achievements() { mAch.open(); },
+                settings() { mSet.open(); },
+                stats() {
+                    let best = 0; try { best = +localStorage.getItem('nx_cb_best') || 0; } catch (e) {}
+                    print('  แตะอวาต้า        ' + st.n.taps, 'tm-in'); print('  คำสั่งที่พิมพ์    ' + st.n.cmds, 'tm-in');
+                    print('  เกมที่เล่นจบ      ' + st.n.games, 'tm-in'); print('  คะแนนสูงสุด      ' + best, 'tm-in');
+                    print('  ความสำเร็จ       ' + count() + '/' + total, 'tm-ok');
+                },
+                neofetch() {
+                    ['      ◢████◣       guest@ice', '     ██▀▀▀▀██      ---------', '     ██ 🧊 ██      OS: NXMEICXQZ_OS 1.0', '     ██▄▄▄▄██      Theme: ' + ACC[accIdx()] + (root.classList.contains('dark') ? ' / dark' : ' / light'),
+                     '      ◥████◤       Screen: ' + innerWidth + 'x' + innerHeight, '                   Achievements: ' + count() + '/' + total].forEach(t => print(t, 'tm-hi'));
+                },
+                fx() { if (window.__ovExtra) window.__ovExtra(innerWidth / 2, innerHeight / 2); try { createSparks(innerWidth / 2, innerHeight / 2, 60, 8); shockwave(innerWidth / 2, innerHeight / 2); } catch (e) {} print('boom.', 'tm-ok'); },
+                date() { print(new Date().toLocaleString('th-TH'), 'tm-in'); },
+                echo(a) { print(a.join(' '), 'tm-in'); },
+                clear() { out.innerHTML = ''; },
+                exit() { mTerm.close(); },
+                close() { mTerm.close(); },
+                play() {
+                    if (!st.ach.secret_game || !window.__mgOpen) return print('command not found: play', 'tm-err');
+                    print('launching CUBE_BREAKER ...', 'tm-ok'); setTimeout(() => { mTerm.close(); window.__mgOpen(); }, 400);
+                },
+                sudo() { unlock('nice_try'); print('guest is not in the sudoers file. This incident will be reported. 🚨', 'tm-err'); },
+                async hack() {
+                    const steps = ['scanning ports ........ done', 'bypassing firewall ..... done', 'decrypting avatar.gif .. done', 'injecting 🧊 .......... done'];
+                    for (const t of steps) { print(t, 'tm-ok'); await sleep(380); }
+                    print('ACCESS GRANTED (just kidding)', 'tm-warn');
+                }
+            };
+            async function run(raw) {
+                const txt = raw.trim(); if (!txt) return;
+                print('$ ' + txt, 'tm-dim'); hist.push(txt); hi = hist.length;
+                if (bump('cmds') >= 10) unlock('cmd10');
+                const parts = txt.split(/\s+/), name = parts[0].toLowerCase();
+                if (name === 'sudo') return CMDS.sudo();
+                if (Object.prototype.hasOwnProperty.call(CMDS, name) && !(name === 'play' && !st.ach.secret_game)) { try { await CMDS[name](parts.slice(1)); } catch (e) { print('error: ' + e.message, 'tm-err'); } }
+                else print('command not found: ' + name + "  (พิมพ์ 'help')", 'tm-err');
+            }
+            inp.addEventListener('keydown', e => {
+                e.stopPropagation();
+                if (e.key === 'Enter') { const v = inp.value; inp.value = ''; run(v); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); if (hi > 0) inp.value = hist[--hi]; }
+                else if (e.key === 'ArrowDown') { e.preventDefault(); inp.value = hi < hist.length - 1 ? hist[++hi] : (hi = hist.length, ''); }
+                else if (e.key === 'Tab') {
+                    e.preventDefault(); const v = inp.value.toLowerCase(); if (!v || v.indexOf(' ') > -1) return;
+                    const m = Object.keys(CMDS).filter(k => k.indexOf(v) === 0 && (k !== 'play' || st.ach.secret_game)); if (m.length === 1) inp.value = m[0] + ' ';
+                }
+                else if (e.key === 'Escape') mTerm.close();
+            });
+
+            // ---------- dock ----------
+            const dock = mk('div'); dock.id = 'nx-dock';
+            const dbtn = (icon, label, fn) => { const b = mk('button', 'nx-d'); b.innerHTML = '<i class="fa-solid ' + icon + '"></i>'; b.setAttribute('aria-label', label); b.title = label; b.addEventListener('click', fn); dock.appendChild(b); return b; };
+            const bAch = dbtn('fa-trophy', 'ความสำเร็จ', () => mAch.open()); bAch.appendChild(cntEl);
+            dbtn('fa-sliders', 'ตั้งค่า', () => mSet.open());
+            dbtn('fa-terminal', 'Terminal (`)', () => mTerm.open());
+            document.body.appendChild(dock); refreshCount();
+            document.addEventListener('keydown', e => {
+                if (e.code !== 'Backquote' || e.ctrlKey || e.metaKey || e.altKey || document.body.classList.contains('locked')) return;
+                if (/^(input|textarea)$/i.test(document.activeElement.tagName)) return;
+                e.preventDefault(); mTerm.el.classList.contains('on') ? mTerm.close() : mTerm.open();
+            });
+
+            // ---------- event hooks for achievements ----------
+            const on = (id, ev, fn) => { const el = $id(id); if (el) el.addEventListener(ev, fn); };
+            on('avatar-container', 'click', () => { bump('taps'); unlock('first_tap'); });
+            on('theme-btn', 'click', () => unlock('theme'));
+            on('accent-btn', 'click', () => { if (bump('accent') >= 3) unlock('palette'); });
+            on('bgm-play-btn', 'click', () => setTimeout(() => { if (bgmPlaying) unlock('dj'); }, 50));
+            function trackLink(h) { if (st.links.indexOf(h) < 0) { st.links.push(h); save(); } if (st.links.length >= 3) unlock('explorer'); }
+            document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a.social-link'); if (a) trackLink(a.href); });
+            const wrap = $id('app-wrap');
+            if (wrap) new MutationObserver(() => { if (wrap.classList.contains('rainbow')) unlock('rainbow'); }).observe(wrap, { attributes: true, attributeFilter: ['class'] });
+            const KON = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']; let kp = 0;
+            document.addEventListener('keydown', e => {
+                const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+                kp = (k === KON[kp]) ? kp + 1 : (k === KON[0] ? 1 : 0);
+                if (kp === KON.length) { kp = 0; unlock('konami'); }
+            });
+            setTimeout(() => { const h = new Date().getHours(); if (h >= 0 && h < 5) unlock('night_owl'); }, 6000);
         })();
     </script>
 </body>
